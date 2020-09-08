@@ -18,7 +18,7 @@ namespace AtCoder.CS
         public DSU(int n = 0)
         {
             _n = n;
-            _parentOrSize = new int[n];
+            _parentOrSize = Enumerable.Repeat(-1, n).ToArray();
         }
 
         public int Merge(int a, int b)
@@ -47,7 +47,7 @@ namespace AtCoder.CS
             return _parentOrSize[a] = LeaderOf(_parentOrSize[a]);
         }
 
-        public int Size(int a)
+        public int SizeOf(int a)
         {
             if (a < 0 || _n <= a) throw new ArgumentException(nameof(a));
             return -_parentOrSize[LeaderOf(a)];
