@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace AtCoder.CS
@@ -17,9 +18,16 @@ namespace AtCoder.CS
         private readonly U _identityU;
 
         public LazySegTree(int n, Func<T, T, T> operation, T identityT, Func<U, T, T> mapping,
+            Func<U, U, U> composition, U identityU) :
+            this(new T[n], operation, identityT, mapping, composition, identityU)
+        {
+        }
+
+        public LazySegTree(IEnumerable<T> data, Func<T, T, T> operation, T identityT, Func<U, T, T> mapping,
             Func<U, U, U> composition, U identityU)
         {
-            _n = n;
+            var d = data.ToArray();
+            _n = d.Length;
             _operation = operation;
             _identityT = identityT;
             _mapping = mapping;
@@ -29,7 +37,7 @@ namespace AtCoder.CS
             _size = 1 << _log;
             _data = Enumerable.Repeat(identityT, _size * 2).ToArray();
             _lazy = Enumerable.Repeat(identityU, _size).ToArray();
-            for (var i = 0; i < _n; i++) _data[_size + i] = identityT;
+            for (var i = 0; i < _n; i++) _data[_size + i] = d[i];
             for (var i = _size - 1; i >= 1; i--) Update(i);
         }
 
@@ -52,9 +60,7 @@ namespace AtCoder.CS
 
         public T Prod(int l, int r)
         {
-            if (l < 0 || _n <= l) throw new ArgumentException(nameof(l));
-            if (r < 0 || _n <= r) throw new ArgumentException(nameof(r));
-            if (r < l) throw new ArgumentException();
+            if (0 > l || l > r || r > _n) throw new ArgumentException();
             if (l == r) return _identityT;
             l += _size;
             r += _size;
@@ -89,9 +95,7 @@ namespace AtCoder.CS
 
         public void Apply(int l, int r, U u)
         {
-            if (l < 0 || _n <= l) throw new ArgumentException(nameof(l));
-            if (r < 0 || _n <= r) throw new ArgumentException(nameof(r));
-            if (r < l) throw new ArgumentException();
+            if (0 > l || l > r || r > _n) throw new ArgumentException();
             if (l == r) return;
             l += _size;
             r += _size;
