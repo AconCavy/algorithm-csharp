@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AtCoder.CS
 {
@@ -21,8 +22,8 @@ namespace AtCoder.CS
 
         public void AddEdge(int from, int to)
         {
-            if (from < 0 || _n <= from) throw new ArgumentException(nameof(from));
-            if (to < 0 || _n <= to) throw new ArgumentException(nameof(to));
+            if (from < 0 || _n <= from) throw new ArgumentOutOfRangeException(nameof(from));
+            if (to < 0 || _n <= to) throw new ArgumentOutOfRangeException(nameof(to));
             _edges.Add((from, new Edge {To = to}));
         }
 
@@ -32,7 +33,7 @@ namespace AtCoder.CS
             var (nowOrd, groupNum) = (0, 0);
             var visited = new Stack<int>(_n);
             var low = new int[_n];
-            var ord = new int[_n];
+            var ord = Enumerable.Repeat(-1, _n).ToArray();
             var ids = new int[_n];
 
             void DFS(int v)
@@ -66,16 +67,21 @@ namespace AtCoder.CS
             }
 
             for (var i = 0; i < _n; i++)
-            {
-                if (ord[i] == -1) DFS(i);
-            }
+                if (ord[i] == -1)
+                    DFS(i);
 
-            for (var i = 0; i < _n; i++)
-            {
-                ids[i] = groupNum - 1 - ids[i];
-            }
+            for (var i = 0; i < _n; i++) ids[i] = groupNum - 1 - ids[i];
 
             return (groupNum, ids);
+        }
+
+        public IEnumerable<IEnumerable<int>> GetSCC()
+        {
+            var (groupNum, tmp) = Ids();
+            var ids = tmp.ToArray();
+            var groups = new List<int>[groupNum].Select(x => new List<int>()).ToArray();
+            foreach (var (id, i) in ids.Select((x, i) => (x, i))) groups[id].Add(i);
+            return groups;
         }
     }
 }

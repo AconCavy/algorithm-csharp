@@ -12,22 +12,12 @@ namespace AtCoder.CS
         public CSR(int n, IEnumerable<(int, T)> edges)
         {
             Start = new int[n + 1];
-            var tuples = edges as (int, T)[] ?? edges.ToArray();
-            Edges = new T[tuples.Length];
-            foreach (var e in tuples)
-            {
-                Start[e.Item1 + 1]++;
-            }
-
-            for (var i = 0; i < n; i++)
-            {
-                Start[i + 1] += Start[i];
-            }
-
-            foreach (var (i, t) in tuples)
-            {
-                Edges[Start[i]++] = t;
-            }
+            var es = edges.ToArray();
+            Edges = new T[es.Length];
+            foreach (var e in es) Start[e.Item1 + 1]++;
+            for (var i = 0; i < n; i++) Start[i + 1] += Start[i];
+            var counter = Start.ToArray();
+            foreach (var (i, t) in es) Edges[counter[i]++] = t;
         }
     }
 }
