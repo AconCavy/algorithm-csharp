@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace AtCoder.CS
@@ -13,20 +14,26 @@ namespace AtCoder.CS
         private readonly T _identity;
 
         public SegTree(int n, Func<T, T, T> operation, T identity)
+            : this(Enumerable.Repeat(identity, n), operation, identity)
         {
-            _n = n;
+        }
+
+        public SegTree(IEnumerable<T> data, Func<T, T, T> operation, T identity)
+        {
+            var d = data.ToArray();
+            _n = d.Length;
             _operation = operation;
             _identity = identity;
             _log = CeilPow2(_n);
             _size = 1 << _log;
             _data = Enumerable.Repeat(identity, _size * 2).ToArray();
-            for (var i = 0; i < _n; i++) _data[_size + i] = identity;
+            for (var i = 0; i < _n; i++) _data[_size + i] = d[i];
             for (var i = _size - 1; i >= 1; i--) Update(i);
         }
 
         public void Set(int p, T x)
         {
-            if (p < 0 || _n <= p) throw new ArgumentException(nameof(p));
+            if (p < 0 || _n <= p) throw new ArgumentOutOfRangeException(nameof(p));
             p += _size;
             _data[p] = x;
             for (var i = 1; i <= _log; i++) Update(p >> i);
@@ -34,15 +41,13 @@ namespace AtCoder.CS
 
         public T Get(int p)
         {
-            if (p < 0 || _n <= p) throw new ArgumentException(nameof(p));
+            if (p < 0 || _n <= p) throw new ArgumentOutOfRangeException(nameof(p));
             return _data[p + _size];
         }
 
         public T Prod(int l, int r)
         {
-            if (l < 0 || _n <= l) throw new ArgumentException(nameof(l));
-            if (r < 0 || _n <= r) throw new ArgumentException(nameof(r));
-            if (r < l) throw new ArgumentException();
+            if (0 > l || l > r || r > _n) throw new ArgumentException();
             var (sml, smr) = (_identity, _identity);
             l += _size;
             r += _size;
@@ -61,7 +66,7 @@ namespace AtCoder.CS
 
         public int MaxRight(int l, Func<T, bool> func)
         {
-            if (l < 0 || _n <= l) throw new ArgumentException(nameof(l));
+            if (l < 0 || _n <= l) throw new ArgumentOutOfRangeException(nameof(l));
             if (!func(_identity)) throw new ArgumentException(nameof(func));
             if (l == _n) return _n;
             l += _size;
@@ -92,7 +97,7 @@ namespace AtCoder.CS
 
         public int MinLeft(int r, Func<T, bool> func)
         {
-            if (r < 0 || _n <= r) throw new ArgumentException(nameof(r));
+            if (r < 0 || _n <= r) throw new ArgumentOutOfRangeException(nameof(r));
             if (!func(_identity)) throw new ArgumentException(nameof(func));
             if (r == 0) return 0;
             r += _size;
