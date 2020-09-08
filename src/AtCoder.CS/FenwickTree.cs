@@ -29,9 +29,7 @@ namespace AtCoder.CS
 
         public long Sum(int l, int r)
         {
-            if (l < 0 || _n <= l) throw new ArgumentException(nameof(l));
-            if (r < 0 || _n <= r) throw new ArgumentException(nameof(r));
-            if (l > r) throw new ArgumentException();
+            if (0 > l || l > r || r > _n) throw new ArgumentException();
             return Sum(r) - Sum(l);
         }
 
