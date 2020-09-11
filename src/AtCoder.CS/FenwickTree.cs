@@ -2,9 +2,6 @@
 
 namespace AtCoder.CS
 {
-    /// <summary>
-    /// Reference: https://en.wikipedia.org/wiki/Fenwick_tree
-    /// </summary>
     public class FenwickTree
     {
         private readonly int _n;
@@ -18,7 +15,7 @@ namespace AtCoder.CS
 
         public void Add(int p, long x)
         {
-            if (p < 0 || _n <= p) throw new ArgumentException(nameof(p));
+            if (p < 0 || _n <= p) throw new IndexOutOfRangeException(nameof(p));
             p++;
             while (p <= _n)
             {
@@ -29,7 +26,7 @@ namespace AtCoder.CS
 
         public long Sum(int l, int r)
         {
-            if (0 > l || l > r || r > _n) throw new ArgumentException();
+            if (l < 0 || r < l || _n < r) throw new IndexOutOfRangeException();
             return Sum(r) - Sum(l);
         }
 
