@@ -55,7 +55,7 @@ namespace AtCoder.CS.Tests
             Assert.That((l - r).Value, Is.Zero);
             Assert.That((l * r).Value, Is.Zero);
             Assert.That(l.Power(r.Value).Value, Is.Zero);
-            Assert.That(l.GetInverse(), Is.Zero);
+            Assert.That(l.Inverse(), Is.Zero);
         }
 
         [Test]
@@ -65,7 +65,7 @@ namespace AtCoder.CS.Tests
             MInt.SetMod(n);
             for (var i = 1; i < n - 1; i++)
             {
-                var x = MInt.GetInverse(i);
+                var x = MInt.Inverse(i);
                 Assert.That(x * i % n, Is.EqualTo(1));
             }
 
@@ -74,7 +74,7 @@ namespace AtCoder.CS.Tests
             for (var i = 1; i < n - 1; i++)
             {
                 if (GCD(i, n) != 1) continue;
-                var x = MInt.GetInverse(i);
+                var x = MInt.Inverse(i);
                 Assert.That(x * i % n, Is.EqualTo(1));
             }
 
@@ -82,7 +82,7 @@ namespace AtCoder.CS.Tests
             MInt.SetMod1000000007();
             for (var i = 1; i < 100000; i++)
             {
-                var x = MInt.GetInverse(i);
+                var x = MInt.Inverse(i);
                 Assert.That(x * i % n, Is.EqualTo(1));
             }
 
@@ -91,14 +91,14 @@ namespace AtCoder.CS.Tests
             for (var i = 1; i < 100000; i++)
             {
                 if (GCD(i, n) != 1) continue;
-                var x = MInt.GetInverse(i);
+                var x = MInt.Inverse(i);
                 Assert.That(x * i % n, Is.EqualTo(1));
             }
 
             MInt.SetMod998244353();
             for (var i = 1; i < 100000; i++)
             {
-                var x = MInt.GetInverse(i);
+                var x = MInt.Inverse(i);
                 Assert.That(x, Is.GreaterThanOrEqualTo(0));
                 Assert.That(x, Is.LessThanOrEqualTo(998244353 - 1));
                 Assert.That(x * i % 998244353, Is.EqualTo(1));
@@ -163,6 +163,13 @@ namespace AtCoder.CS.Tests
             Assert.That(new MInt(1) != new MInt(12), Is.False);
 
             Assert.That(new MInt(1).ToString(), Is.EqualTo("1"));
+            MInt a = 1;
+            MInt b = 1;
+            const long c = 1;
+            const double d = 1;
+            Assert.That(a.Equals(b), Is.True);
+            Assert.That(a.Equals(c), Is.True);
+            Assert.That(a.Equals(d), Is.False);
             Assert.Throws<ArgumentException>(() => new MInt(3).Power(-1));
         }
 
