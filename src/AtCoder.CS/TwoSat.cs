@@ -24,8 +24,8 @@ namespace AtCoder.CS
 
         public void AddClause(int i, bool f, int j, bool g)
         {
-            if (i < 0 || _n < i) throw new ArgumentException(nameof(i));
-            if (j < 0 || _n < j) throw new ArgumentException(nameof(j));
+            if (i < 0 || _n < i) throw new IndexOutOfRangeException(nameof(i));
+            if (j < 0 || _n < j) throw new IndexOutOfRangeException(nameof(j));
             _scc.AddEdge(2 * i + (f ? 0 : 1), 2 * j + (g ? 1 : 0));
             _scc.AddEdge(2 * j + (g ? 0 : 1), 2 * i + (f ? 1 : 0));
         }
