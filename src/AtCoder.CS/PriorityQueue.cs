@@ -9,17 +9,32 @@ namespace AtCoder.CS
     {
         private readonly SortedDictionary<T, int> _data;
 
+        public PriorityQueue() : this(null, null)
+        {
+        }
+
+        public PriorityQueue(IComparer<T> comparer = null)
+            : this(null, comparer)
+        {
+        }
+
         public PriorityQueue(int count, IComparer<T> comparer = null)
-            : this(new List<T>(count), comparer)
+            : this(Enumerable.Repeat(default(T), count), comparer)
         {
         }
 
         public PriorityQueue(IEnumerable<T> data = null, IComparer<T> comparer = null)
         {
             comparer ??= Comparer<T>.Default;
-            _data = data == null
-                ? new SortedDictionary<T, int>(comparer)
-                : new SortedDictionary<T, int>(data.ToDictionary(x => x, _ => 1), comparer);
+            var list = data?.ToList() ?? new List<T>();
+            var dict = new Dictionary<T, int>();
+            foreach (var val in list)
+            {
+                if (!dict.ContainsKey(val)) dict[val] = 0;
+                dict[val]++;
+            }
+
+            _data = new SortedDictionary<T, int>(dict, comparer);
         }
 
         public void Enqueue(T item)
@@ -35,6 +50,15 @@ namespace AtCoder.CS
             if (_data[key] > 1) _data[key]--;
             else _data.Remove(key);
             return key;
+        }
+
+        public T Peek()
+        {
+            if (!_data.Any()) throw new InvalidOperationException();
+            using var e = _data.GetEnumerator();
+            e.MoveNext();
+            var (ret, _) = e.Current;
+            return ret;
         }
 
         public bool TryDequeue(out T result)
@@ -61,23 +85,12 @@ namespace AtCoder.CS
             return false;
         }
 
-        public T Peek()
-        {
-            if (!_data.Any()) throw new InvalidOperationException();
-            using var e = _data.GetEnumerator();
-            e.MoveNext();
-            var (ret, _) = e.Current;
-            return ret;
-        }
-
         public void Clear() => _data.Clear();
         public bool Contains(T item) => _data.ContainsKey(item);
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            if (array == null) throw new ArgumentNullException(nameof(array));
-            if (arrayIndex < 0) throw new ArgumentOutOfRangeException(nameof(arrayIndex));
-            GetFlatData().ToList().CopyTo(array);
+            GetFlatData().ToList().CopyTo(array, arrayIndex);
         }
 
         public IEnumerator<T> GetEnumerator() => GetFlatData().GetEnumerator();
