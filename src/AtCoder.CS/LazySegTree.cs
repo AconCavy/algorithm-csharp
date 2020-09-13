@@ -33,7 +33,7 @@ namespace AtCoder.CS
             _mapping = mapping;
             _composition = composition;
             _identityU = identityU;
-            _log = CeilPow2(_n);
+            while (1 << _log < _n) _log++;
             _size = 1 << _log;
             _data = Enumerable.Repeat(identityT, _size * 2).ToArray();
             _lazy = Enumerable.Repeat(identityU, _size).ToArray();
@@ -43,7 +43,7 @@ namespace AtCoder.CS
 
         public void Set(int p, T x)
         {
-            if (p < 0 || _n <= p) throw new ArgumentException(nameof(p));
+            if (p < 0 || _n <= p) throw new IndexOutOfRangeException(nameof(p));
             p += _size;
             for (var i = _log; i >= 1; i--) Push(p >> i);
             _data[p] = x;
@@ -52,7 +52,7 @@ namespace AtCoder.CS
 
         public T Get(int p)
         {
-            if (p < 0 || _n <= p) throw new ArgumentException(nameof(p));
+            if (p < 0 || _n <= p) throw new IndexOutOfRangeException(nameof(p));
             p += _size;
             for (var i = _log; i >= 1; i--) Push(p >> i);
             return _data[p];
@@ -60,7 +60,7 @@ namespace AtCoder.CS
 
         public T Prod(int l, int r)
         {
-            if (0 > l || l > r || r > _n) throw new ArgumentException();
+            if (l < 0 || r < l || _n < r) throw new IndexOutOfRangeException();
             if (l == r) return _identityT;
             l += _size;
             r += _size;
@@ -86,7 +86,7 @@ namespace AtCoder.CS
 
         public void Apply(int p, U u)
         {
-            if (p < 0 || _n <= p) throw new ArgumentException(nameof(p));
+            if (p < 0 || _n <= p) throw new IndexOutOfRangeException(nameof(p));
             p += _size;
             for (var i = _log; i >= 1; i--) Push(p >> i);
             _data[p] = _mapping(u, _data[p]);
@@ -95,7 +95,7 @@ namespace AtCoder.CS
 
         public void Apply(int l, int r, U u)
         {
-            if (0 > l || l > r || r > _n) throw new ArgumentException();
+            if (l < 0 || r < l || _n < r) throw new IndexOutOfRangeException();
             if (l == r) return;
             l += _size;
             r += _size;
@@ -123,7 +123,7 @@ namespace AtCoder.CS
 
         public int MaxRight(int l, Func<T, bool> func)
         {
-            if (l < 0 || _n <= l) throw new ArgumentException(nameof(l));
+            if (l < 0 || _n <= l) throw new IndexOutOfRangeException(nameof(l));
             if (!func(_identityT)) throw new ArgumentException(nameof(func));
             if (l == _n) return _n;
             l += _size;
@@ -154,7 +154,7 @@ namespace AtCoder.CS
 
         public int MinLeft(int r, Func<T, bool> func)
         {
-            if (r < 0 || _n <= r) throw new ArgumentException(nameof(r));
+            if (r < 0 || _n <= r) throw new IndexOutOfRangeException(nameof(r));
             if (!func(_identityT)) throw new ArgumentException(nameof(func));
             if (r == 0) return 0;
             r += _size;
@@ -197,13 +197,6 @@ namespace AtCoder.CS
             AllApply(k * 2, _lazy[k]);
             AllApply(k * 2 + 1, _lazy[k]);
             _lazy[k] = _identityU;
-        }
-
-        private static int CeilPow2(int n)
-        {
-            var x = 0;
-            while (1 << x < n) x++;
-            return x;
         }
     }
 }
