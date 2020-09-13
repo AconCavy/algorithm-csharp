@@ -22,8 +22,8 @@ namespace AtCoder.CS
 
         public void AddEdge(int from, int to)
         {
-            if (from < 0 || _n <= from) throw new ArgumentOutOfRangeException(nameof(from));
-            if (to < 0 || _n <= to) throw new ArgumentOutOfRangeException(nameof(to));
+            if (from < 0 || _n <= from) throw new IndexOutOfRangeException(nameof(from));
+            if (to < 0 || _n <= to) throw new IndexOutOfRangeException(nameof(to));
             _edges.Add((from, new Edge {To = to}));
         }
 
