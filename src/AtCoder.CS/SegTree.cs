@@ -24,7 +24,7 @@ namespace AtCoder.CS
             _n = d.Length;
             _operation = operation;
             _identity = identity;
-            _log = CeilPow2(_n);
+            while (1 << _log < _n) _log++;
             _size = 1 << _log;
             _data = Enumerable.Repeat(identity, _size * 2).ToArray();
             for (var i = 0; i < _n; i++) _data[_size + i] = d[i];
@@ -33,7 +33,7 @@ namespace AtCoder.CS
 
         public void Set(int p, T x)
         {
-            if (p < 0 || _n <= p) throw new ArgumentOutOfRangeException(nameof(p));
+            if (p < 0 || _n <= p) throw new IndexOutOfRangeException(nameof(p));
             p += _size;
             _data[p] = x;
             for (var i = 1; i <= _log; i++) Update(p >> i);
@@ -41,13 +41,13 @@ namespace AtCoder.CS
 
         public T Get(int p)
         {
-            if (p < 0 || _n <= p) throw new ArgumentOutOfRangeException(nameof(p));
+            if (p < 0 || _n <= p) throw new IndexOutOfRangeException(nameof(p));
             return _data[p + _size];
         }
 
         public T Prod(int l, int r)
         {
-            if (0 > l || l > r || r > _n) throw new ArgumentException();
+            if (l < 0 || r < l || _n < r) throw new IndexOutOfRangeException();
             var (sml, smr) = (_identity, _identity);
             l += _size;
             r += _size;
@@ -66,7 +66,7 @@ namespace AtCoder.CS
 
         public int MaxRight(int l, Func<T, bool> func)
         {
-            if (l < 0 || _n <= l) throw new ArgumentOutOfRangeException(nameof(l));
+            if (l < 0 || _n <= l) throw new IndexOutOfRangeException(nameof(l));
             if (!func(_identity)) throw new ArgumentException(nameof(func));
             if (l == _n) return _n;
             l += _size;
@@ -97,7 +97,7 @@ namespace AtCoder.CS
 
         public int MinLeft(int r, Func<T, bool> func)
         {
-            if (r < 0 || _n <= r) throw new ArgumentOutOfRangeException(nameof(r));
+            if (r < 0 || _n <= r) throw new IndexOutOfRangeException(nameof(r));
             if (!func(_identity)) throw new ArgumentException(nameof(func));
             if (r == 0) return 0;
             r += _size;
@@ -128,12 +128,5 @@ namespace AtCoder.CS
         }
 
         private void Update(int k) => _data[k] = _operation(_data[k * 2], _data[k * 2 + 1]);
-
-        private static int CeilPow2(int n)
-        {
-            var x = 0;
-            while (1 << x < n) x++;
-            return x;
-        }
     }
 }
