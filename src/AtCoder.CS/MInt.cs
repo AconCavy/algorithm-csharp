@@ -9,15 +9,21 @@ namespace AtCoder.CS
 
         public MInt(long data) => Value = (0 <= data ? data : data + Mod) % Mod;
         public static implicit operator long(MInt mint) => mint.Value;
+        public static implicit operator int(MInt mint) => (int) mint.Value;
         public static implicit operator MInt(long val) => new MInt(val);
+        public static implicit operator MInt(int val) => new MInt(val);
         public static MInt operator +(MInt a, MInt b) => a.Value + b.Value;
         public static MInt operator +(MInt a, long b) => a.Value + b;
+        public static MInt operator +(MInt a, int b) => a.Value + b;
         public static MInt operator -(MInt a, MInt b) => a.Value - b.Value;
         public static MInt operator -(MInt a, long b) => a.Value - b;
+        public static MInt operator -(MInt a, int b) => a.Value - b;
         public static MInt operator *(MInt a, MInt b) => a.Value * b.Value;
         public static MInt operator *(MInt a, long b) => a.Value * (b % Mod);
-        public static MInt operator /(MInt a, MInt b) => a.Value * b.Inverse();
+        public static MInt operator *(MInt a, int b) => a.Value * (b % Mod);
+        public static MInt operator /(MInt a, MInt b) => a * b.Inverse();
         public static MInt operator /(MInt a, long b) => a.Value * Inverse(b);
+        public static MInt operator /(MInt a, int b) => a.Value * Inverse(b);
         public static bool operator ==(MInt a, MInt b) => a.Value == b.Value;
         public static bool operator !=(MInt a, MInt b) => a.Value != b.Value;
         public bool Equals(MInt other) => Value == other.Value;
@@ -25,10 +31,11 @@ namespace AtCoder.CS
         public override int GetHashCode() => Value.GetHashCode();
         public override string ToString() => Value.ToString();
 
-        public long Inverse() => Inverse(Value);
+        public MInt Inverse() => Inverse(Value);
 
-        public static long Inverse(long a)
+        public static MInt Inverse(long a)
         {
+            if (a == 0) return 0;
             var p = Mod;
             var (x1, y1, x2, y2) = (1L, 0L, 0L, 1L);
             while (true)
@@ -46,10 +53,11 @@ namespace AtCoder.CS
             }
         }
 
-        public MInt Power(long n)
+        public MInt Power(long n) => Power(Value, n);
+
+        public static MInt Power(MInt x, long n)
         {
             if (n < 0) throw new ArgumentException();
-            var x = Value;
             var r = new MInt(1);
             while (n > 0)
             {

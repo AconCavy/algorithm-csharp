@@ -55,7 +55,7 @@ namespace AtCoder.CS.Tests
             Assert.That((l - r).Value, Is.Zero);
             Assert.That((l * r).Value, Is.Zero);
             Assert.That(l.Power(r.Value).Value, Is.Zero);
-            Assert.That(l.Inverse(), Is.Zero);
+            Assert.That(l.Inverse().Value, Is.Zero);
         }
 
         [Test]
@@ -99,9 +99,9 @@ namespace AtCoder.CS.Tests
             for (var i = 1; i < 100000; i++)
             {
                 var x = MInt.Inverse(i);
-                Assert.That(x, Is.GreaterThanOrEqualTo(0));
-                Assert.That(x, Is.LessThanOrEqualTo(998244353 - 1));
-                Assert.That(x * i % 998244353, Is.EqualTo(1));
+                Assert.That(x.Value, Is.GreaterThanOrEqualTo(0));
+                Assert.That(x.Value, Is.LessThanOrEqualTo(998244353 - 1));
+                Assert.That(x.Value * i % 998244353, Is.EqualTo(1));
             }
         }
 
@@ -171,6 +171,48 @@ namespace AtCoder.CS.Tests
             Assert.That(a.Equals(c), Is.True);
             Assert.That(a.Equals(d), Is.False);
             Assert.Throws<ArgumentException>(() => new MInt(3).Power(-1));
+        }
+
+        [Test]
+        public void CastIntTest()
+        {
+            MInt.SetMod(11);
+            Assert.That((int) new MInt(1), Is.EqualTo(1));
+            Assert.That((int) new MInt(12), Is.EqualTo(1));
+            Assert.That((MInt) 1, Is.EqualTo(new MInt(1)));
+            Assert.That((MInt) 12, Is.EqualTo(new MInt(1)));
+        }
+
+        [Test]
+        public void IntOperatorsTest()
+        {
+            MInt.SetMod(11);
+            Assert.That(new MInt(1) + 1, Is.EqualTo(new MInt(2)));
+            Assert.That(new MInt(11) - 1, Is.EqualTo(new MInt(10)));
+            Assert.That(new MInt(2) * 5, Is.EqualTo(new MInt(10)));
+            Assert.That(new MInt(10) / 2, Is.EqualTo(new MInt(5)));
+            Assert.That(10 / new MInt(5), Is.EqualTo(new MInt(2)));
+        }
+
+        [Test]
+        public void CastLongTest()
+        {
+            MInt.SetMod(11);
+            Assert.That((long) new MInt(1L), Is.EqualTo(1));
+            Assert.That((long) new MInt(12L), Is.EqualTo(1));
+            Assert.That((MInt) 1L, Is.EqualTo(new MInt(1)));
+            Assert.That((MInt) 12L, Is.EqualTo(new MInt(1)));
+        }
+
+        [Test]
+        public void LongOperatorsTest()
+        {
+            MInt.SetMod(11);
+            Assert.That(new MInt(1) + 1L, Is.EqualTo(new MInt(2)));
+            Assert.That(new MInt(11) - 1L, Is.EqualTo(new MInt(10)));
+            Assert.That(new MInt(2) * 5L, Is.EqualTo(new MInt(10)));
+            Assert.That(new MInt(10) / 2L, Is.EqualTo(new MInt(5)));
+            Assert.That(10L / new MInt(5), Is.EqualTo(new MInt(2)));
         }
 
         private long GCD(long a, long b) => b == 0 ? a : GCD(b, a % b);
