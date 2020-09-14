@@ -137,23 +137,23 @@ namespace AtCoder.CS.Tests
         public void UsageTest()
         {
             MInt.SetMod998244353();
-            Assert.That(MInt.Mod, Is.EqualTo(998244353));
+            Assert.That(MInt.Modulo, Is.EqualTo(998244353));
             Assert.That((new MInt(1) + new MInt(2)).Value, Is.EqualTo(3));
             Assert.That((1L + new MInt(2)).Value, Is.EqualTo(3));
             Assert.That((new MInt(1) + 2L).Value, Is.EqualTo(3));
 
             MInt.SetMod1000000007();
-            Assert.That(MInt.Mod, Is.EqualTo(1000000007));
+            Assert.That(MInt.Modulo, Is.EqualTo(1000000007));
 
             MInt.SetMod(3);
-            Assert.That(MInt.Mod, Is.EqualTo(3));
+            Assert.That(MInt.Modulo, Is.EqualTo(3));
             Assert.That((new MInt(2) - new MInt(1)).Value, Is.EqualTo(1));
             Assert.That((2L - new MInt(1)).Value, Is.EqualTo(1));
             Assert.That((new MInt(2) - 1L).Value, Is.EqualTo(1));
             Assert.That((new MInt(1) + new MInt(2)).Value, Is.EqualTo(0));
 
             MInt.SetMod(11);
-            Assert.That(MInt.Mod, Is.EqualTo(11));
+            Assert.That(MInt.Modulo, Is.EqualTo(11));
             Assert.That(new MInt(4).Value, Is.EqualTo(4));
             Assert.That(new MInt(-4).Value, Is.EqualTo(7));
             Assert.That((new MInt(3) * new MInt(5)).Value, Is.EqualTo(4));

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace AtCoder.CS
 {
-    public class LazySegTree<T, U>
+    public class LazySegmentTree<T, U>
     {
         private readonly int _n;
         private readonly int _size;
@@ -17,13 +17,13 @@ namespace AtCoder.CS
         private readonly T _identityT;
         private readonly U _identityU;
 
-        public LazySegTree(int n, Func<T, T, T> operation, T identityT, Func<U, T, T> mapping,
+        public LazySegmentTree(int n, Func<T, T, T> operation, T identityT, Func<U, T, T> mapping,
             Func<U, U, U> composition, U identityU) :
             this(new T[n], operation, identityT, mapping, composition, identityU)
         {
         }
 
-        public LazySegTree(IEnumerable<T> data, Func<T, T, T> operation, T identityT, Func<U, T, T> mapping,
+        public LazySegmentTree(IEnumerable<T> data, Func<T, T, T> operation, T identityT, Func<U, T, T> mapping,
             Func<U, U, U> composition, U identityU)
         {
             var d = data.ToArray();
@@ -58,7 +58,7 @@ namespace AtCoder.CS
             return _data[p];
         }
 
-        public T Prod(int l, int r)
+        public T Query(int l, int r)
         {
             if (l < 0 || r < l || _n < r) throw new IndexOutOfRangeException();
             if (l == r) return _identityT;
@@ -82,7 +82,7 @@ namespace AtCoder.CS
             return _operation(sml, smr);
         }
 
-        public T AllProd() => _data[1];
+        public T QueryToAll() => _data[1];
 
         public void Apply(int p, U u)
         {

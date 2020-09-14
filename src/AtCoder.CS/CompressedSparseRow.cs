@@ -3,13 +3,12 @@ using System.Linq;
 
 namespace AtCoder.CS
 {
-    public class CSR<T>
+    public class CompressedSparseRow<T>
     {
         public int[] Start { get; }
-
         public T[] Edges { get; }
 
-        public CSR(int n, IEnumerable<(int, T)> edges)
+        public CompressedSparseRow(int n, IEnumerable<(int, T)> edges)
         {
             Start = new int[n + 1];
             var es = edges.ToArray();

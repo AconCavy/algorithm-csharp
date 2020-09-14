@@ -4,12 +4,12 @@ using System.Linq;
 
 namespace AtCoder.CS
 {
-    public class DSU
+    public class DisjointSetUnion
     {
         private readonly int _n;
         private readonly int[] _parentOrSize;
 
-        public DSU(int n = 0)
+        public DisjointSetUnion(int n = 0)
         {
             _n = n;
             _parentOrSize = Enumerable.Repeat(-1, n).ToArray();
@@ -47,7 +47,7 @@ namespace AtCoder.CS
             return -_parentOrSize[LeaderOf(a)];
         }
 
-        public IEnumerable<IEnumerable<int>> Groups()
+        public IEnumerable<IEnumerable<int>> GetGroups()
         {
             var leaders = new int[_n];
             var groupSize = new int[_n];

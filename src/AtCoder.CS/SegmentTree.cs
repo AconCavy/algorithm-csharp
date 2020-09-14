@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace AtCoder.CS
 {
-    public class SegTree<T>
+    public class SegmentTree<T>
     {
         private readonly int _n;
         private readonly int _size;
@@ -13,12 +13,12 @@ namespace AtCoder.CS
         private readonly Func<T, T, T> _operation;
         private readonly T _identity;
 
-        public SegTree(int n, Func<T, T, T> operation, T identity)
+        public SegmentTree(int n, Func<T, T, T> operation, T identity)
             : this(Enumerable.Repeat(identity, n), operation, identity)
         {
         }
 
-        public SegTree(IEnumerable<T> data, Func<T, T, T> operation, T identity)
+        public SegmentTree(IEnumerable<T> data, Func<T, T, T> operation, T identity)
         {
             var d = data.ToArray();
             _n = d.Length;
@@ -45,7 +45,7 @@ namespace AtCoder.CS
             return _data[p + _size];
         }
 
-        public T Prod(int l, int r)
+        public T Query(int l, int r)
         {
             if (l < 0 || r < l || _n < r) throw new IndexOutOfRangeException();
             var (sml, smr) = (_identity, _identity);
@@ -62,7 +62,7 @@ namespace AtCoder.CS
             return _operation(sml, smr);
         }
 
-        public T AllProd() => _data[1];
+        public T QueryToAll() => _data[1];
 
         public int MaxRight(int l, Func<T, bool> func)
         {

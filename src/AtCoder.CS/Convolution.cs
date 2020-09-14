@@ -7,7 +7,7 @@ namespace AtCoder.CS
     public static class Convolution
     {
         private static MInt[] _sumE;
-        private static MInt[] _sumIE;
+        private static MInt[] _sumIe;
         private static int _primitiveRoot;
 
         public static IEnumerable<MInt> Execute(IEnumerable<MInt> a, IEnumerable<MInt> b)
@@ -18,13 +18,8 @@ namespace AtCoder.CS
             if (System.Math.Min(n, m) <= 60)
             {
                 for (var i = 0; i < n; i++)
-                {
-                    for (var j = 0; j < m; j++)
-                    {
-                        ret[i + j] += a1[i] * b1[j];
-                    }
-                }
-
+                for (var j = 0; j < m; j++)
+                    ret[i + j] += a1[i] * b1[j];
                 return ret;
             }
 
@@ -41,11 +36,11 @@ namespace AtCoder.CS
 
         private static void Initialize()
         {
-            if (_sumE != null && _sumIE != null) return;
-            var m = MInt.Mod;
+            if (_sumE != null && _sumIe != null) return;
+            var m = MInt.Modulo;
             _primitiveRoot = PrimitiveRoot(m);
             _sumE = new MInt[30];
-            _sumIE = new MInt[30];
+            _sumIe = new MInt[30];
             var es = new MInt[30];
             var ies = new MInt[30];
             var count2 = BitScanForward(m - 1);
@@ -64,7 +59,7 @@ namespace AtCoder.CS
             for (var i = 0; i < count2 - 2; i++)
             {
                 _sumE[i] = es[i] * now;
-                _sumIE[i] = ies[i] * inow;
+                _sumIe[i] = ies[i] * inow;
                 now *= ies[i];
                 inow *= es[i];
             }
@@ -74,7 +69,7 @@ namespace AtCoder.CS
         {
             var ret = items.ToArray();
             var h = CeilPower2(ret.Length);
-            if (_sumE == null) Initialize();
+            Initialize();
 
             for (var ph = 1; ph <= h; ph++)
             {
@@ -103,7 +98,7 @@ namespace AtCoder.CS
         {
             var ret = items.ToArray();
             var h = CeilPower2(ret.Length);
-            if (_sumIE == null) Initialize();
+            Initialize();
 
             for (var ph = h; ph >= 1; ph--)
             {
@@ -121,7 +116,7 @@ namespace AtCoder.CS
                         ret[i + offset + p] = (l - r) * inow;
                     }
 
-                    inow *= _sumIE[BitScanForward(~s)];
+                    inow *= _sumIe[BitScanForward(~s)];
                 }
             }
 
@@ -141,24 +136,6 @@ namespace AtCoder.CS
             var x = 0;
             while ((1 << x) < n) x++;
             return x;
-        }
-
-        private static long Power(long x, long n, long m)
-        {
-            if (n < 0) throw new ArgumentException(nameof(n));
-            if (m < 1) throw new ArgumentException(nameof(m));
-            if (m == 1) return 0;
-            uint r = 1;
-            var y = (uint) (x % m >= 0 ? x % m : (x + m) % m);
-            var um = (uint) m;
-            while (n > 1)
-            {
-                if (n % 1 == 1) r = r * y % um;
-                y = y * y % um;
-                n >>= 1;
-            }
-
-            return r;
         }
 
         private static int PrimitiveRoot(long m)
@@ -193,9 +170,8 @@ namespace AtCoder.CS
             {
                 var ok = true;
                 for (var i = 0; i < count && ok; i++)
-                {
-                    if (Power(g, (m - 1) / divs[i], m) == 1) ok = false;
-                }
+                    if (Math.PowerMod(g, (m - 1) / divs[i], m) == 1)
+                        ok = false;
 
                 if (ok) return _primitiveRoot = g;
             }

@@ -37,7 +37,7 @@ namespace AtCoder.CS.Tests
         public void InvalidTest()
         {
             Assert.Throws<OverflowException>(() => _ = new FenwickTree(-1));
-            
+
             var ft = new FenwickTree(10);
             Assert.Throws<IndexOutOfRangeException>(() => ft.Add(-1, 0));
             Assert.Throws<IndexOutOfRangeException>(() => ft.Add(10, 0));

@@ -6,12 +6,12 @@ namespace AtCoder.CS
 {
     public static class StringAlgorithm
     {
-        public static IEnumerable<int> SuffixArray(string str)
+        public static IEnumerable<int> CreateSuffixes(string str)
         {
-            return SuffixArrayInducedSorting(str.Select(x => x - 0), 255);
+            return CreateSuffixesByInducedSorting(str.Select(x => x - 0), 255);
         }
 
-        public static IEnumerable<int> SuffixArray<T>(IEnumerable<T> items)
+        public static IEnumerable<int> CreateSuffixes<T>(IEnumerable<T> items)
         {
             var s = items.ToArray();
             var n = s.Length;
@@ -25,24 +25,25 @@ namespace AtCoder.CS
                 s2[idx[i]] = now;
             }
 
-            return SuffixArrayInducedSorting(s2, now);
+            return CreateSuffixesByInducedSorting(s2, now);
         }
 
-        public static IEnumerable<int> SuffixArray(IEnumerable<int> items, int upper)
+        public static IEnumerable<int> CreateSuffixes(IEnumerable<int> items, int upper)
         {
             if (items == null) throw new ArgumentException(nameof(items));
             if (upper < 0) throw new ArgumentException(nameof(upper));
             var s = items.ToArray();
             if (s.Any(x => x < 0 || upper <= x)) throw new ArgumentException(nameof(items));
-            return SuffixArrayInducedSorting(s, upper);
+            return CreateSuffixesByInducedSorting(s, upper);
         }
 
-        public static IEnumerable<int> LCPArray(string str, IEnumerable<int> suffixArray)
+        public static IEnumerable<int> CreateLongestCommonPrefixes(string str, IEnumerable<int> suffixArray)
         {
-            return LCPArray(str.Select(x => x - 0), suffixArray);
+            return CreateLongestCommonPrefixes(str.Select(x => x - 0), suffixArray);
         }
 
-        public static IEnumerable<int> LCPArray<T>(IEnumerable<T> items, IEnumerable<int> suffixArray)
+        public static IEnumerable<int> CreateLongestCommonPrefixes<T>(IEnumerable<T> items,
+            IEnumerable<int> suffixArray)
         {
             var s = items.ToArray();
             var sa = suffixArray.ToArray();
@@ -91,7 +92,7 @@ namespace AtCoder.CS
             return z;
         }
 
-        private static IEnumerable<int> SuffixArrayInducedSorting(IEnumerable<int> items, int upper,
+        private static IEnumerable<int> CreateSuffixesByInducedSorting(IEnumerable<int> items, int upper,
             int naive = 10, int doubling = 40)
         {
             var s = items.ToArray();
@@ -103,8 +104,8 @@ namespace AtCoder.CS
                 case 2: return s[0] < s[1] ? new[] {0, 1} : new[] {1, 0};
             }
 
-            if (n < naive) return SuffixArrayNaive(s);
-            if (n < doubling) return SuffixArrayDoubling(s);
+            if (n < naive) return CreateSuffixesByNaive(s);
+            if (n < doubling) return CreateSuffixesByDoubling(s);
 
             var sa = new int[n];
             var ls = new bool[n];
@@ -201,7 +202,7 @@ namespace AtCoder.CS
                 recS[lmsMap[sortedLms[i]]] = recUpper;
             }
 
-            var recSa = SuffixArrayInducedSorting(recS, recUpper, naive, doubling).ToArray();
+            var recSa = CreateSuffixesByInducedSorting(recS, recUpper, naive, doubling).ToArray();
             for (var i = 0; i < m; i++)
             {
                 sortedLms[i] = lms[recSa[i]];
@@ -211,7 +212,7 @@ namespace AtCoder.CS
             return sa;
         }
 
-        private static IEnumerable<int> SuffixArrayNaive(IEnumerable<int> items)
+        private static IEnumerable<int> CreateSuffixesByNaive(IEnumerable<int> items)
         {
             var s = items.ToArray();
             var n = s.Length;
@@ -235,7 +236,7 @@ namespace AtCoder.CS
             return sa;
         }
 
-        private static IEnumerable<int> SuffixArrayDoubling(IEnumerable<int> items)
+        private static IEnumerable<int> CreateSuffixesByDoubling(IEnumerable<int> items)
         {
             var rnk = items.ToArray();
             var n = rnk.Length;

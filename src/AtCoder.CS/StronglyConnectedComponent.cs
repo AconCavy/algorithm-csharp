@@ -4,17 +4,18 @@ using System.Linq;
 
 namespace AtCoder.CS
 {
-    public class SCCGraph
+    public class StronglyConnectedComponent
     {
-        private struct Edge
+        private readonly struct Edge
         {
-            public int To;
+            public readonly int To;
+            public Edge(int to) => To = to;
         }
 
         private readonly int _n;
         private readonly List<(int, Edge)> _edges;
 
-        public SCCGraph(int n = 0)
+        public StronglyConnectedComponent(int n = 0)
         {
             _n = n;
             _edges = new List<(int, Edge)>();
@@ -24,19 +25,19 @@ namespace AtCoder.CS
         {
             if (from < 0 || _n <= from) throw new IndexOutOfRangeException(nameof(from));
             if (to < 0 || _n <= to) throw new IndexOutOfRangeException(nameof(to));
-            _edges.Add((from, new Edge {To = to}));
+            _edges.Add((from, new Edge(to)));
         }
 
         public (int, IEnumerable<int>) Ids()
         {
-            var g = new CSR<Edge>(_n, _edges);
+            var g = new CompressedSparseRow<Edge>(_n, _edges);
             var (nowOrd, groupNum) = (0, 0);
             var visited = new Stack<int>(_n);
             var low = new int[_n];
             var ord = Enumerable.Repeat(-1, _n).ToArray();
             var ids = new int[_n];
 
-            void DFS(int v)
+            void Dfs(int v)
             {
                 low[v] = ord[v] = nowOrd++;
                 visited.Push(v);
@@ -45,13 +46,10 @@ namespace AtCoder.CS
                     var to = g.Edges[i].To;
                     if (ord[to] == -1)
                     {
-                        DFS(to);
+                        Dfs(to);
                         low[v] = System.Math.Min(low[v], low[to]);
                     }
-                    else
-                    {
-                        low[v] = System.Math.Min(low[v], ord[to]);
-                    }
+                    else low[v] = System.Math.Min(low[v], ord[to]);
                 }
 
                 if (low[v] != ord[v]) return;
@@ -68,14 +66,14 @@ namespace AtCoder.CS
 
             for (var i = 0; i < _n; i++)
                 if (ord[i] == -1)
-                    DFS(i);
+                    Dfs(i);
 
             for (var i = 0; i < _n; i++) ids[i] = groupNum - 1 - ids[i];
 
             return (groupNum, ids);
         }
 
-        public IEnumerable<IEnumerable<int>> GetSCC()
+        public IEnumerable<IEnumerable<int>> GetGraph()
         {
             var (groupNum, tmp) = Ids();
             var ids = tmp.ToArray();

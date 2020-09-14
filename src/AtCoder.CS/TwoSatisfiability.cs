@@ -3,23 +3,18 @@ using System.Linq;
 
 namespace AtCoder.CS
 {
-    /// <summary>
-    /// Reference:
-    /// B. Aspvall, M. Plass, and R. Tarjan,
-    /// A Linear-Time Algorithm for Testing the Truth of Certain Quantified Boolean Formulas
-    /// </summary>
-    public class TwoSat
+    public class TwoSatisfiability
     {
-        public bool[] Answer => _answer;
-        private readonly int _n;
-        private readonly bool[] _answer;
-        private readonly SCCGraph _scc;
+        public bool[] Answer { get; }
 
-        public TwoSat(int n = 0)
+        private readonly int _n;
+        private readonly StronglyConnectedComponent _scc;
+
+        public TwoSatisfiability(int n = 0)
         {
             _n = n;
-            _answer = new bool[n];
-            _scc = new SCCGraph(2 * n);
+            Answer = new bool[n];
+            _scc = new StronglyConnectedComponent(2 * n);
         }
 
         public void AddClause(int i, bool f, int j, bool g)
@@ -37,7 +32,7 @@ namespace AtCoder.CS
             for (var i = 0; i < _n; i++)
             {
                 if (ids[2 * i] == ids[2 * i + 1]) return false;
-                _answer[i] = ids[2 * i] < ids[2 * i + 1];
+                Answer[i] = ids[2 * i] < ids[2 * i + 1];
             }
 
             return true;
