@@ -1,7 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 
-namespace AtCoder.CS.Tests
+namespace AtCoderLibraryCSharp.Tests
 {
     public class FenwickTreeTests
     {

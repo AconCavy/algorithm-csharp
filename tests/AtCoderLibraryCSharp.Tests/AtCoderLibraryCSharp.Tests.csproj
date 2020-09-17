@@ -13,7 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\AtCoder.CS\AtCoder.CS.csproj" />
+      <ProjectReference Include="..\..\src\AtCoderLibraryCSharp\AtCoderLibraryCSharp.csproj" />
     </ItemGroup>
 
 </Project>

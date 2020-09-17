@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AtCoder.CS
+namespace AtCoderLibraryCSharp
 {
     public class PriorityQueue<T> : IEnumerable<T>
     {

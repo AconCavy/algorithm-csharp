@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 
-namespace AtCoder.CS.Tests
+namespace AtCoderLibraryCSharp.Tests
 {
     public class PriorityQueueTests
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace AtCoder.CS
+namespace AtCoderLibraryCSharp
 {
     public class TwoSatisfiability
     {

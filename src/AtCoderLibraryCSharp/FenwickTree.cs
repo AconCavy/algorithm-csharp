@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AtCoder.CS
+namespace AtCoderLibraryCSharp
 {
     public class FenwickTree
     {

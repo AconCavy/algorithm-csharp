@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtCoder.CS", "src/AtCoder.CS/AtCoder.CS.csproj", "{5731C955-AF17-4832-B377-FA72DE6112C2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtCoderLibraryCSharp", "src/AtCoderLibraryCSharp/AtCoderLibraryCSharp.csproj", "{5731C955-AF17-4832-B377-FA72DE6112C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtCoder.CS.Tests", "tests/AtCoder.CS.Tests\AtCoder.CS.Tests.csproj", "{C2783ACF-74E4-42FD-BC6C-025E7ADA8A14}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtCoderLibraryCSharp.Tests", "tests/AtCoderLibraryCSharp.Tests\AtCoderLibraryCSharp.Tests.csproj", "{C2783ACF-74E4-42FD-BC6C-025E7ADA8A14}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

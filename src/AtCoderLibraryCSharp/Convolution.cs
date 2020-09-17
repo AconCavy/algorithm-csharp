@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AtCoder.CS
+namespace AtCoderLibraryCSharp
 {
     public static class Convolution
     {
-        private static MInt[] _sumE;
-        private static MInt[] _sumIe;
+        private static ModuloInteger[] _sumE;
+        private static ModuloInteger[] _sumIe;
         private static int _primitiveRoot;
 
-        public static IEnumerable<MInt> Execute(IEnumerable<MInt> a, IEnumerable<MInt> b)
+        public static IEnumerable<ModuloInteger> Execute(IEnumerable<ModuloInteger> a, IEnumerable<ModuloInteger> b)
         {
             var (a1, b1) = (a.ToArray(), b.ToArray());
             var (n, m) = (a1.Length, b1.Length);
-            var ret = new MInt[n + m - 1];
+            var ret = new ModuloInteger[n + m - 1];
             if (System.Math.Min(n, m) <= 60)
             {
                 for (var i = 0; i < n; i++)
@@ -37,14 +37,14 @@ namespace AtCoder.CS
         private static void Initialize()
         {
             if (_sumE != null && _sumIe != null) return;
-            var m = MInt.Modulo;
+            var m = ModuloInteger.Modulo;
             _primitiveRoot = PrimitiveRoot(m);
-            _sumE = new MInt[30];
-            _sumIe = new MInt[30];
-            var es = new MInt[30];
-            var ies = new MInt[30];
+            _sumE = new ModuloInteger[30];
+            _sumIe = new ModuloInteger[30];
+            var es = new ModuloInteger[30];
+            var ies = new ModuloInteger[30];
             var count2 = BitScanForward(m - 1);
-            var e = new MInt(_primitiveRoot).Power((m - 1) >> count2);
+            var e = new ModuloInteger(_primitiveRoot).Power((m - 1) >> count2);
             var ie = e.Inverse();
             for (var i = count2; i >= 2; i--)
             {
@@ -54,8 +54,8 @@ namespace AtCoder.CS
                 ie *= ie;
             }
 
-            MInt now = 1;
-            MInt inow = 1;
+            ModuloInteger now = 1;
+            ModuloInteger inow = 1;
             for (var i = 0; i < count2 - 2; i++)
             {
                 _sumE[i] = es[i] * now;
@@ -65,7 +65,7 @@ namespace AtCoder.CS
             }
         }
 
-        private static IEnumerable<MInt> Butterfly(IEnumerable<MInt> items)
+        private static IEnumerable<ModuloInteger> Butterfly(IEnumerable<ModuloInteger> items)
         {
             var ret = items.ToArray();
             var h = CeilPower2(ret.Length);
@@ -75,7 +75,7 @@ namespace AtCoder.CS
             {
                 var w = 1 << (ph - 1);
                 var p = 1 << (h - ph);
-                MInt now = 1;
+                ModuloInteger now = 1;
                 for (var s = 0; s < w; s++)
                 {
                     var offset = s << (h - ph + 1);
@@ -94,7 +94,7 @@ namespace AtCoder.CS
             return ret;
         }
 
-        private static IEnumerable<MInt> ButterflyInverse(IEnumerable<MInt> items)
+        private static IEnumerable<ModuloInteger> ButterflyInverse(IEnumerable<ModuloInteger> items)
         {
             var ret = items.ToArray();
             var h = CeilPower2(ret.Length);
@@ -104,7 +104,7 @@ namespace AtCoder.CS
             {
                 var w = 1 << (ph - 1);
                 var p = 1 << (h - ph);
-                MInt inow = 1;
+                ModuloInteger inow = 1;
                 for (var s = 0; s < w; s++)
                 {
                     var offset = s << (h - ph + 1);
