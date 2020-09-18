@@ -5,6 +5,8 @@ namespace AtCoderLibraryCSharp
     public readonly struct ModuloInteger
     {
         public long Value { get; }
+        // for performance
+        // public const long Modulo = 998244353;
         public static long Modulo { get; private set; } = 998244353;
 
         public ModuloInteger(long data) => Value = (0 <= data ? data : data + Modulo) % Modulo;
