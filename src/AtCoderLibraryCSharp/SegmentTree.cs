@@ -26,8 +26,8 @@ namespace AtCoderLibraryCSharp
             _identity = identity;
             while (1 << _log < _n) _log++;
             _size = 1 << _log;
-            _data = Enumerable.Repeat(identity, _size * 2).ToArray();
-            for (var i = 0; i < _n; i++) _data[_size + i] = d[i];
+            _data = Enumerable.Repeat(identity, _size << 1).ToArray();
+            d.CopyTo(_data, _size);
             for (var i = _size - 1; i >= 1; i--) Update(i);
         }
 
@@ -73,12 +73,12 @@ namespace AtCoderLibraryCSharp
             var sm = _identity;
             do
             {
-                while (l % 2 == 0) l >>= 1;
+                while ((l & 1) == 0) l >>= 1;
                 if (!func(_operation(sm, _data[l])))
                 {
                     while (l < _size)
                     {
-                        l *= 2;
+                        l <<= 1;
                         var tmp = _operation(sm, _data[l]);
                         if (!func(tmp)) continue;
                         sm = tmp;
@@ -105,12 +105,12 @@ namespace AtCoderLibraryCSharp
             do
             {
                 r--;
-                while (r > 1 && r % 2 == 0) r >>= 1;
+                while (r > 1 && (r & 1) == 0) r >>= 1;
                 if (!func(_operation(_data[r], sm)))
                 {
                     while (r < _size)
                     {
-                        r = r * 2 + 1;
+                        r = (r << 1) + 1;
                         var tmp = _operation(_data[r], sm);
                         if (!func(tmp)) continue;
                         sm = tmp;
@@ -127,6 +127,6 @@ namespace AtCoderLibraryCSharp
             return 0;
         }
 
-        private void Update(int k) => _data[k] = _operation(_data[k * 2], _data[k * 2 + 1]);
+        private void Update(int k) => _data[k] = _operation(_data[k << 1], _data[(k << 1) + 1]);
     }
 }

@@ -35,9 +35,9 @@ namespace AtCoderLibraryCSharp
             _identityU = identityU;
             while (1 << _log < _n) _log++;
             _size = 1 << _log;
-            _data = Enumerable.Repeat(identityT, _size * 2).ToArray();
+            _data = Enumerable.Repeat(identityT, _size << 1).ToArray();
             _lazy = Enumerable.Repeat(identityU, _size).ToArray();
-            for (var i = 0; i < _n; i++) _data[_size + i] = d[i];
+            d.CopyTo(_data, _size);
             for (var i = _size - 1; i >= 1; i--) Update(i);
         }
 
@@ -108,8 +108,8 @@ namespace AtCoderLibraryCSharp
             var (l2, r2) = (l, r);
             while (l2 < r2)
             {
-                if ((l2 & 1) == 1) AllApply(l2++, u);
-                if ((r2 & 1) == 1) AllApply(--r2, u);
+                if ((l2 & 1) == 1) ApplyToAll(l2++, u);
+                if ((r2 & 1) == 1) ApplyToAll(--r2, u);
                 l2 >>= 1;
                 r2 >>= 1;
             }
@@ -130,7 +130,7 @@ namespace AtCoderLibraryCSharp
             var sm = _identityT;
             do
             {
-                while (l % 2 == 0) l >>= 1;
+                while ((l & 1) == 0) l >>= 1;
                 if (!func(_operation(sm, _data[l])))
                 {
                     while (l < _size)
@@ -162,12 +162,12 @@ namespace AtCoderLibraryCSharp
             do
             {
                 r--;
-                while (r > 1 && r % 2 == 0) r >>= 1;
+                while (r > 1 && (r & 1) == 0) r >>= 1;
                 if (!func(_operation(_data[r], sm)))
                 {
                     while (r < _size)
                     {
-                        r = r * 2 + 1;
+                        r = (r << 1) + 1;
                         var tmp = _operation(_data[r], sm);
                         if (!func(tmp)) continue;
                         sm = tmp;
@@ -184,9 +184,9 @@ namespace AtCoderLibraryCSharp
             return 0;
         }
 
-        private void Update(int k) => _data[k] = _operation(_data[k * 2], _data[k * 2 + 1]);
+        private void Update(int k) => _data[k] = _operation(_data[k << 1], _data[(k << 1) + 1]);
 
-        private void AllApply(int k, U u)
+        private void ApplyToAll(int k, U u)
         {
             _data[k] = _mapping(u, _data[k]);
             if (k < _size) _lazy[k] = _composition(u, _lazy[k]);
@@ -194,8 +194,8 @@ namespace AtCoderLibraryCSharp
 
         private void Push(int k)
         {
-            AllApply(k * 2, _lazy[k]);
-            AllApply(k * 2 + 1, _lazy[k]);
+            ApplyToAll(k << 1, _lazy[k]);
+            ApplyToAll((k << 1) + 1, _lazy[k]);
             _lazy[k] = _identityU;
         }
     }
