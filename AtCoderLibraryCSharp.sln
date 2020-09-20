@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtCoderLibraryCSharp.Exampl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtCoderLibraryCSharp.Examples.Tests", "tests/AtCoderLibraryCSharp.Examples.Tests/AtCoderLibraryCSharp.Examples.Tests.csproj", "{D559E6E8-479E-4A1F-90DF-8B9EFEA7C1F6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtCoderLibraryCSharp.Utilities", "src/AtCoderLibraryCSharp.Utilities/AtCoderLibraryCSharp.Utilities.csproj", "{E19075A0-B50A-4D59-A5F4-4AFCB29A07A4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{D559E6E8-479E-4A1F-90DF-8B9EFEA7C1F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D559E6E8-479E-4A1F-90DF-8B9EFEA7C1F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D559E6E8-479E-4A1F-90DF-8B9EFEA7C1F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E19075A0-B50A-4D59-A5F4-4AFCB29A07A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E19075A0-B50A-4D59-A5F4-4AFCB29A07A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E19075A0-B50A-4D59-A5F4-4AFCB29A07A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E19075A0-B50A-4D59-A5F4-4AFCB29A07A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
