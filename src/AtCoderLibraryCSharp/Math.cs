@@ -11,11 +11,11 @@ namespace AtCoderLibraryCSharp
             var ra = r.ToArray();
             var ma = m.ToArray();
             if (ra.Length != ma.Length) throw new ArgumentException();
-            var (r0, m0) = (0L, 0L);
+            var (r0, m0) = (0L, 1L);
             for (var i = 0; i < ra.Length; i++)
             {
                 if (ma[i] < 1) throw new ArgumentException(nameof(m));
-                var r1 = (ra[i] < 0 ? ra[i] + ma[i] : ra[i]) % ma[i];
+                var r1 = ra[i] < 0 ? ra[i] % ma[i] + ma[i] : ra[i] % ma[i];
                 var m1 = ma[i];
                 if (m0 < m1)
                 {
@@ -32,7 +32,7 @@ namespace AtCoderLibraryCSharp
                 var (g, im) = InverseGcd(m0, m1);
                 var u1 = m1 / g;
                 if ((r1 - r0) % g > 0) return (0, 0);
-                var x = (r1 - r0) / g % u1 & im % u1;
+                var x = (r1 - r0) / g % u1 * im % u1;
                 r0 += x * m0;
                 m0 *= u1;
                 if (r0 < 0) r0 += m0;
@@ -66,10 +66,10 @@ namespace AtCoderLibraryCSharp
 
         public static (long, long) InverseGcd(long a, long b)
         {
-            a = (a < 0 ? a + b : a) % b;
+            a = a < 0 ? a % b + b : a % b;
             if (a == 0) return (b, 0);
             var (s, t, m0, m1) = (b, a, 0L, 1L);
-            while (t > 1)
+            while (t > 0)
             {
                 var u = s / t;
                 s -= t * u;
@@ -86,7 +86,7 @@ namespace AtCoderLibraryCSharp
         {
             if (m < 1) throw new ArgumentException(nameof(m));
             var (g, z) = InverseGcd(x, m);
-            if (g == 1) throw new InvalidOperationException();
+            if (g != 1) throw new InvalidOperationException();
             return z;
         }
 
@@ -119,7 +119,7 @@ namespace AtCoderLibraryCSharp
             if (m < 1) throw new ArgumentException(nameof(m));
             if (m == 1) return 0;
             uint r = 1;
-            var y = (uint) ((x < 0 ? x + m : x) % m);
+            var y = (uint) (x < 0 ? x % m + m : x % m);
             var um = (uint) m;
             while (n > 1)
             {
