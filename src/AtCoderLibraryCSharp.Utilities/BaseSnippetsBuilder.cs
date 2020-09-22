@@ -10,6 +10,7 @@ namespace AtCoderLibraryCSharp.Utilities
         protected abstract string Extension { get; }
         private readonly string _outputPath;
         private readonly string _outputName;
+        private const string FallbackFileName = "fallback.txt";
 
         protected BaseSnippetsBuilder(string outputName, string targetDirectory, string outputDirectory = null)
         {
@@ -27,7 +28,7 @@ namespace AtCoderLibraryCSharp.Utilities
 
         public async ValueTask BuildAsync(CancellationToken cancellationToken = default)
         {
-            var outputPath = _outputPath + _outputName + Extension;
+            var outputPath = Path.Combine(_outputPath, _outputName + Extension);
             await using var output = File.Exists(outputPath)
                 ? new FileStream(outputPath, FileMode.Truncate)
                 : File.Create(outputPath);
