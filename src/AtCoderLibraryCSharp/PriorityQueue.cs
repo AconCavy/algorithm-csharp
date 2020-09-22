@@ -18,11 +18,6 @@ namespace AtCoderLibraryCSharp
         {
         }
 
-        public PriorityQueue(int count, IComparer<T> comparer = null)
-            : this(Enumerable.Repeat(default(T), count), comparer)
-        {
-        }
-
         public PriorityQueue(IEnumerable<T> data = null, IComparer<T> comparer = null)
         {
             comparer ??= Comparer<T>.Default;

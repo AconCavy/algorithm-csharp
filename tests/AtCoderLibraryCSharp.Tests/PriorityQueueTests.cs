@@ -13,9 +13,6 @@ namespace AtCoderLibraryCSharp.Tests
             var queue = new PriorityQueue<int>();
             Assert.That(queue.Count(), Is.EqualTo(0));
 
-            queue = new PriorityQueue<int>(3);
-            Assert.That(queue.Count(), Is.EqualTo(3));
-
             queue = new PriorityQueue<int>(new[] {0, 1, 2});
             Assert.That(queue.Count(), Is.EqualTo(3));
 
@@ -42,7 +39,7 @@ namespace AtCoderLibraryCSharp.Tests
         [Test]
         public void DescendingTest()
         {
-            var queue = new PriorityQueue<int>(0, new DescendingComparer<int>());
+            var queue = new PriorityQueue<int>(new DescendingComparer<int>());
             queue.Enqueue(0);
             queue.Enqueue(4);
             queue.Enqueue(3);
