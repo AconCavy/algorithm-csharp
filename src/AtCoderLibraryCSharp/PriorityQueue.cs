@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace AtCoderLibraryCSharp
 {
-    public class PriorityQueue<T> : IEnumerable<T>
+    public class PriorityQueue<T> : IReadOnlyCollection<T>
     {
-        private readonly SortedDictionary<T, int> _data;
+        private readonly List<T> _heap;
+        private readonly IComparer<T> _comparer;
+        public int Count => _heap.Count;
 
         public PriorityQueue() : this(null, null)
         {
@@ -18,47 +19,57 @@ namespace AtCoderLibraryCSharp
         {
         }
 
-        public PriorityQueue(IEnumerable<T> data = null, IComparer<T> comparer = null)
+        public PriorityQueue(IEnumerable<T> items = null, IComparer<T> comparer = null)
         {
-            comparer ??= Comparer<T>.Default;
-            var list = data?.ToList() ?? new List<T>();
-            var dict = new Dictionary<T, int>();
-            foreach (var val in list)
-            {
-                if (!dict.ContainsKey(val)) dict[val] = 0;
-                dict[val]++;
-            }
-
-            _data = new SortedDictionary<T, int>(dict, comparer);
+            _heap = new List<T>();
+            _comparer = comparer ?? Comparer<T>.Default;
+            if (items == null) return;
+            foreach (var item in items) Enqueue(item);
         }
 
         public void Enqueue(T item)
         {
-            if (!_data.ContainsKey(item)) _data[item] = 0;
-            _data[item]++;
+            var child = Count;
+            _heap.Add(item);
+            while (child > 0)
+            {
+                var parent = (child - 1) / 2;
+                if (_comparer.Compare(_heap[parent], _heap[child]) <= 0) break;
+                (_heap[parent], _heap[child]) = (_heap[child], _heap[parent]);
+                child = parent;
+            }
         }
 
         public T Dequeue()
         {
-            if (!_data.Any()) throw new InvalidOperationException();
-            var key = Peek();
-            if (_data[key] > 1) _data[key]--;
-            else _data.Remove(key);
-            return key;
+            if (Count == 0) throw new InvalidOperationException();
+            var ret = _heap[0];
+            _heap[0] = _heap[Count - 1];
+            _heap.RemoveAt(Count - 1);
+            var parent = 0;
+            while (parent * 2 + 1 < Count)
+            {
+                var left = parent * 2 + 1;
+                var right = parent * 2 + 2;
+                if (right < Count && _comparer.Compare(_heap[left], _heap[right]) > 0)
+                    left = right;
+                if (_comparer.Compare(_heap[parent], _heap[left]) <= 0) break;
+                (_heap[parent], _heap[left]) = (_heap[left], _heap[parent]);
+                parent = left;
+            }
+
+            return ret;
         }
 
         public T Peek()
         {
-            if (!_data.Any()) throw new InvalidOperationException();
-            using var e = _data.GetEnumerator();
-            e.MoveNext();
-            var (ret, _) = e.Current;
-            return ret;
+            if (Count == 0) throw new InvalidOperationException();
+            return _heap[0];
         }
 
         public bool TryDequeue(out T result)
         {
-            if (_data.Any())
+            if (Count > 0)
             {
                 result = Dequeue();
                 return true;
@@ -70,7 +81,7 @@ namespace AtCoderLibraryCSharp
 
         public bool TryPeek(out T result)
         {
-            if (_data.Any())
+            if (Count > 0)
             {
                 result = Peek();
                 return true;
@@ -80,17 +91,18 @@ namespace AtCoderLibraryCSharp
             return false;
         }
 
-        public void Clear() => _data.Clear();
-        public bool Contains(T item) => _data.ContainsKey(item);
+        public void Clear() => _heap.Clear();
 
-        public void CopyTo(T[] array, int arrayIndex)
+        public bool Contains(T item) => _heap.Contains(item);
+        
+        public IEnumerator<T> GetEnumerator()
         {
-            GetFlatData().ToList().CopyTo(array, arrayIndex);
+            return _heap.GetEnumerator();
         }
 
-        public IEnumerator<T> GetEnumerator() => GetFlatData().GetEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        private IEnumerable<T> GetFlatData() => _data.SelectMany(x => Enumerable.Repeat(x.Key, x.Value));
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
     }
 }

@@ -112,45 +112,6 @@ namespace AtCoderLibraryCSharp.Tests
             Assert.That(queue.Contains(1), Is.False);
         }
 
-        [Test]
-        public void CopyToTest()
-        {
-            var queue = new PriorityQueue<int>();
-            queue.Enqueue(0);
-            queue.Enqueue(3);
-            queue.Enqueue(1);
-            queue.Enqueue(2);
-            var result = new int[4];
-            queue.CopyTo(result, 0);
-            for (var i = 0; i < 4; i++)
-            {
-                Assert.That(result[i], Is.EqualTo(i));
-            }
-
-            result = new int[4];
-            Assert.Throws<ArgumentException>(() => queue.CopyTo(result, 1));
-
-            result = new int[5];
-            queue.CopyTo(result, 1);
-            Assert.That(result[0], Is.EqualTo(0));
-            Assert.That(result[1], Is.EqualTo(0));
-            Assert.That(result[2], Is.EqualTo(1));
-            Assert.That(result[3], Is.EqualTo(2));
-            Assert.That(result[4], Is.EqualTo(3));
-
-            queue = new PriorityQueue<int>(new DescendingComparer<int>());
-            queue.Enqueue(0);
-            queue.Enqueue(3);
-            queue.Enqueue(1);
-            queue.Enqueue(2);
-            result = new int[4];
-            queue.CopyTo(result, 0);
-            for (var i = 0; i < 4; i++)
-            {
-                Assert.That(result[i], Is.EqualTo(3 - i));
-            }
-        }
-
         private class DescendingComparer<T> : IComparer<T>
         {
             public int Compare(T x, T y) => Comparer<T>.Default.Compare(y, x);
