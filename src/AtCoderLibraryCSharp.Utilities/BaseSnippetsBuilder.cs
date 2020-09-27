@@ -10,7 +10,6 @@ namespace AtCoderLibraryCSharp.Utilities
         protected abstract string Extension { get; }
         private readonly string _outputPath;
         private readonly string _outputName;
-        private const string FallbackFileName = "fallback.txt";
 
         protected BaseSnippetsBuilder(string outputName, string targetDirectory, string outputDirectory = null)
         {
@@ -29,14 +28,13 @@ namespace AtCoderLibraryCSharp.Utilities
         public async ValueTask BuildAsync(CancellationToken cancellationToken = default)
         {
             var outputPath = Path.Combine(_outputPath, _outputName + Extension);
-            await using var output = File.Exists(outputPath)
+            await using var fileStream = File.Exists(outputPath)
                 ? new FileStream(outputPath, FileMode.Truncate)
                 : File.Create(outputPath);
-            await using var streamWriter = new StreamWriter(output) {AutoFlush = false};
-            await BuildBodyAsync(streamWriter, cancellationToken);
-            await streamWriter.FlushAsync();
+            await BuildSnippetsAsync(fileStream, cancellationToken);
+            await fileStream.FlushAsync(cancellationToken);
         }
 
-        protected abstract ValueTask BuildBodyAsync(StreamWriter streamWriter, CancellationToken cancellationToken);
+        protected abstract ValueTask BuildSnippetsAsync(FileStream fileStream, CancellationToken cancellationToken);
     }
 }
