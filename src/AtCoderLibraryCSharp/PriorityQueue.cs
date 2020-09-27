@@ -92,17 +92,8 @@ namespace AtCoderLibraryCSharp
         }
 
         public void Clear() => _heap.Clear();
-
         public bool Contains(T item) => _heap.Contains(item);
-        
-        public IEnumerator<T> GetEnumerator()
-        {
-            return _heap.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        public IEnumerator<T> GetEnumerator() => _heap.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

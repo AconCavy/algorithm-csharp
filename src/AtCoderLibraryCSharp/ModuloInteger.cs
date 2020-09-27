@@ -5,11 +5,16 @@ namespace AtCoderLibraryCSharp
     public readonly struct ModuloInteger
     {
         public long Value { get; }
-        // for performance
-        // public const long Modulo = 998244353;
         public static long Modulo { get; private set; } = 998244353;
+        public static void SetMod(long m) => Modulo = m;
+        public static void SetMod998244353() => SetMod(998244353);
+        public static void SetMod1000000007() => SetMod(1000000007);
 
-        public ModuloInteger(long data) => Value = (0 <= data ? data : data + Modulo) % Modulo;
+        // The modulo will be used as an editable property.
+        // The constant modulo will be recommended to use for performances in use cases.
+        // public const long Modulo = 998244353;
+
+        public ModuloInteger(long data) => Value = 0 <= data % Modulo ? data % Modulo : data % Modulo + Modulo;
         public static implicit operator long(ModuloInteger mint) => mint.Value;
         public static implicit operator int(ModuloInteger mint) => (int) mint.Value;
         public static implicit operator ModuloInteger(long val) => new ModuloInteger(val);
@@ -42,12 +47,12 @@ namespace AtCoderLibraryCSharp
             var (x1, y1, x2, y2) = (1L, 0L, 0L, 1L);
             while (true)
             {
-                if (p == 1) return (x2 % Modulo + Modulo) % Modulo;
+                if (p == 1) return x2;
                 var div = a / p;
                 x1 -= x2 * div;
                 y1 -= y2 * div;
                 a %= p;
-                if (a == 1) return (x1 % Modulo + Modulo) % Modulo;
+                if (a == 1) return x1;
                 div = p / a;
                 x2 -= x1 * div;
                 y2 -= y1 * div;
@@ -70,9 +75,5 @@ namespace AtCoderLibraryCSharp
 
             return r;
         }
-
-        public static void SetMod(long m) => Modulo = m;
-        public static void SetMod998244353() => SetMod(998244353);
-        public static void SetMod1000000007() => SetMod(1000000007);
     }
 }
