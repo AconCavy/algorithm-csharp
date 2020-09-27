@@ -4,34 +4,34 @@ using System.Linq;
 
 namespace AtCoderLibraryCSharp
 {
-    public class SegmentTree<T>
+    public class SegmentTree<TMonoid>
     {
         private readonly int _n;
         private readonly int _size;
         private readonly int _log;
-        private readonly T[] _data;
-        private readonly Func<T, T, T> _operation;
-        private readonly T _identity;
+        private readonly TMonoid[] _data;
+        private readonly Func<TMonoid, TMonoid, TMonoid> _operation;
+        private readonly TMonoid _monoidId;
 
-        public SegmentTree(int n, Func<T, T, T> operation, T identity)
-            : this(Enumerable.Repeat(identity, n), operation, identity)
+        public SegmentTree(int n, Func<TMonoid, TMonoid, TMonoid> operation, TMonoid monoidId)
+            : this(Enumerable.Repeat(monoidId, n), operation, monoidId)
         {
         }
 
-        public SegmentTree(IEnumerable<T> data, Func<T, T, T> operation, T identity)
+        public SegmentTree(IEnumerable<TMonoid> data, Func<TMonoid, TMonoid, TMonoid> operation, TMonoid monoidId)
         {
             var d = data.ToArray();
             _n = d.Length;
             _operation = operation;
-            _identity = identity;
+            _monoidId = monoidId;
             while (1 << _log < _n) _log++;
             _size = 1 << _log;
-            _data = Enumerable.Repeat(identity, _size << 1).ToArray();
+            _data = Enumerable.Repeat(monoidId, _size << 1).ToArray();
             d.CopyTo(_data, _size);
             for (var i = _size - 1; i >= 1; i--) Update(i);
         }
 
-        public void Set(int p, T x)
+        public void Set(int p, TMonoid x)
         {
             if (p < 0 || _n <= p) throw new IndexOutOfRangeException(nameof(p));
             p += _size;
@@ -39,16 +39,16 @@ namespace AtCoderLibraryCSharp
             for (var i = 1; i <= _log; i++) Update(p >> i);
         }
 
-        public T Get(int p)
+        public TMonoid Get(int p)
         {
             if (p < 0 || _n <= p) throw new IndexOutOfRangeException(nameof(p));
             return _data[p + _size];
         }
 
-        public T Query(int l, int r)
+        public TMonoid Query(int l, int r)
         {
             if (l < 0 || r < l || _n < r) throw new IndexOutOfRangeException();
-            var (sml, smr) = (_identity, _identity);
+            var (sml, smr) = (_monoidId, _monoidId);
             l += _size;
             r += _size;
             while (l < r)
@@ -62,15 +62,15 @@ namespace AtCoderLibraryCSharp
             return _operation(sml, smr);
         }
 
-        public T QueryToAll() => _data[1];
+        public TMonoid QueryToAll() => _data[1];
 
-        public int MaxRight(int l, Func<T, bool> func)
+        public int MaxRight(int l, Func<TMonoid, bool> func)
         {
             if (l < 0 || _n <= l) throw new IndexOutOfRangeException(nameof(l));
-            if (!func(_identity)) throw new ArgumentException(nameof(func));
+            if (!func(_monoidId)) throw new ArgumentException(nameof(func));
             if (l == _n) return _n;
             l += _size;
-            var sm = _identity;
+            var sm = _monoidId;
             do
             {
                 while ((l & 1) == 0) l >>= 1;
@@ -95,13 +95,13 @@ namespace AtCoderLibraryCSharp
             return _n;
         }
 
-        public int MinLeft(int r, Func<T, bool> func)
+        public int MinLeft(int r, Func<TMonoid, bool> func)
         {
             if (r < 0 || _n <= r) throw new IndexOutOfRangeException(nameof(r));
-            if (!func(_identity)) throw new ArgumentException(nameof(func));
+            if (!func(_monoidId)) throw new ArgumentException(nameof(func));
             if (r == 0) return 0;
             r += _size;
-            var sm = _identity;
+            var sm = _monoidId;
             do
             {
                 r--;
