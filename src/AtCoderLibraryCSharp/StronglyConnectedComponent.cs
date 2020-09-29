@@ -28,7 +28,7 @@ namespace AtCoderLibraryCSharp
             _edges.Add((from, new Edge(to)));
         }
 
-        public (int, IEnumerable<int>) Ids()
+        public (int, IEnumerable<int>) GetIds()
         {
             var g = new CompressedSparseRow<Edge>(_n, _edges);
             var (nowOrd, groupNum) = (0, 0);
@@ -75,7 +75,7 @@ namespace AtCoderLibraryCSharp
 
         public IEnumerable<IEnumerable<int>> GetGraph()
         {
-            var (groupNum, tmp) = Ids();
+            var (groupNum, tmp) = GetIds();
             var ids = tmp.ToArray();
             var groups = new List<int>[groupNum].Select(x => new List<int>()).ToArray();
             foreach (var (id, i) in ids.Select((x, i) => (x, i))) groups[id].Add(i);

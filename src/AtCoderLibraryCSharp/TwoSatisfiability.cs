@@ -27,7 +27,7 @@ namespace AtCoderLibraryCSharp
 
         public bool IsSatisfiable()
         {
-            var (_, tmp) = _scc.Ids();
+            var (_, tmp) = _scc.GetIds();
             var ids = tmp.ToArray();
             for (var i = 0; i < _n; i++)
             {
