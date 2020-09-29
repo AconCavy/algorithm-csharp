@@ -2,29 +2,26 @@
 
 The library is AtCoder Library for C#.
 
-## UnitTests
+## Main Classes
 
-### Main Classes
+- Convolution
+- Disjoint Set Union
+- FenwickTree
+- LazySegmentTree
+- Math
+- MaxFlowGraph
+- MinCostFlowGraph
+- ModuloInteger
+- SegmentTree
+- StringAlgorithm
+- StronglyConnectedComponent
+- TwoSatisfiability
 
-- [ ] Convolution
-- [x] Disjoint Set Union
-- [x] FenwickTree
-- [ ] LazySegmentTree
-- [ ] Math
-- [ ] MaxFlowGraph
-- [ ] MinCostFlowGraph
-- [x] ModuloInteger
-- [ ] SegmentTree
-- [ ] StringAlgorithm
-- [ ] StronglyConnectedComponent
-- [x] TwoSatisfiability
+## Optional Classes
 
-### Options Classes
-- [x] PriorityQueue
+- PriorityQueue
 
-## AtCoder Library Practice Contest
-
-Confirmed working are...
+### AtCoder Library Practice Contest
 
 - [x] A - Disjoint Set Union
 - [x] B - Fenwick Tree
@@ -53,6 +50,26 @@ dotnet run -p src/AtCoderLibraryCSharp.Utilities
 
 And, snippets will be generated on `./outputs/`.
 
-### Supported Editor
+#### Supported Editor
 
 - Visual Studio Code
+
+## Tests
+
+### Main Classes
+
+- [ ] Convolution
+- [x] Disjoint Set Union
+- [x] FenwickTree
+- [ ] LazySegmentTree
+- [ ] Math
+- [ ] MaxFlowGraph
+- [ ] MinCostFlowGraph
+- [x] ModuloInteger
+- [ ] SegmentTree
+- [ ] StringAlgorithm
+- [x] StronglyConnectedComponent
+- [x] TwoSatisfiability
+
+### Optional Classes
+- [x] PriorityQueue
