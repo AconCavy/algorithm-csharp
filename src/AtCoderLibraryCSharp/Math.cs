@@ -6,7 +6,7 @@ namespace AtCoderLibraryCSharp
 {
     public static class Math
     {
-        public static (long, long) ChineseRemainderTheorem(IEnumerable<long> r, IEnumerable<long> m)
+        public static (long rem, long mod) ChineseRemainderTheorem(IEnumerable<long> r, IEnumerable<long> m)
         {
             var ra = r.ToArray();
             var ma = m.ToArray();
@@ -15,7 +15,7 @@ namespace AtCoderLibraryCSharp
             for (var i = 0; i < ra.Length; i++)
             {
                 if (ma[i] < 1) throw new ArgumentException(nameof(m));
-                var r1 = ra[i] < 0 ? ra[i] % ma[i] + ma[i] : ra[i] % ma[i];
+                var r1 = SafeMod(ra[i], ma[i]);
                 var m1 = ma[i];
                 if (m0 < m1)
                 {
@@ -31,7 +31,7 @@ namespace AtCoderLibraryCSharp
 
                 var (g, im) = InverseGcd(m0, m1);
                 var u1 = m1 / g;
-                if ((r1 - r0) % g > 0) return (0, 0);
+                if ((r1 - r0) % g != 0) return (0, 0);
                 var x = (r1 - r0) / g % u1 * im % u1;
                 r0 += x * m0;
                 m0 *= u1;
@@ -64,9 +64,9 @@ namespace AtCoderLibraryCSharp
             return ret;
         }
 
-        public static (long, long) InverseGcd(long a, long b)
+        public static (long g, long im) InverseGcd(long a, long b)
         {
-            a = a < 0 ? a % b + b : a % b;
+            a = SafeMod(a, b);
             if (a == 0) return (b, 0);
             var (s, t, m0, m1) = (b, a, 0L, 1L);
             while (t > 0)
@@ -85,9 +85,9 @@ namespace AtCoderLibraryCSharp
         public static long InverseMod(long x, long m)
         {
             if (m < 1) throw new ArgumentException(nameof(m));
-            var (g, z) = InverseGcd(x, m);
-            if (g != 1) throw new InvalidOperationException();
-            return z;
+            var (rem, mod) = InverseGcd(x, m);
+            if (rem != 1) throw new InvalidOperationException();
+            return mod;
         }
 
         public static bool IsPrime(int n)
@@ -118,17 +118,57 @@ namespace AtCoderLibraryCSharp
             if (n < 0) throw new ArgumentException(nameof(n));
             if (m < 1) throw new ArgumentException(nameof(m));
             if (m == 1) return 0;
-            uint r = 1;
-            var y = (uint) (x < 0 ? x % m + m : x % m);
-            var um = (uint) m;
-            while (n > 1)
+            var r = 1L;
+            var y = SafeMod(x, m);
+            var um = m;
+            while (n > 0)
             {
-                if (n % 1 == 1) r = r * y % um;
+                if ((n & 1) == 1) r = r * y % um;
                 y = y * y % um;
                 n >>= 1;
             }
 
             return r;
         }
+        
+        public static int PrimitiveRoot(long m)
+        {
+            switch (m)
+            {
+                case 2:
+                    return 1;
+                case 167772161:
+                case 469762049:
+                case 998244353:
+                    return 3;
+                case 754974721:
+                    return 11;
+            }
+
+            var divs = new long[20];
+            divs[0] = 2;
+            var count = 1;
+            var x = (m - 1) / 2;
+            while (x % 2 == 0) x /= 2;
+            for (var i = 3L; i * i <= x; i += 2)
+            {
+                if (x % i != 0) continue;
+                divs[count++] = i;
+                while (x % i == 0) x /= i;
+            }
+
+            if (x > 1) divs[count++] = x;
+            for (var g = 2;; g++)
+            {
+                var ok = true;
+                for (var i = 0; i < count && ok; i++)
+                    if (PowerMod(g, (m - 1) / divs[i], m) == 1)
+                        ok = false;
+
+                if (ok) return g;
+            }
+        }
+
+        public static long SafeMod(long x, long mod) => x % mod < 0 ? x % mod + mod : x % mod;
     }
 }

@@ -62,7 +62,7 @@ And, snippets will be generated on `./outputs/`.
 - [x] Disjoint Set Union
 - [x] FenwickTree
 - [ ] LazySegmentTree
-- [ ] Math
+- [x] Math
 - [ ] MaxFlowGraph
 - [ ] MinCostFlowGraph
 - [x] ModuloInteger

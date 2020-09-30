@@ -38,7 +38,7 @@ namespace AtCoderLibraryCSharp
         {
             if (_sumE != null && _sumIe != null) return;
             var m = ModuloInteger.Modulo;
-            _primitiveRoot = PrimitiveRoot(m);
+            _primitiveRoot = Math.PrimitiveRoot(m);
             _sumE = new ModuloInteger[30];
             _sumIe = new ModuloInteger[30];
             var es = new ModuloInteger[30];
@@ -136,45 +136,6 @@ namespace AtCoderLibraryCSharp
             var x = 0;
             while ((1 << x) < n) x++;
             return x;
-        }
-
-        private static int PrimitiveRoot(long m)
-        {
-            if (_primitiveRoot != 0) return _primitiveRoot;
-            switch (m)
-            {
-                case 2:
-                    return _primitiveRoot = 1;
-                case 167772161:
-                case 469762049:
-                case 998244353:
-                    return _primitiveRoot = 3;
-                case 754974721:
-                    return _primitiveRoot = 11;
-            }
-
-            var divs = new long[20];
-            divs[0] = 2;
-            var count = 1;
-            var x = (m - 1) / 2;
-            while (x % 2 == 0) x /= 2;
-            for (var i = 3; (long) i * i < x; i += 2)
-            {
-                if (x % i != 0) continue;
-                divs[count++] = i;
-                while (x % i == 0) x /= i;
-            }
-
-            if (x > 1) divs[count++] = x;
-            for (var g = 2;; g++)
-            {
-                var ok = true;
-                for (var i = 0; i < count && ok; i++)
-                    if (Math.PowerMod(g, (m - 1) / divs[i], m) == 1)
-                        ok = false;
-
-                if (ok) return _primitiveRoot = g;
-            }
         }
     }
 }
