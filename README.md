@@ -67,7 +67,7 @@ And, snippets will be generated on `./outputs/`.
 - [x] MinCostFlowGraph
 - [x] ModuloInteger
 - [x] SegmentTree
-- [ ] StringAlgorithm
+- [x] StringAlgorithm
 - [x] StronglyConnectedComponent
 - [x] TwoSatisfiability
 

@@ -30,10 +30,9 @@ namespace AtCoderLibraryCSharp
 
         public static IEnumerable<int> CreateSuffixes(IEnumerable<int> items, int upper)
         {
-            if (items == null) throw new ArgumentException(nameof(items));
             if (upper < 0) throw new ArgumentException(nameof(upper));
             var s = items.ToArray();
-            if (s.Any(x => x < 0 || upper <= x)) throw new ArgumentException(nameof(items));
+            if (s.Any(x => x < 0 || upper < x)) throw new ArgumentException(nameof(items));
             return CreateSuffixesByInducedSorting(s, upper);
         }
 
@@ -80,7 +79,7 @@ namespace AtCoderLibraryCSharp
             var s = items.ToArray();
             var n = s.Length;
             if (n == 0) return new List<int>();
-            var z = new[] {0};
+            var z = new int[n];
             for (int i = 1, j = 0; i < n; i++)
             {
                 z[i] = j + z[j] <= i ? 0 : System.Math.Min(j + z[j] - i, z[i - j]);
