@@ -54,8 +54,11 @@ namespace AtCoderLibraryCSharp
             if (capacity < 0) throw new ArgumentException(nameof(capacity));
             var m = _pos.Count;
             _pos.Add((from, _edges[from].Count));
-            _edges[from].Add(new InternalEdge(to, _edges[to].Count, capacity));
-            _edges[to].Add(new InternalEdge(from, _edges[from].Count - 1, 0));
+            var fromId = _edges[from].Count;
+            var toId = _edges[to].Count;
+            if (from == to) toId++;
+            _edges[from].Add(new InternalEdge(to, toId, capacity));
+            _edges[to].Add(new InternalEdge(from, fromId, 0));
             return m;
         }
 
@@ -90,6 +93,7 @@ namespace AtCoderLibraryCSharp
         {
             if (s < 0 || _n <= s) throw new IndexOutOfRangeException(nameof(s));
             if (t < 0 || _n <= t) throw new IndexOutOfRangeException(nameof(t));
+            if (s == t) throw new ArgumentException();
             var queue = new Queue<int>();
             int[] depth;
             int[] iter;
