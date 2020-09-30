@@ -64,7 +64,7 @@ And, snippets will be generated on `./outputs/`.
 - [x] LazySegmentTree
 - [x] Math
 - [x] MaxFlowGraph
-- [ ] MinCostFlowGraph
+- [x] MinCostFlowGraph
 - [x] ModuloInteger
 - [x] SegmentTree
 - [ ] StringAlgorithm

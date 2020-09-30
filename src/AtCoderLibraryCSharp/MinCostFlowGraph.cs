@@ -74,10 +74,15 @@ namespace AtCoderLibraryCSharp
         {
             if (from < 0 || _n <= from) throw new IndexOutOfRangeException(nameof(from));
             if (to < 0 || _n <= to) throw new IndexOutOfRangeException(nameof(to));
+            if (capacity < 0) throw new ArgumentException(nameof(capacity));
+            if (cost < 0) throw new ArgumentException(nameof(cost));
             var m = _pos.Count;
             _pos.Add((from, _edges[from].Count));
-            _edges[from].Add(new InternalEdge(to, _edges[to].Count, capacity, cost));
-            _edges[to].Add(new InternalEdge(from, _edges[from].Count - 1, 0, -cost));
+            var fromId = _edges[from].Count;
+            var toId = _edges[to].Count;
+            if (from == to) toId++;
+            _edges[from].Add(new InternalEdge(to, toId, capacity, cost));
+            _edges[to].Add(new InternalEdge(from, fromId, 0, -cost));
             return m;
         }
 
@@ -96,7 +101,7 @@ namespace AtCoderLibraryCSharp
 
         public (long, long) Flow(int s, int t) => Flow(s, t, long.MaxValue);
 
-        public (long, long) Flow(int s, int t, long flowLimit) => Slope(s, t, flowLimit).First();
+        public (long, long) Flow(int s, int t, long flowLimit) => Slope(s, t, flowLimit).Last();
 
         public IEnumerable<(long, long)> Slope(int s, int t) => Slope(s, t, long.MaxValue);
 
@@ -172,10 +177,10 @@ namespace AtCoderLibraryCSharp
                 cost += c * d;
                 if (prev == d) ret.Pop();
                 ret.Push((flow, cost));
-                prev = cost;
+                prev = d;
             }
 
-            return ret;
+            return ret.Reverse();
         }
     }
 }
