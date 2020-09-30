@@ -61,7 +61,7 @@ And, snippets will be generated on `./outputs/`.
 - [ ] Convolution
 - [x] Disjoint Set Union
 - [x] FenwickTree
-- [ ] LazySegmentTree
+- [x] LazySegmentTree
 - [x] Math
 - [ ] MaxFlowGraph
 - [ ] MinCostFlowGraph

@@ -19,7 +19,7 @@ namespace AtCoderLibraryCSharp
 
         public LazySegmentTree(int n, Func<TMonoid, TMonoid, TMonoid> operation, TMonoid monoidId,
             Func<TMap, TMonoid, TMonoid> mapping, Func<TMap, TMap, TMap> composition, TMap mapId) :
-            this(new TMonoid[n], operation, monoidId, mapping, composition, mapId)
+            this(Enumerable.Repeat(monoidId, n), operation, monoidId, mapping, composition, mapId)
         {
         }
 
@@ -123,10 +123,11 @@ namespace AtCoderLibraryCSharp
 
         public int MaxRight(int l, Func<TMonoid, bool> func)
         {
-            if (l < 0 || _n <= l) throw new IndexOutOfRangeException(nameof(l));
+            if (l < 0 || _n < l) throw new IndexOutOfRangeException(nameof(l));
             if (!func(_monoidId)) throw new ArgumentException(nameof(func));
             if (l == _n) return _n;
             l += _size;
+            for (var i = _log; i >= 1; i--) Push(l >> i);
             var sm = _monoidId;
             do
             {
@@ -135,7 +136,8 @@ namespace AtCoderLibraryCSharp
                 {
                     while (l < _size)
                     {
-                        l *= 2;
+                        Push(l);
+                        l <<= 1;
                         var tmp = _operation(sm, _data[l]);
                         if (!func(tmp)) continue;
                         sm = tmp;
@@ -154,19 +156,21 @@ namespace AtCoderLibraryCSharp
 
         public int MinLeft(int r, Func<TMonoid, bool> func)
         {
-            if (r < 0 || _n <= r) throw new IndexOutOfRangeException(nameof(r));
+            if (r < 0 || _n < r) throw new IndexOutOfRangeException(nameof(r));
             if (!func(_monoidId)) throw new ArgumentException(nameof(func));
             if (r == 0) return 0;
             r += _size;
+            for (var i = _log; i >= 1; i--) Push((r - 1) >> i);
             var sm = _monoidId;
             do
             {
                 r--;
-                while (r > 1 && (r & 1) == 0) r >>= 1;
+                while (r > 1 && (r & 1) == 1) r >>= 1;
                 if (!func(_operation(_data[r], sm)))
                 {
                     while (r < _size)
                     {
+                        Push(r);
                         r = (r << 1) + 1;
                         var tmp = _operation(_data[r], sm);
                         if (!func(tmp)) continue;
@@ -178,7 +182,6 @@ namespace AtCoderLibraryCSharp
                 }
 
                 sm = _operation(_data[r], sm);
-                r++;
             } while ((r & -r) != r);
 
             return 0;
