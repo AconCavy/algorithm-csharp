@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace AtCoderLibraryCSharp.Tests
 {
-    public class MIntTest
+    public class ModuloIntegerTests
     {
         [Test]
         public void DynamicBorderTest()
