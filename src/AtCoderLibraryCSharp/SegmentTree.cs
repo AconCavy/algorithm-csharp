@@ -66,7 +66,7 @@ namespace AtCoderLibraryCSharp
 
         public int MaxRight(int l, Func<TMonoid, bool> func)
         {
-            if (l < 0 || _n <= l) throw new IndexOutOfRangeException(nameof(l));
+            if (l < 0 || _n < l) throw new IndexOutOfRangeException(nameof(l));
             if (!func(_monoidId)) throw new ArgumentException(nameof(func));
             if (l == _n) return _n;
             l += _size;
@@ -97,7 +97,7 @@ namespace AtCoderLibraryCSharp
 
         public int MinLeft(int r, Func<TMonoid, bool> func)
         {
-            if (r < 0 || _n <= r) throw new IndexOutOfRangeException(nameof(r));
+            if (r < 0 || _n < r) throw new IndexOutOfRangeException(nameof(r));
             if (!func(_monoidId)) throw new ArgumentException(nameof(func));
             if (r == 0) return 0;
             r += _size;
@@ -105,7 +105,7 @@ namespace AtCoderLibraryCSharp
             do
             {
                 r--;
-                while (r > 1 && (r & 1) == 0) r >>= 1;
+                while (r > 1 && (r & 1) == 1) r >>= 1;
                 if (!func(_operation(_data[r], sm)))
                 {
                     while (r < _size)
@@ -121,7 +121,6 @@ namespace AtCoderLibraryCSharp
                 }
 
                 sm = _operation(_data[r], sm);
-                r++;
             } while ((r & -r) != r);
 
             return 0;
