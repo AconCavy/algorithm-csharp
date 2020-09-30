@@ -45,7 +45,7 @@ namespace AtCoderLibraryCSharp.Tests
             {
                 for (var j = 0; j < 100; j++)
                 {
-                    Assert.That(((ModuloInteger) i * (ModuloInteger) j).Value, Is.Zero);
+                    Assert.That((i * (ModuloInteger) j).Value, Is.Zero);
                 }
             }
 

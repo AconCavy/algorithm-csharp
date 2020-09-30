@@ -10,7 +10,6 @@ namespace AtCoderLibraryCSharp.Tests
         public void InitializeTest()
         {
             Assert.DoesNotThrow(() => _ = new MaxFlowGraph());
-            Assert.DoesNotThrow(() => _ = new MaxFlowGraph(0));
             Assert.DoesNotThrow(() => _ = new MaxFlowGraph(10));
         }
 

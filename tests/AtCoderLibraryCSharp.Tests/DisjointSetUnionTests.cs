@@ -9,7 +9,7 @@ namespace AtCoderLibraryCSharp.Tests
         [Test]
         public void InitializeTest()
         {
-            Assert.DoesNotThrow(() => _ = new DisjointSetUnion(0));
+            Assert.DoesNotThrow(() => _ = new DisjointSetUnion());
             Assert.DoesNotThrow(() => _ = new DisjointSetUnion(2));
             Assert.Throws<ArgumentOutOfRangeException>(() => _ = new DisjointSetUnion(-1));
         }

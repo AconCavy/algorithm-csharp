@@ -34,7 +34,7 @@ namespace AtCoderLibraryCSharp.Tests
         }
 
         [Test]
-        public void InvalidTest()
+        public void InvalidArgumentsTest()
         {
             Assert.Throws<OverflowException>(() => _ = new FenwickTree(-1));
 

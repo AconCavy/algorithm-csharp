@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using NUnit.Framework;
 
 namespace AtCoderLibraryCSharp.Tests
@@ -11,13 +10,13 @@ namespace AtCoderLibraryCSharp.Tests
         public void InitializeTest()
         {
             var queue = new PriorityQueue<int>();
-            Assert.That(queue.Count(), Is.EqualTo(0));
+            Assert.That(queue.Count, Is.EqualTo(0));
 
             queue = new PriorityQueue<int>(new[] {0, 1, 2});
-            Assert.That(queue.Count(), Is.EqualTo(3));
+            Assert.That(queue.Count, Is.EqualTo(3));
 
             queue = new PriorityQueue<int>(new DescendingComparer<int>());
-            Assert.That(queue.Count(), Is.EqualTo(0));
+            Assert.That(queue.Count, Is.EqualTo(0));
         }
 
         [Test]
@@ -95,12 +94,12 @@ namespace AtCoderLibraryCSharp.Tests
         {
             var queue = new PriorityQueue<int>();
             queue.Clear();
-            Assert.That(queue.Count(), Is.EqualTo(0));
+            Assert.That(queue.Count, Is.EqualTo(0));
 
             queue.Enqueue(0);
-            Assert.That(queue.Count(), Is.EqualTo(1));
+            Assert.That(queue.Count, Is.EqualTo(1));
             queue.Clear();
-            Assert.That(queue.Count(), Is.EqualTo(0));
+            Assert.That(queue.Count, Is.EqualTo(0));
         }
 
         [Test]
