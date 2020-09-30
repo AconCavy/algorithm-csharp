@@ -1,7 +1,10 @@
-﻿namespace AtCoderLibraryCSharp.Examples.Tests
+﻿using NUnit.Framework;
+
+namespace AtCoderLibraryCSharp.Examples.Tests
 {
     public class JTests
     {
+        [Test]
         public void Test1()
         {
             const string input = @"5 5
