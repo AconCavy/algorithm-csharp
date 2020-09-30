@@ -63,7 +63,7 @@ And, snippets will be generated on `./outputs/`.
 - [x] FenwickTree
 - [x] LazySegmentTree
 - [x] Math
-- [ ] MaxFlowGraph
+- [x] MaxFlowGraph
 - [ ] MinCostFlowGraph
 - [x] ModuloInteger
 - [x] SegmentTree
