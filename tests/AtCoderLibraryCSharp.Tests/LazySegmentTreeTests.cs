@@ -104,8 +104,8 @@ namespace AtCoderLibraryCSharp.Tests
                     var now = 0;
                     for (var q = 0; q < 3000; q++)
                     {
-                        var ty = RandomInteger(0, 3);
-                        var (l, r) = RandomPair(0, n);
+                        var ty = Utilities.RandomInteger(0, 3);
+                        var (l, r) = Utilities.RandomPair(0, n);
                         switch (ty)
                         {
                             case 0:
@@ -168,8 +168,8 @@ namespace AtCoderLibraryCSharp.Tests
                     var now = 0;
                     for (var q = 0; q < 1000; q++)
                     {
-                        var ty = RandomInteger(0, 2);
-                        var (l, r) = RandomPair(0, n);
+                        var ty = Utilities.RandomInteger(0, 2);
+                        var (l, r) = Utilities.RandomPair(0, n);
                         if (ty == 0)
                         {
                             bool F(Monoid s)
@@ -204,8 +204,8 @@ namespace AtCoderLibraryCSharp.Tests
                     var now = 0;
                     for (var q = 0; q < 1000; q++)
                     {
-                        var ty = RandomInteger(0, 2);
-                        var (l, r) = RandomPair(0, n);
+                        var ty = Utilities.RandomInteger(0, 2);
+                        var (l, r) = Utilities.RandomPair(0, n);
                         if (ty == 0)
                         {
                             bool F(Monoid s)
@@ -242,8 +242,6 @@ namespace AtCoderLibraryCSharp.Tests
         private static int SimpleOperation(int a, int b) => System.Math.Max(a, b);
         private static int SimpleMapping(int a, int b) => a + b;
         private static int SimpleComposition(int a, int b) => a + b;
-        private static readonly Random Random = new Random(100);
-
         private class TimeManager
         {
             private readonly int[] _times;
@@ -307,20 +305,6 @@ namespace AtCoderLibraryCSharp.Tests
             if (r.NewTime == -1) return l;
             if (l.NewTime <= r.NewTime) throw new ArgumentException();
             return l;
-        }
-
-        private static int RandomInteger(int lower, int upper) => Random.Next(lower, upper + 1);
-
-        private static (int, int) RandomPair(int lower, int upper)
-        {
-            var (a, b) = (0, 0);
-            do
-            {
-                a = RandomInteger(lower, upper);
-                b = RandomInteger(lower, upper);
-            } while (a == b);
-
-            return a <= b ? (a, b) : (b, a);
         }
     }
 }
