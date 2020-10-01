@@ -1,11 +1,14 @@
 # AtCoderLibraryCSharp
 
-The library is AtCoder Library for C#.
+AtCoderLibraryCSharp is the **UNOFFICIAL** AtCoderLibrary for C#.
+
+The library is based on [ac-library](https://github.com/atcoder/ac-library) and written by C#.
 
 ## Main Classes
 
+- CompressedSparseRow
 - Convolution
-- Disjoint Set Union
+- DisjointSetUnion
 - FenwickTree
 - LazySegmentTree
 - Math
@@ -21,7 +24,7 @@ The library is AtCoder Library for C#.
 
 - PriorityQueue
 
-### AtCoder Library Practice Contest
+## AtCoder Library Practice Contest
 
 - [x] A - Disjoint Set Union
 - [x] B - Fenwick Tree
@@ -53,23 +56,3 @@ And, snippets will be generated on `./outputs/`.
 #### Supported Editor
 
 - Visual Studio Code
-
-## Tests
-
-### Main Classes
-
-- [ ] Convolution
-- [x] Disjoint Set Union
-- [x] FenwickTree
-- [x] LazySegmentTree
-- [x] Math
-- [x] MaxFlowGraph
-- [x] MinCostFlowGraph
-- [x] ModuloInteger
-- [x] SegmentTree
-- [x] StringAlgorithm
-- [x] StronglyConnectedComponent
-- [x] TwoSatisfiability
-
-### Optional Classes
-- [x] PriorityQueue
