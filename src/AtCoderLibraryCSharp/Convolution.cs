@@ -9,11 +9,13 @@ namespace AtCoderLibraryCSharp
         private static ModuloInteger[] _sumE;
         private static ModuloInteger[] _sumIe;
         private static int _primitiveRoot;
+        private static long _modulo;
 
         public static IEnumerable<ModuloInteger> Execute(IEnumerable<ModuloInteger> a, IEnumerable<ModuloInteger> b)
         {
             var (a1, b1) = (a.ToArray(), b.ToArray());
             var (n, m) = (a1.Length, b1.Length);
+            if (n < 1 || m < 1) return new ModuloInteger[0];
             var ret = new ModuloInteger[n + m - 1];
             if (System.Math.Min(n, m) <= 60)
             {
@@ -31,11 +33,19 @@ namespace AtCoderLibraryCSharp
             for (var i = 0; i < a1.Length; i++) a1[i] *= b1[i];
             ret = ButterflyInverse(a1).ToArray();
             Array.Resize(ref ret, n + m - 1);
-            return ret.Select(x => x / z);
+            var iz = ModuloInteger.Inverse(z);
+            return ret.Select(x => x * iz);
         }
 
         private static void Initialize()
         {
+            if (ModuloInteger.Modulo != _modulo)
+            {
+                _modulo = ModuloInteger.Modulo;
+                _sumE = null;
+                _sumIe = null;
+            }
+
             if (_sumE != null && _sumIe != null) return;
             var m = ModuloInteger.Modulo;
             _primitiveRoot = Math.PrimitiveRoot(m);
@@ -56,7 +66,7 @@ namespace AtCoderLibraryCSharp
 
             ModuloInteger now = 1;
             ModuloInteger inow = 1;
-            for (var i = 0; i < count2 - 2; i++)
+            for (var i = 0; i <= count2 - 2; i++)
             {
                 _sumE[i] = es[i] * now;
                 _sumIe[i] = ies[i] * inow;
