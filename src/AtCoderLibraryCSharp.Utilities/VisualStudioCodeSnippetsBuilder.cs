@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,7 +16,7 @@ namespace AtCoderLibraryCSharp.Utilities
         private class Snippet
         {
             [JsonPropertyName("scope")] public string Scope { get; set; } = "csharp";
-            [JsonPropertyName("prefix")] public string Prefix { get; set; }
+            [JsonPropertyName("prefix")] public string[] Prefix { get; set; }
             [JsonPropertyName("body")] public string[] Body { get; set; }
         }
 
@@ -56,7 +57,11 @@ namespace AtCoderLibraryCSharp.Utilities
                 body.Add(line);
             }
 
-            return (fileName, new Snippet {Prefix = fileName.ToLower(), Body = body.ToArray()});
+            var prefixes = new List<string> {fileName.ToLower()};
+            var abbreviation = new Regex("[a-z0-9]").Replace(fileName, "").ToLower();
+            if (abbreviation.Length > 1) prefixes.Add(abbreviation);
+
+            return (fileName, new Snippet {Prefix = prefixes.ToArray(), Body = body.ToArray()});
         }
     }
 }
