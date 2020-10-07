@@ -30,6 +30,22 @@ namespace AtCoderLibraryCSharp
             return Sum(r) - Sum(l);
         }
 
+        public int LowerBound(long w)
+        {
+            if (w <= 0) return 0;
+            var x = 0;
+            var r = 1;
+            while (r < _n) r <<= 1;
+            for (var k = r; k > 0; k >>= 1)
+            {
+                if (x + k - 1 >= _n || _data[x + k - 1] >= w) continue;
+                w -= _data[x + k - 1];
+                x += k;
+            }
+
+            return x;
+        }
+
         private long Sum(int r)
         {
             var s = 0L;
