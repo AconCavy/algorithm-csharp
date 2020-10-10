@@ -53,6 +53,25 @@ namespace AtCoderLibraryCSharp.Tests
         }
 
         [Test]
+        public void UpperBoundTest()
+        {
+            const int n = 50;
+            for (var k = 0; k <= n; k++)
+            {
+                var ft = new FenwickTree(k);
+                for (var i = 0; i < k; i++) ft.Add(i, i * i);
+                var sum = new int[k];
+                for (var i = 1; i < k; i++) sum[i] = sum[i - 1] + i * i;
+                for (var i = 0; i < k; i++)
+                {
+                    Assert.That(ft.UpperBound(sum[i]), Is.EqualTo(i + 1));
+                    if (i >= 2) Assert.That(ft.UpperBound(sum[i] + 1), Is.EqualTo(i + 1));
+                    Assert.That(ft.UpperBound(sum[i] - 1), Is.EqualTo(i));
+                }
+            }
+        }
+
+        [Test]
         public void InvalidArgumentsTest()
         {
             Assert.Throws<OverflowException>(() => _ = new FenwickTree(-1));
