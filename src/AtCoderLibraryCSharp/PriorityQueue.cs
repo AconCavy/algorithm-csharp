@@ -7,22 +7,34 @@ namespace AtCoderLibraryCSharp
     public class PriorityQueue<T> : IReadOnlyCollection<T>
     {
         private readonly List<T> _heap;
-        private readonly IComparer<T> _comparer;
+        private readonly Comparison<T> _comparison;
         public int Count => _heap.Count;
 
-        public PriorityQueue() : this(null, null)
+        public PriorityQueue() : this(items: null)
         {
         }
 
-        public PriorityQueue(IComparer<T> comparer = null)
-            : this(null, comparer)
+        public PriorityQueue(IEnumerable<T> items) : this(items, Comparer<T>.Default)
         {
         }
 
-        public PriorityQueue(IEnumerable<T> items = null, IComparer<T> comparer = null)
+        public PriorityQueue(IComparer<T> comparer) : this(null, comparer)
+        {
+        }
+
+        public PriorityQueue(Comparison<T> comparison) : this(null, comparison)
+        {
+        }
+
+        public PriorityQueue(IEnumerable<T> items, IComparer<T> comparer)
+            : this(items, (comparer ?? Comparer<T>.Default).Compare)
+        {
+        }
+
+        public PriorityQueue(IEnumerable<T> items, Comparison<T> comparison)
         {
             _heap = new List<T>();
-            _comparer = comparer ?? Comparer<T>.Default;
+            _comparison = comparison;
             if (items == null) return;
             foreach (var item in items) Enqueue(item);
         }
@@ -34,7 +46,7 @@ namespace AtCoderLibraryCSharp
             while (child > 0)
             {
                 var parent = (child - 1) / 2;
-                if (_comparer.Compare(_heap[parent], _heap[child]) <= 0) break;
+                if (_comparison(_heap[parent], _heap[child]) <= 0) break;
                 (_heap[parent], _heap[child]) = (_heap[child], _heap[parent]);
                 child = parent;
             }
@@ -51,9 +63,9 @@ namespace AtCoderLibraryCSharp
             {
                 var left = parent * 2 + 1;
                 var right = parent * 2 + 2;
-                if (right < Count && _comparer.Compare(_heap[left], _heap[right]) > 0)
+                if (right < Count && _comparison(_heap[left], _heap[right]) > 0)
                     left = right;
-                if (_comparer.Compare(_heap[parent], _heap[left]) <= 0) break;
+                if (_comparison(_heap[parent], _heap[left]) <= 0) break;
                 (_heap[parent], _heap[left]) = (_heap[left], _heap[parent]);
                 parent = left;
             }
