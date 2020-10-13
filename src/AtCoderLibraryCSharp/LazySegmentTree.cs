@@ -6,7 +6,7 @@ namespace AtCoderLibraryCSharp
 {
     public class LazySegmentTree<TMonoid, TMap>
     {
-        private readonly int _n;
+        private readonly int _length;
         private readonly int _size;
         private readonly int _log;
         private readonly TMonoid[] _data;
@@ -17,9 +17,9 @@ namespace AtCoderLibraryCSharp
         private readonly TMonoid _monoidId;
         private readonly TMap _mapId;
 
-        public LazySegmentTree(int n, Func<TMonoid, TMonoid, TMonoid> operation, TMonoid monoidId,
+        public LazySegmentTree(int length, Func<TMonoid, TMonoid, TMonoid> operation, TMonoid monoidId,
             Func<TMap, TMonoid, TMonoid> mapping, Func<TMap, TMap, TMap> composition, TMap mapId) :
-            this(Enumerable.Repeat(monoidId, n), operation, monoidId, mapping, composition, mapId)
+            this(Enumerable.Repeat(monoidId, length), operation, monoidId, mapping, composition, mapId)
         {
         }
 
@@ -27,13 +27,13 @@ namespace AtCoderLibraryCSharp
             Func<TMap, TMonoid, TMonoid> mapping, Func<TMap, TMap, TMap> composition, TMap mapId)
         {
             var d = data.ToArray();
-            _n = d.Length;
+            _length = d.Length;
             _operation = operation;
             _monoidId = monoidId;
             _mapping = mapping;
             _composition = composition;
             _mapId = mapId;
-            while (1 << _log < _n) _log++;
+            while (1 << _log < _length) _log++;
             _size = 1 << _log;
             _data = Enumerable.Repeat(monoidId, _size << 1).ToArray();
             _lazy = Enumerable.Repeat(mapId, _size).ToArray();
@@ -41,42 +41,42 @@ namespace AtCoderLibraryCSharp
             for (var i = _size - 1; i >= 1; i--) Update(i);
         }
 
-        public void Set(int p, TMonoid x)
+        public void Set(int index, TMonoid monoid)
         {
-            if (p < 0 || _n <= p) throw new IndexOutOfRangeException(nameof(p));
-            p += _size;
-            for (var i = _log; i >= 1; i--) Push(p >> i);
-            _data[p] = x;
-            for (var i = 1; i <= _log; i++) Update(p >> i);
+            if (index < 0 || _length <= index) throw new IndexOutOfRangeException(nameof(index));
+            index += _size;
+            for (var i = _log; i >= 1; i--) Push(index >> i);
+            _data[index] = monoid;
+            for (var i = 1; i <= _log; i++) Update(index >> i);
         }
 
-        public TMonoid Get(int p)
+        public TMonoid Get(int index)
         {
-            if (p < 0 || _n <= p) throw new IndexOutOfRangeException(nameof(p));
-            p += _size;
-            for (var i = _log; i >= 1; i--) Push(p >> i);
-            return _data[p];
+            if (index < 0 || _length <= index) throw new IndexOutOfRangeException(nameof(index));
+            index += _size;
+            for (var i = _log; i >= 1; i--) Push(index >> i);
+            return _data[index];
         }
 
-        public TMonoid Query(int l, int r)
+        public TMonoid Query(int left, int right)
         {
-            if (l < 0 || r < l || _n < r) throw new IndexOutOfRangeException();
-            if (l == r) return _monoidId;
-            l += _size;
-            r += _size;
+            if (left < 0 || right < left || _length < right) throw new IndexOutOfRangeException();
+            if (left == right) return _monoidId;
+            left += _size;
+            right += _size;
             for (var i = _log; i >= 1; i--)
             {
-                if ((l >> i) << i != l) Push(l >> i);
-                if ((r >> i) << i != r) Push(r >> i);
+                if ((left >> i) << i != left) Push(left >> i);
+                if ((right >> i) << i != right) Push(right >> i);
             }
 
             var (sml, smr) = (_monoidId, _monoidId);
-            while (l < r)
+            while (left < right)
             {
-                if ((l & 1) == 1) sml = _operation(sml, _data[l++]);
-                if ((r & 1) == 1) smr = _operation(_data[--r], smr);
-                l >>= 1;
-                r >>= 1;
+                if ((left & 1) == 1) sml = _operation(sml, _data[left++]);
+                if ((right & 1) == 1) smr = _operation(_data[--right], smr);
+                left >>= 1;
+                right >>= 1;
             }
 
             return _operation(sml, smr);
@@ -84,115 +84,115 @@ namespace AtCoderLibraryCSharp
 
         public TMonoid QueryToAll() => _data[1];
 
-        public void Apply(int p, TMap u)
+        public void Apply(int index, TMap map)
         {
-            if (p < 0 || _n <= p) throw new IndexOutOfRangeException(nameof(p));
-            p += _size;
-            for (var i = _log; i >= 1; i--) Push(p >> i);
-            _data[p] = _mapping(u, _data[p]);
-            for (var i = 1; i <= _log; i++) Update(p >> i);
+            if (index < 0 || _length <= index) throw new IndexOutOfRangeException(nameof(index));
+            index += _size;
+            for (var i = _log; i >= 1; i--) Push(index >> i);
+            _data[index] = _mapping(map, _data[index]);
+            for (var i = 1; i <= _log; i++) Update(index >> i);
         }
 
-        public void Apply(int l, int r, TMap u)
+        public void Apply(int left, int right, TMap map)
         {
-            if (l < 0 || r < l || _n < r) throw new IndexOutOfRangeException();
-            if (l == r) return;
-            l += _size;
-            r += _size;
+            if (left < 0 || right < left || _length < right) throw new IndexOutOfRangeException();
+            if (left == right) return;
+            left += _size;
+            right += _size;
             for (var i = _log; i >= 1; i--)
             {
-                if ((l >> i) << i != l) Push(l >> i);
-                if ((r >> i) << i != r) Push((r - 1) >> i);
+                if ((left >> i) << i != left) Push(left >> i);
+                if ((right >> i) << i != right) Push((right - 1) >> i);
             }
 
-            var (l2, r2) = (l, r);
+            var (l2, r2) = (l: left, r: right);
             while (l2 < r2)
             {
-                if ((l2 & 1) == 1) ApplyToAll(l2++, u);
-                if ((r2 & 1) == 1) ApplyToAll(--r2, u);
+                if ((l2 & 1) == 1) ApplyToAll(l2++, map);
+                if ((r2 & 1) == 1) ApplyToAll(--r2, map);
                 l2 >>= 1;
                 r2 >>= 1;
             }
 
             for (var i = 1; i <= _log; i++)
             {
-                if ((l >> i) << i != l) Update(l >> i);
-                if ((r >> i) << i != r) Update((r - 1) >> i);
+                if ((left >> i) << i != left) Update(left >> i);
+                if ((right >> i) << i != right) Update((right - 1) >> i);
             }
         }
 
-        public int MaxRight(int l, Func<TMonoid, bool> func)
+        public int MaxRight(int left, Func<TMonoid, bool> func)
         {
-            if (l < 0 || _n < l) throw new IndexOutOfRangeException(nameof(l));
+            if (left < 0 || _length < left) throw new IndexOutOfRangeException(nameof(left));
             if (!func(_monoidId)) throw new ArgumentException(nameof(func));
-            if (l == _n) return _n;
-            l += _size;
-            for (var i = _log; i >= 1; i--) Push(l >> i);
+            if (left == _length) return _length;
+            left += _size;
+            for (var i = _log; i >= 1; i--) Push(left >> i);
             var sm = _monoidId;
             do
             {
-                while ((l & 1) == 0) l >>= 1;
-                if (!func(_operation(sm, _data[l])))
+                while ((left & 1) == 0) left >>= 1;
+                if (!func(_operation(sm, _data[left])))
                 {
-                    while (l < _size)
+                    while (left < _size)
                     {
-                        Push(l);
-                        l <<= 1;
-                        var tmp = _operation(sm, _data[l]);
+                        Push(left);
+                        left <<= 1;
+                        var tmp = _operation(sm, _data[left]);
                         if (!func(tmp)) continue;
                         sm = tmp;
-                        l++;
+                        left++;
                     }
 
-                    return l - _size;
+                    return left - _size;
                 }
 
-                sm = _operation(sm, _data[l]);
-                l++;
-            } while ((l & -l) != l);
+                sm = _operation(sm, _data[left]);
+                left++;
+            } while ((left & -left) != left);
 
-            return _n;
+            return _length;
         }
 
-        public int MinLeft(int r, Func<TMonoid, bool> func)
+        public int MinLeft(int right, Func<TMonoid, bool> func)
         {
-            if (r < 0 || _n < r) throw new IndexOutOfRangeException(nameof(r));
+            if (right < 0 || _length < right) throw new IndexOutOfRangeException(nameof(right));
             if (!func(_monoidId)) throw new ArgumentException(nameof(func));
-            if (r == 0) return 0;
-            r += _size;
-            for (var i = _log; i >= 1; i--) Push((r - 1) >> i);
+            if (right == 0) return 0;
+            right += _size;
+            for (var i = _log; i >= 1; i--) Push((right - 1) >> i);
             var sm = _monoidId;
             do
             {
-                r--;
-                while (r > 1 && (r & 1) == 1) r >>= 1;
-                if (!func(_operation(_data[r], sm)))
+                right--;
+                while (right > 1 && (right & 1) == 1) right >>= 1;
+                if (!func(_operation(_data[right], sm)))
                 {
-                    while (r < _size)
+                    while (right < _size)
                     {
-                        Push(r);
-                        r = (r << 1) + 1;
-                        var tmp = _operation(_data[r], sm);
+                        Push(right);
+                        right = (right << 1) + 1;
+                        var tmp = _operation(_data[right], sm);
                         if (!func(tmp)) continue;
                         sm = tmp;
-                        r--;
+                        right--;
                     }
 
-                    return r + 1 - _size;
+                    return right + 1 - _size;
                 }
 
-                sm = _operation(_data[r], sm);
-            } while ((r & -r) != r);
+                sm = _operation(_data[right], sm);
+            } while ((right & -right) != right);
 
             return 0;
         }
 
         private void Update(int k) => _data[k] = _operation(_data[k << 1], _data[(k << 1) + 1]);
 
-        private void ApplyToAll(int k, TMap u)
+        private void ApplyToAll(int k, TMap map)
         {
-            _data[k] = _mapping(u, _data[k]);
-            if (k < _size) _lazy[k] = _composition(u, _lazy[k]);
+            _data[k] = _mapping(map, _data[k]);
+            if (k < _size) _lazy[k] = _composition(map, _lazy[k]);
         }
 
         private void Push(int k)

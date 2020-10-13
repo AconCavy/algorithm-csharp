@@ -50,8 +50,8 @@ namespace AtCoderLibraryCSharp.Tests
             Assert.Throws<IndexOutOfRangeException>(() => lst.Query(0, 11));
             Assert.Throws<IndexOutOfRangeException>(() => lst.Query(-1, 11));
 
-            Assert.Throws<IndexOutOfRangeException>(() => lst.Apply(-1, u: 1));
-            Assert.Throws<IndexOutOfRangeException>(() => lst.Apply(11, u: 1));
+            Assert.Throws<IndexOutOfRangeException>(() => lst.Apply(-1, map: 1));
+            Assert.Throws<IndexOutOfRangeException>(() => lst.Apply(11, map: 1));
             Assert.Throws<IndexOutOfRangeException>(() => lst.Apply(-1, -1, 1));
             Assert.Throws<IndexOutOfRangeException>(() => lst.Apply(3, 2, 1));
             Assert.Throws<IndexOutOfRangeException>(() => lst.Apply(0, 11, 1));
