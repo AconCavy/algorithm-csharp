@@ -105,13 +105,13 @@ namespace AtCoderLibraryCSharp
                 if ((right >> i) << i != right) Push((right - 1) >> i);
             }
 
-            var (l2, r2) = (l: left, r: right);
-            while (l2 < r2)
+            var (l, r) = (left, right);
+            while (l < r)
             {
-                if ((l2 & 1) == 1) ApplyToAll(l2++, map);
-                if ((r2 & 1) == 1) ApplyToAll(--r2, map);
-                l2 >>= 1;
-                r2 >>= 1;
+                if ((l & 1) == 1) ApplyToAll(l++, map);
+                if ((r & 1) == 1) ApplyToAll(--r, map);
+                l >>= 1;
+                r >>= 1;
             }
 
             for (var i = 1; i <= _log; i++)
