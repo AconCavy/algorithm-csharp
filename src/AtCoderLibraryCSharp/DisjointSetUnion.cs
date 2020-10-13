@@ -6,19 +6,19 @@ namespace AtCoderLibraryCSharp
 {
     public class DisjointSetUnion
     {
-        private readonly int _n;
+        private readonly int _length;
         private readonly int[] _parentOrSize;
 
-        public DisjointSetUnion(int n = 0)
+        public DisjointSetUnion(int length = 0)
         {
-            _n = n;
-            _parentOrSize = Enumerable.Repeat(-1, n).ToArray();
+            _length = length;
+            _parentOrSize = Enumerable.Repeat(-1, length).ToArray();
         }
 
         public int Merge(int a, int b)
         {
-            if (a < 0 || _n <= a) throw new IndexOutOfRangeException(nameof(a));
-            if (b < 0 || _n <= b) throw new IndexOutOfRangeException(nameof(b));
+            if (a < 0 || _length <= a) throw new IndexOutOfRangeException(nameof(a));
+            if (b < 0 || _length <= b) throw new IndexOutOfRangeException(nameof(b));
             var (x, y) = (LeaderOf(a), LeaderOf(b));
             if (x == y) return x;
             if (-_parentOrSize[x] < -_parentOrSize[y]) (x, y) = (y, x);
@@ -29,36 +29,36 @@ namespace AtCoderLibraryCSharp
 
         public bool IsSame(int a, int b)
         {
-            if (a < 0 || _n <= a) throw new IndexOutOfRangeException(nameof(a));
-            if (b < 0 || _n <= b) throw new IndexOutOfRangeException(nameof(b));
+            if (a < 0 || _length <= a) throw new IndexOutOfRangeException(nameof(a));
+            if (b < 0 || _length <= b) throw new IndexOutOfRangeException(nameof(b));
             return LeaderOf(a) == LeaderOf(b);
         }
 
         public int LeaderOf(int a)
         {
-            if (a < 0 || _n <= a) throw new IndexOutOfRangeException(nameof(a));
+            if (a < 0 || _length <= a) throw new IndexOutOfRangeException(nameof(a));
             if (_parentOrSize[a] < 0) return a;
             return _parentOrSize[a] = LeaderOf(_parentOrSize[a]);
         }
 
         public int SizeOf(int a)
         {
-            if (a < 0 || _n <= a) throw new IndexOutOfRangeException(nameof(a));
+            if (a < 0 || _length <= a) throw new IndexOutOfRangeException(nameof(a));
             return -_parentOrSize[LeaderOf(a)];
         }
 
         public IEnumerable<IEnumerable<int>> GetGroups()
         {
-            var leaders = new int[_n];
-            var groupSize = new int[_n];
-            for (var i = 0; i < _n; i++)
+            var leaders = new int[_length];
+            var groupSize = new int[_length];
+            for (var i = 0; i < _length; i++)
             {
                 leaders[i] = LeaderOf(i);
                 groupSize[leaders[i]]++;
             }
 
-            var ret = new List<int>[_n].Select(x => new List<int>()).ToArray();
-            for (var i = 0; i < _n; i++) ret[leaders[i]].Add(i);
+            var ret = new List<int>[_length].Select(x => new List<int>()).ToArray();
+            for (var i = 0; i < _length; i++) ret[leaders[i]].Add(i);
             return ret.Where(x => x.Any());
         }
     }
