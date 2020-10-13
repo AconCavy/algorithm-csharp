@@ -12,30 +12,30 @@ namespace AtCoderLibraryCSharp
             public Edge(int to) => To = to;
         }
 
-        private readonly int _n;
+        private readonly int _length;
         private readonly List<(int, Edge)> _edges;
 
-        public StronglyConnectedComponent(int n = 0)
+        public StronglyConnectedComponent(int length = 0)
         {
-            _n = n;
+            _length = length;
             _edges = new List<(int, Edge)>();
         }
 
         public void AddEdge(int from, int to)
         {
-            if (from < 0 || _n <= from) throw new IndexOutOfRangeException(nameof(from));
-            if (to < 0 || _n <= to) throw new IndexOutOfRangeException(nameof(to));
+            if (from < 0 || _length <= from) throw new IndexOutOfRangeException(nameof(from));
+            if (to < 0 || _length <= to) throw new IndexOutOfRangeException(nameof(to));
             _edges.Add((from, new Edge(to)));
         }
 
         public (int, IEnumerable<int>) GetIds()
         {
-            var g = new CompressedSparseRow<Edge>(_n, _edges);
+            var g = new CompressedSparseRow<Edge>(_length, _edges);
             var (nowOrd, groupNum) = (0, 0);
-            var visited = new Stack<int>(_n);
-            var low = new int[_n];
-            var ord = Enumerable.Repeat(-1, _n).ToArray();
-            var ids = new int[_n];
+            var visited = new Stack<int>(_length);
+            var low = new int[_length];
+            var ord = Enumerable.Repeat(-1, _length).ToArray();
+            var ids = new int[_length];
 
             void Dfs(int v)
             {
@@ -56,7 +56,7 @@ namespace AtCoderLibraryCSharp
                 while (true)
                 {
                     var u = visited.Pop();
-                    ord[u] = _n;
+                    ord[u] = _length;
                     ids[u] = groupNum;
                     if (u == v) break;
                 }
@@ -64,21 +64,21 @@ namespace AtCoderLibraryCSharp
                 groupNum++;
             }
 
-            for (var i = 0; i < _n; i++)
+            for (var i = 0; i < _length; i++)
                 if (ord[i] == -1)
                     Dfs(i);
 
-            for (var i = 0; i < _n; i++) ids[i] = groupNum - 1 - ids[i];
+            for (var i = 0; i < _length; i++) ids[i] = groupNum - 1 - ids[i];
 
             return (groupNum, ids);
         }
 
         public IEnumerable<IEnumerable<int>> GetGraph()
         {
-            var (groupNum, tmp) = GetIds();
-            var ids = tmp.ToArray();
-            var groups = new List<int>[groupNum].Select(x => new List<int>()).ToArray();
-            foreach (var (id, i) in ids.Select((x, i) => (x, i))) groups[id].Add(i);
+            var (groupNum, identities) = GetIds();
+            var ids = identities.ToArray();
+            var groups = new List<int>[groupNum].Select(_ => new List<int>()).ToArray();
+            foreach (var (id, index) in ids.Select((x, i) => (x, i))) groups[id].Add(index);
             return groups;
         }
     }
