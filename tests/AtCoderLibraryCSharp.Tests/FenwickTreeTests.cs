@@ -9,6 +9,7 @@ namespace AtCoderLibraryCSharp.Tests
         public void EmptyTest()
         {
             var ft = new FenwickTree();
+            Assert.That(ft.Sum(0), Is.Zero);
             Assert.That(ft.Sum(0, 0), Is.Zero);
         }
 
@@ -21,13 +22,20 @@ namespace AtCoderLibraryCSharp.Tests
                 var ft = new FenwickTree(k);
                 for (var i = 0; i < k; i++) ft.Add(i, i * i);
 
+                for (var i = 0; i <= k; i++)
+                {
+                    var expected = 0L;
+                    for (var j = 0; j < i; j++) expected += j * j;
+                    Assert.That(ft.Sum(i), Is.EqualTo(expected));
+                }
+
                 for (var l = 0; l <= k; l++)
                 {
                     for (var r = l; r <= k; r++)
                     {
-                        var sum = 0L;
-                        for (var i = l; i < r; i++) sum += i * i;
-                        Assert.That(ft.Sum(l, r), Is.EqualTo(sum));
+                        var expected = 0L;
+                        for (var i = l; i < r; i++) expected += i * i;
+                        Assert.That(ft.Sum(l, r), Is.EqualTo(expected));
                     }
                 }
             }
@@ -80,6 +88,8 @@ namespace AtCoderLibraryCSharp.Tests
             Assert.Throws<IndexOutOfRangeException>(() => ft.Add(-1, 0));
             Assert.Throws<IndexOutOfRangeException>(() => ft.Add(10, 0));
 
+            Assert.Throws<IndexOutOfRangeException>(() => ft.Sum(-1));
+            Assert.Throws<IndexOutOfRangeException>(() => ft.Sum(11));
             Assert.Throws<IndexOutOfRangeException>(() => ft.Sum(-1, 3));
             Assert.Throws<IndexOutOfRangeException>(() => ft.Sum(3, 11));
             Assert.Throws<IndexOutOfRangeException>(() => ft.Sum(5, 3));

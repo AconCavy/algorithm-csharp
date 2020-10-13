@@ -4,74 +4,67 @@ namespace AtCoderLibraryCSharp
 {
     public class FenwickTree
     {
-        private readonly int _n;
+        private readonly int _length;
         private readonly long[] _data;
 
-        public FenwickTree(int n = 0)
+        private delegate bool Compare(long item, long data);
+
+        private readonly Compare _lowerBound = (item, data) => item <= data;
+        private readonly Compare _upperBound = (item, data) => item < data;
+
+        public FenwickTree(int length = 0)
         {
-            _n = n;
-            _data = new long[n];
+            _length = length;
+            _data = new long[length];
         }
 
-        public void Add(int p, long x)
+        public void Add(int index, long item)
         {
-            if (p < 0 || _n <= p) throw new IndexOutOfRangeException(nameof(p));
-            p++;
-            while (p <= _n)
+            if (index < 0 || _length <= index) throw new IndexOutOfRangeException(nameof(index));
+            index++;
+            while (index <= _length)
             {
-                _data[p - 1] += x;
-                p += p & -p;
+                _data[index - 1] += item;
+                index += index & -index;
             }
         }
 
-        public long Sum(int l, int r)
+        public long Sum(int length)
         {
-            if (l < 0 || r < l || _n < r) throw new IndexOutOfRangeException();
-            return Sum(r) - Sum(l);
-        }
-
-        public int LowerBound(long w)
-        {
-            if (w <= 0) return 0;
-            var x = 0;
-            var r = 1;
-            while (r < _n) r <<= 1;
-            for (var k = r; k > 0; k >>= 1)
-            {
-                if (x + k - 1 >= _n || _data[x + k - 1] >= w) continue;
-                w -= _data[x + k - 1];
-                x += k;
-            }
-
-            return x;
-        }
-
-        public int UpperBound(long w)
-        {
-            if (w < 0) return 0;
-            var x = 0;
-            var r = 1;
-            while (r < _n) r <<= 1;
-            for (var k = r; k > 0; k >>= 1)
-            {
-                if (x + k - 1 >= _n || _data[x + k - 1] > w) continue;
-                w -= _data[x + k - 1];
-                x += k;
-            }
-
-            return x;
-        }
-
-        private long Sum(int r)
-        {
+            if (length < 0 || _length < length) throw new IndexOutOfRangeException(nameof(length));
             var s = 0L;
-            while (r > 0)
+            while (length > 0)
             {
-                s += _data[r - 1];
-                r -= r & -r;
+                s += _data[length - 1];
+                length -= length & -length;
             }
 
             return s;
+        }
+
+        public long Sum(int left, int right)
+        {
+            if (left < 0 || right < left || _length < right) throw new IndexOutOfRangeException();
+            return Sum(right) - Sum(left);
+        }
+
+        public int LowerBound(long item) => CommonBound(item, _lowerBound);
+        public int UpperBound(long item) => CommonBound(item, _upperBound);
+
+        private int CommonBound(long item, Compare compare)
+        {
+            if (compare(item, 0)) return 0;
+            var x = 0;
+            var r = 1;
+            while (r < _length) r <<= 1;
+            for (var k = r; k > 0; k >>= 1)
+            {
+                if (x + k - 1 >= _length || compare(item, _data[x + k - 1])) continue;
+                item -= _data[x + k - 1];
+                x += k;
+            }
+
+            return x;
         }
     }
 }
