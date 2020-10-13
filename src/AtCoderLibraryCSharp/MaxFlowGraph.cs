@@ -36,54 +36,54 @@ namespace AtCoderLibraryCSharp
             }
         }
 
-        private readonly int _n;
+        private readonly int _length;
         private readonly List<InternalEdge>[] _edges;
-        private readonly List<(int X, int Y)> _pos;
+        private readonly List<(int X, int Y)> _positions;
 
-        public MaxFlowGraph(int n = 0)
+        public MaxFlowGraph(int length = 0)
         {
-            _n = n;
-            _edges = new List<InternalEdge>[n].Select(x => new List<InternalEdge>()).ToArray();
-            _pos = new List<(int X, int Y)>();
+            _length = length;
+            _edges = new List<InternalEdge>[length].Select(x => new List<InternalEdge>()).ToArray();
+            _positions = new List<(int X, int Y)>();
         }
 
         public int AddEdge(int from, int to, long capacity)
         {
-            if (from < 0 || _n <= from) throw new IndexOutOfRangeException(nameof(from));
-            if (to < 0 || _n <= to) throw new IndexOutOfRangeException(nameof(to));
+            if (from < 0 || _length <= from) throw new IndexOutOfRangeException(nameof(from));
+            if (to < 0 || _length <= to) throw new IndexOutOfRangeException(nameof(to));
             if (capacity < 0) throw new ArgumentException(nameof(capacity));
-            var m = _pos.Count;
-            _pos.Add((from, _edges[from].Count));
+            var count = _positions.Count;
+            _positions.Add((from, _edges[from].Count));
             var fromId = _edges[from].Count;
             var toId = _edges[to].Count;
             if (from == to) toId++;
             _edges[from].Add(new InternalEdge(to, toId, capacity));
             _edges[to].Add(new InternalEdge(from, fromId, 0));
-            return m;
+            return count;
         }
 
-        public Edge GetEdge(int i)
+        public Edge GetEdge(int index)
         {
-            var m = _pos.Count;
-            if (i < 0 || m <= i) throw new IndexOutOfRangeException(nameof(i));
-            var e = _edges[_pos[i].X][_pos[i].Y];
+            var m = _positions.Count;
+            if (index < 0 || m <= index) throw new IndexOutOfRangeException(nameof(index));
+            var e = _edges[_positions[index].X][_positions[index].Y];
             var re = _edges[e.To][e.Rev];
-            return new Edge(_pos[i].X, e.To, e.Capacity + re.Capacity, re.Capacity);
+            return new Edge(_positions[index].X, e.To, e.Capacity + re.Capacity, re.Capacity);
         }
 
         public IEnumerable<Edge> GetEdges()
         {
-            for (var i = 0; i < _pos.Count; i++) yield return GetEdge(i);
+            for (var i = 0; i < _positions.Count; i++) yield return GetEdge(i);
         }
 
-        public void ChangeEdge(int i, long newCapacity, long newFlow)
+        public void ChangeEdge(int index, long newCapacity, long newFlow)
         {
-            var m = _pos.Count;
-            if (i < 0 || m <= i) throw new IndexOutOfRangeException(nameof(i));
+            var count = _positions.Count;
+            if (index < 0 || count <= index) throw new IndexOutOfRangeException(nameof(index));
             if (newFlow < 0 || newCapacity < newFlow) throw new ArgumentException();
-            var e = _edges[_pos[i].X][_pos[i].Y];
+            var e = _edges[_positions[index].X][_positions[index].Y];
             var re = _edges[e.To][e.Rev];
-            _edges[_pos[i].X][_pos[i].Y] = new InternalEdge(e.To, e.Rev, newCapacity - newFlow);
+            _edges[_positions[index].X][_positions[index].Y] = new InternalEdge(e.To, e.Rev, newCapacity - newFlow);
             _edges[e.To][e.Rev] = new InternalEdge(re.To, re.Rev, newFlow);
         }
 
@@ -91,8 +91,8 @@ namespace AtCoderLibraryCSharp
 
         public long Flow(int s, int t, long flowLimit)
         {
-            if (s < 0 || _n <= s) throw new IndexOutOfRangeException(nameof(s));
-            if (t < 0 || _n <= t) throw new IndexOutOfRangeException(nameof(t));
+            if (s < 0 || _length <= s) throw new IndexOutOfRangeException(nameof(s));
+            if (t < 0 || _length <= t) throw new IndexOutOfRangeException(nameof(t));
             if (s == t) throw new ArgumentException();
             var queue = new Queue<int>();
             int[] depth;
@@ -100,7 +100,7 @@ namespace AtCoderLibraryCSharp
 
             void Bfs()
             {
-                depth = Enumerable.Repeat(-1, _n).ToArray();
+                depth = Enumerable.Repeat(-1, _length).ToArray();
                 depth[s] = 0;
                 queue.Clear();
                 queue.Enqueue(s);
@@ -143,7 +143,7 @@ namespace AtCoderLibraryCSharp
             {
                 Bfs();
                 if (depth[t] == -1) break;
-                iter = new int[_n];
+                iter = new int[_length];
                 while (flow < flowLimit)
                 {
                     var f = Dfs(t, flowLimit - flow);
@@ -157,7 +157,7 @@ namespace AtCoderLibraryCSharp
 
         public IEnumerable<bool> MinCut(int s)
         {
-            var visited = new bool[_n];
+            var visited = new bool[_length];
             var queue = new Queue<int>();
             queue.Enqueue(s);
             while (queue.Any())
