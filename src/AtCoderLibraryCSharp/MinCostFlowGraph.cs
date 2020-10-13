@@ -59,25 +59,25 @@ namespace AtCoderLibraryCSharp
             }
         }
 
-        private readonly int _n;
+        private readonly int _length;
         private readonly List<InternalEdge>[] _edges;
-        private readonly List<(int X, int Y)> _pos;
+        private readonly List<(int X, int Y)> _positions;
 
-        public MinCostFlowGraph(int n = 0)
+        public MinCostFlowGraph(int length = 0)
         {
-            _n = n;
-            _edges = new List<InternalEdge>[n].Select(x => new List<InternalEdge>()).ToArray();
-            _pos = new List<(int X, int Y)>();
+            _length = length;
+            _edges = new List<InternalEdge>[length].Select(x => new List<InternalEdge>()).ToArray();
+            _positions = new List<(int X, int Y)>();
         }
 
         public int AddEdge(int from, int to, long capacity, long cost)
         {
-            if (from < 0 || _n <= from) throw new IndexOutOfRangeException(nameof(from));
-            if (to < 0 || _n <= to) throw new IndexOutOfRangeException(nameof(to));
+            if (from < 0 || _length <= from) throw new IndexOutOfRangeException(nameof(from));
+            if (to < 0 || _length <= to) throw new IndexOutOfRangeException(nameof(to));
             if (capacity < 0) throw new ArgumentException(nameof(capacity));
             if (cost < 0) throw new ArgumentException(nameof(cost));
-            var m = _pos.Count;
-            _pos.Add((from, _edges[from].Count));
+            var m = _positions.Count;
+            _positions.Add((from, _edges[from].Count));
             var fromId = _edges[from].Count;
             var toId = _edges[to].Count;
             if (from == to) toId++;
@@ -86,17 +86,17 @@ namespace AtCoderLibraryCSharp
             return m;
         }
 
-        public Edge GetEdge(int i)
+        public Edge GetEdge(int index)
         {
-            if (i < 0 || _pos.Count <= i) throw new IndexOutOfRangeException(nameof(i));
-            var e = _edges[_pos[i].X][_pos[i].Y];
+            if (index < 0 || _positions.Count <= index) throw new IndexOutOfRangeException(nameof(index));
+            var e = _edges[_positions[index].X][_positions[index].Y];
             var re = _edges[e.To][e.Rev];
-            return new Edge(_pos[i].X, e.To, e.Capacity + re.Capacity, re.Capacity, e.Cost);
+            return new Edge(_positions[index].X, e.To, e.Capacity + re.Capacity, re.Capacity, e.Cost);
         }
 
         public IEnumerable<Edge> GetEdges()
         {
-            for (var i = 0; i < _pos.Count; i++) yield return GetEdge(i);
+            for (var i = 0; i < _positions.Count; i++) yield return GetEdge(i);
         }
 
         public (long, long) Flow(int s, int t) => Flow(s, t, long.MaxValue);
@@ -107,19 +107,19 @@ namespace AtCoderLibraryCSharp
 
         public IEnumerable<(long, long)> Slope(int s, int t, long flowLimit)
         {
-            if (s < 0 || _n <= s) throw new IndexOutOfRangeException(nameof(s));
-            if (t < 0 || _n <= t) throw new IndexOutOfRangeException(nameof(t));
+            if (s < 0 || _length <= s) throw new IndexOutOfRangeException(nameof(s));
+            if (t < 0 || _length <= t) throw new IndexOutOfRangeException(nameof(t));
             if (s == t) throw new ArgumentException();
-            var dual = new long[_n];
+            var dual = new long[_length];
             int[] pv;
             int[] pe;
 
             bool Bfs()
             {
-                var dist = Enumerable.Repeat(long.MaxValue, _n).ToArray();
-                var visited = new bool[_n];
-                pv = Enumerable.Repeat(-1, _n).ToArray();
-                pe = Enumerable.Repeat(-1, _n).ToArray();
+                var dist = Enumerable.Repeat(long.MaxValue, _length).ToArray();
+                var visited = new bool[_length];
+                pv = Enumerable.Repeat(-1, _length).ToArray();
+                pe = Enumerable.Repeat(-1, _length).ToArray();
                 var queue = new PriorityQueue<Q>();
                 dist[s] = 0;
                 queue.Enqueue(new Q(0, s));
@@ -144,7 +144,7 @@ namespace AtCoderLibraryCSharp
                 }
 
                 if (!visited[t]) return false;
-                for (var v = 0; v < _n; v++)
+                for (var v = 0; v < _length; v++)
                 {
                     if (!visited[v]) continue;
                     dual[v] -= dist[t] - dist[v];
