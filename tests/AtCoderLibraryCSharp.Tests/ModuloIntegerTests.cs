@@ -211,6 +211,23 @@ namespace AtCoderLibraryCSharp.Tests
         }
 
         [Test]
+        public void GetHashCodeTest()
+        {
+            var modulo = new[] {11, 12, 998244353, 1000000007, 1000000008};
+            foreach (var m in modulo)
+            {
+                ModuloInteger.SetModulo(m);
+                for (var i = 1; i < System.Math.Min(m - 1, 1000); i++)
+                {
+                    var x = new ModuloInteger(i);
+                    var y = x + m;
+                    Assert.That(x, Is.EqualTo(y));
+                    Assert.That(x.GetHashCode(), Is.EqualTo(y.GetHashCode()));
+                }
+            }
+        }
+
+        [Test]
         public void CastIntTest()
         {
             ModuloInteger.SetModulo(11);

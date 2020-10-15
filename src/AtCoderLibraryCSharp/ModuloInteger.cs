@@ -35,7 +35,7 @@ namespace AtCoderLibraryCSharp
         public static ModuloInteger Inverse(long value)
         {
             if (value == 0) return 0;
-            var (s, t, m0, m1) = (Modulo, a: value, 0L, 1L);
+            var (s, t, m0, m1) = (Modulo, value, 0L, 1L);
             while (t > 0)
             {
                 var u = s / t;
