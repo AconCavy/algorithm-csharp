@@ -44,24 +44,26 @@ namespace AtCoderLibraryCSharp
         public static long FloorSum(long n, long m, long a, long b)
         {
             var ret = 0L;
-            if (a >= m)
+            while (true)
             {
-                ret += (n - 1) * n * (a / m) / 2;
-                a %= m;
-            }
+                if (a >= m)
+                {
+                    ret += (n - 1) * n * (a / m) / 2;
+                    a %= m;
+                }
 
-            if (b >= m)
-            {
-                ret += n * (b / m);
-                b %= m;
-            }
+                if (b >= m)
+                {
+                    ret += n * (b / m);
+                    b %= m;
+                }
 
-            var yMax = (a * n + b) / m;
-            var xMax = yMax * m - b;
-            if (yMax == 0) return ret;
-            ret += (n - (xMax + a - 1) / a) * yMax;
-            ret += FloorSum(yMax, a, m, (a - xMax % a) % a);
-            return ret;
+                var yMax = (a * n + b) / m;
+                var xMax = yMax * m - b;
+                if (yMax == 0) return ret;
+                ret += (n - (xMax + a - 1) / a) * yMax;
+                (n, m, a, b) = (yMax, a, m, (a - xMax % a) % a);
+            }
         }
 
         public static (long g, long im) InverseGreatestCommonDivisor(long a, long b)
