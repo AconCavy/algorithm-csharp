@@ -149,15 +149,15 @@ namespace AtCoderLibraryCSharp
                 const long m12 = mod1 * mod2;
                 const ulong m123 = (ulong) mod1 * (ulong) mod2 * (ulong) mod3;
 
-                var i1 = (ulong) Math.InverseGcd(m23, mod1).im;
-                var i2 = (ulong) Math.InverseGcd(m13, mod2).im;
-                var i3 = (ulong) Math.InverseGcd(m12, mod3).im;
+                var i1 = (ulong) Math.InverseGreatestCommonDivisor(m23, mod1).im;
+                var i2 = (ulong) Math.InverseGreatestCommonDivisor(m13, mod2).im;
+                var i3 = (ulong) Math.InverseGreatestCommonDivisor(m12, mod3).im;
 
-                ModuloInteger.SetMod(mod1);
+                ModuloInteger.SetModulo(mod1);
                 var c1 = Execute(a1.Select(x => (ModuloInteger) x), b1.Select(x => (ModuloInteger) x)).ToArray();
-                ModuloInteger.SetMod(mod2);
+                ModuloInteger.SetModulo(mod2);
                 var c2 = Execute(a1.Select(x => (ModuloInteger) x), b1.Select(x => (ModuloInteger) x)).ToArray();
-                ModuloInteger.SetMod(mod3);
+                ModuloInteger.SetModulo(mod3);
                 var c3 = Execute(a1.Select(x => (ModuloInteger) x), b1.Select(x => (ModuloInteger) x)).ToArray();
                 for (var i = 0; i < ret.Length; i++)
                 {
@@ -166,7 +166,7 @@ namespace AtCoderLibraryCSharp
                     x += (ulong) c2[i].Value * i2 % mod2 * m13;
                     x += (ulong) c3[i].Value * i3 % mod3 * m12;
                     var tmp = x % mod1;
-                    var diff = (long) c1[i] - Math.SafeMod((long) tmp, mod1);
+                    var diff = (long) c1[i] - Math.SafeModulo((long) tmp, mod1);
                     if (diff < 0) diff += mod1;
                     var offset = new[] {0UL, 0UL, m123, m123 * 2, m123 * 3};
                     x -= offset[diff % 5];

@@ -31,7 +31,7 @@ namespace AtCoderLibraryCSharp.Tests
             for (var d = -10; d <= 10; d++)
             {
                 var (rem, mod) = Math.ChineseRemainderTheorem(new long[] {c, d}, new long[] {a, b});
-                var lcm = a * b / Gcd(a, b);
+                var lcm = a * b / GreatestCommonDivisor(a, b);
                 if (mod == 0)
                 {
                     for (var x = 0; x < lcm; x++) Assert.That(x % a != c || x % b != d, Is.True);
@@ -39,8 +39,8 @@ namespace AtCoderLibraryCSharp.Tests
                 }
 
                 Assert.That(mod, Is.EqualTo(lcm));
-                Assert.That(rem % a, Is.EqualTo(Math.SafeMod(c, a)));
-                Assert.That(rem % b, Is.EqualTo(Math.SafeMod(d, b)));
+                Assert.That(rem % a, Is.EqualTo(Math.SafeModulo(c, a)));
+                Assert.That(rem % b, Is.EqualTo(Math.SafeModulo(d, b)));
             }
         }
 
@@ -55,8 +55,8 @@ namespace AtCoderLibraryCSharp.Tests
             for (var f = -5; f <= 5; f++)
             {
                 var (rem, mod) = Math.ChineseRemainderTheorem(new long[] {d, e, f}, new long[] {a, b, c});
-                var lcm = a * b / Gcd(a, b);
-                lcm *= c / Gcd(lcm, c);
+                var lcm = a * b / GreatestCommonDivisor(a, b);
+                lcm *= c / GreatestCommonDivisor(lcm, c);
                 if (mod == 0)
                 {
                     for (var x = 0; x < lcm; x++) Assert.That(x % a != d || x % b != e || x % c != f, Is.True);
@@ -64,9 +64,9 @@ namespace AtCoderLibraryCSharp.Tests
                 }
 
                 Assert.That(mod, Is.EqualTo(lcm));
-                Assert.That(rem % a, Is.EqualTo(Math.SafeMod(d, a)));
-                Assert.That(rem % b, Is.EqualTo(Math.SafeMod(e, b)));
-                Assert.That(rem % c, Is.EqualTo(Math.SafeMod(f, c)));
+                Assert.That(rem % a, Is.EqualTo(Math.SafeModulo(d, a)));
+                Assert.That(rem % b, Is.EqualTo(Math.SafeModulo(e, b)));
+                Assert.That(rem % c, Is.EqualTo(Math.SafeModulo(f, c)));
             }
         }
 
@@ -81,7 +81,7 @@ namespace AtCoderLibraryCSharp.Tests
         }
 
         [Test]
-        public void InverseGcdTest()
+        public void InverseGreatestCommonDivisorTest()
         {
             var list = new List<long>();
             for (var i = 0; i <= 10; i++)
@@ -112,9 +112,9 @@ namespace AtCoderLibraryCSharp.Tests
                 foreach (var b in list)
                 {
                     if (b <= 0) continue;
-                    var a2 = Math.SafeMod(a, b);
-                    var igcd = Math.InverseGcd(a, b);
-                    var g = Gcd(a2, b);
+                    var a2 = Math.SafeModulo(a, b);
+                    var igcd = Math.InverseGreatestCommonDivisor(a, b);
+                    var g = GreatestCommonDivisor(a2, b);
                     Assert.That(igcd.g, Is.EqualTo(g));
                     Assert.That(igcd.im, Is.GreaterThanOrEqualTo(0));
                     Assert.That(b / igcd.g, Is.GreaterThanOrEqualTo(igcd.im));
@@ -123,14 +123,14 @@ namespace AtCoderLibraryCSharp.Tests
         }
 
         [Test]
-        public void InverseModTest()
+        public void InverseModuloTest()
         {
             for (var a = -100; a <= 100; a++)
             {
                 for (var b = 1; b <= 1000; b++)
                 {
-                    if (Gcd(Math.SafeMod(a, b), b) != 1) continue;
-                    var c = Math.InverseMod(a, b);
+                    if (GreatestCommonDivisor(Math.SafeModulo(a, b), b) != 1) continue;
+                    var c = Math.InverseModulo(a, b);
                     Assert.That(c, Is.GreaterThanOrEqualTo(0));
                     Assert.That(b, Is.GreaterThanOrEqualTo(c));
                     Assert.That((a * c % b + b) % b, Is.EqualTo(1 % b));
@@ -139,32 +139,33 @@ namespace AtCoderLibraryCSharp.Tests
         }
 
         [Test]
-        public void InverseModZeroTest()
+        public void InverseModuloZeroTest()
         {
-            Assert.That(Math.InverseMod(0, 1), Is.Zero);
+            Assert.That(Math.InverseModulo(0, 1), Is.Zero);
             for (var i = 0; i < 10; i++)
             {
-                Assert.That(Math.InverseMod(i, 1), Is.Zero);
-                Assert.That(Math.InverseMod(-i, 1), Is.Zero);
-                Assert.That(Math.InverseMod(long.MinValue + i, 1), Is.Zero);
-                Assert.That(Math.InverseMod(long.MaxValue - i, 1), Is.Zero);
+                Assert.That(Math.InverseModulo(i, 1), Is.Zero);
+                Assert.That(Math.InverseModulo(-i, 1), Is.Zero);
+                Assert.That(Math.InverseModulo(long.MinValue + i, 1), Is.Zero);
+                Assert.That(Math.InverseModulo(long.MaxValue - i, 1), Is.Zero);
             }
         }
 
         [Test]
-        public void InverseModBoundHandTest()
+        public void InverseModuloBoundHandTest()
         {
-            Assert.That(Math.InverseMod(long.MinValue, long.MaxValue), Is.EqualTo(Math.InverseMod(-1, long.MaxValue)));
-            Assert.That(Math.InverseMod(long.MaxValue, long.MaxValue - 1), Is.EqualTo(1));
-            Assert.That(Math.InverseMod(long.MaxValue - 1, long.MaxValue), Is.EqualTo(long.MaxValue - 1));
-            Assert.That(Math.InverseMod(long.MaxValue / 2 + 1, long.MaxValue), Is.EqualTo(2));
+            Assert.That(Math.InverseModulo(long.MinValue, long.MaxValue),
+                Is.EqualTo(Math.InverseModulo(-1, long.MaxValue)));
+            Assert.That(Math.InverseModulo(long.MaxValue, long.MaxValue - 1), Is.EqualTo(1));
+            Assert.That(Math.InverseModulo(long.MaxValue - 1, long.MaxValue), Is.EqualTo(long.MaxValue - 1));
+            Assert.That(Math.InverseModulo(long.MaxValue / 2 + 1, long.MaxValue), Is.EqualTo(2));
         }
 
         [Test]
-        public void InverseModInvalidArgumentTest()
+        public void InverseModuloInvalidArgumentTest()
         {
-            Assert.Throws<ArgumentException>(() => Math.InverseMod(2, 0));
-            Assert.Throws<ArgumentException>(() => Math.InverseMod(2, -1));
+            Assert.Throws<ArgumentException>(() => Math.InverseModulo(2, 0));
+            Assert.Throws<ArgumentException>(() => Math.InverseModulo(2, -1));
         }
 
         [Test]
@@ -180,21 +181,21 @@ namespace AtCoderLibraryCSharp.Tests
         }
 
         [Test]
-        public void PowerModTest()
+        public void PowerModuloTest()
         {
             for (var a = -100; a <= 100; a++)
             for (var b = 0; b <= 100; b++)
             for (var c = 1; c <= 100; c++)
-                Assert.That(Math.PowerMod(a, b, c), Is.EqualTo(PowerModNaive(a, b, c)));
+                Assert.That(Math.PowerModulo(a, b, c), Is.EqualTo(PowerModuloNaive(a, b, c)));
         }
 
         [Test]
-        public void PowerModInvalidArgumentTest()
+        public void PowerModuloInvalidArgumentTest()
         {
-            Assert.DoesNotThrow(() => Math.PowerMod(2, 2, 11));
-            Assert.Throws<ArgumentException>(() => Math.PowerMod(2, -1, 11));
-            Assert.Throws<ArgumentException>(() => Math.PowerMod(2, 2, 0));
-            Assert.Throws<ArgumentException>(() => Math.PowerMod(2, -1, 0));
+            Assert.DoesNotThrow(() => Math.PowerModulo(2, 2, 11));
+            Assert.Throws<ArgumentException>(() => Math.PowerModulo(2, -1, 11));
+            Assert.Throws<ArgumentException>(() => Math.PowerModulo(2, 2, 0));
+            Assert.Throws<ArgumentException>(() => Math.PowerModulo(2, -1, 0));
         }
 
         [Test]
@@ -231,7 +232,7 @@ namespace AtCoderLibraryCSharp.Tests
         }
 
         [Test]
-        public void SafeModTest()
+        public void SafeModuloTest()
         {
             var list = new List<long>();
             for (var i = 0; i <= 10; i++)
@@ -248,19 +249,17 @@ namespace AtCoderLibraryCSharp.Tests
                 {
                     if (b <= 0) continue;
                     var value = ((ulong) (a % b) + (ulong) b) % (ulong) b;
-                    Assert.That(value, Is.EqualTo(Math.SafeMod(a, b)));
+                    Assert.That(value, Is.EqualTo(Math.SafeModulo(a, b)));
                 }
             }
         }
 
-        private static long Gcd(long a, long b)
+        private static long GreatestCommonDivisor(long a, long b)
         {
             while (true)
             {
                 if (b == 0) return a;
-                var a1 = a;
-                a = b;
-                b = a1 % b;
+                (a, b) = (b, a % b);
             }
         }
 
@@ -280,9 +279,9 @@ namespace AtCoderLibraryCSharp.Tests
             return true;
         }
 
-        private static long PowerModNaive(long x, long n, long mod)
+        private static long PowerModuloNaive(long x, long n, long mod)
         {
-            var y = Math.SafeMod(x, mod);
+            var y = Math.SafeModulo(x, mod);
             var z = 1L % mod;
             for (var i = 0L; i < n; i++) z = z * y % mod;
             return z % mod;

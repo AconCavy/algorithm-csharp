@@ -15,7 +15,7 @@ namespace AtCoderLibraryCSharp
             for (var i = 0; i < ra.Length; i++)
             {
                 if (ma[i] < 1) throw new ArgumentException(nameof(m));
-                var r1 = SafeMod(ra[i], ma[i]);
+                var r1 = SafeModulo(ra[i], ma[i]);
                 var m1 = ma[i];
                 if (m0 < m1)
                 {
@@ -29,7 +29,7 @@ namespace AtCoderLibraryCSharp
                     continue;
                 }
 
-                var (g, im) = InverseGcd(m0, m1);
+                var (g, im) = InverseGreatestCommonDivisor(m0, m1);
                 var u1 = m1 / g;
                 if ((r1 - r0) % g != 0) return (0, 0);
                 var x = (r1 - r0) / g % u1 * im % u1;
@@ -64,9 +64,9 @@ namespace AtCoderLibraryCSharp
             return ret;
         }
 
-        public static (long g, long im) InverseGcd(long a, long b)
+        public static (long g, long im) InverseGreatestCommonDivisor(long a, long b)
         {
-            a = SafeMod(a, b);
+            a = SafeModulo(a, b);
             if (a == 0) return (b, 0);
             var (s, t, m0, m1) = (b, a, 0L, 1L);
             while (t > 0)
@@ -82,55 +82,54 @@ namespace AtCoderLibraryCSharp
             return (s, m0);
         }
 
-        public static long InverseMod(long x, long m)
+        public static long InverseModulo(long value, long modulo)
         {
-            if (m < 1) throw new ArgumentException(nameof(m));
-            var (rem, mod) = InverseGcd(x, m);
+            if (modulo < 1) throw new ArgumentException(nameof(modulo));
+            var (rem, mod) = InverseGreatestCommonDivisor(value, modulo);
             if (rem != 1) throw new InvalidOperationException();
             return mod;
         }
 
-        public static bool IsPrime(int n)
+        public static bool IsPrime(int value)
         {
-            if (n <= 1) return false;
-            if (n == 2 || n == 7 || n == 61) return true;
-            if (n % 2 == 0) return false;
-            long d = n - 1;
+            if (value <= 1) return false;
+            if (value == 2 || value == 7 || value == 61) return true;
+            if (value % 2 == 0) return false;
+            long d = value - 1;
             while (d % 2 == 0) d /= 2;
             foreach (var a in new long[] {2, 7, 61})
             {
                 var t = d;
-                var y = PowerMod(a, t, n);
-                while (t != n - 1 && y != 1 && y != n - 1)
+                var y = PowerModulo(a, t, value);
+                while (t != value - 1 && y != 1 && y != value - 1)
                 {
-                    y = y * y % n;
+                    y = y * y % value;
                     t <<= 1;
                 }
 
-                if (y != n - 1 && t % 2 == 0) return false;
+                if (y != value - 1 && t % 2 == 0) return false;
             }
 
             return true;
         }
 
-        public static long PowerMod(long x, long n, long m)
+        public static long PowerModulo(long value, long n, long modulo)
         {
             if (n < 0) throw new ArgumentException(nameof(n));
-            if (m < 1) throw new ArgumentException(nameof(m));
-            if (m == 1) return 0;
-            var r = 1L;
-            var y = SafeMod(x, m);
-            var um = m;
+            if (modulo < 1) throw new ArgumentException(nameof(modulo));
+            if (modulo == 1) return 0;
+            var ret = 1L;
+            var y = SafeModulo(value, modulo);
             while (n > 0)
             {
-                if ((n & 1) == 1) r = r * y % um;
-                y = y * y % um;
+                if ((n & 1) == 1) ret = ret * y % modulo;
+                y = y * y % modulo;
                 n >>= 1;
             }
 
-            return r;
+            return ret;
         }
-        
+
         public static int PrimitiveRoot(long m)
         {
             switch (m)
@@ -162,13 +161,14 @@ namespace AtCoderLibraryCSharp
             {
                 var ok = true;
                 for (var i = 0; i < count && ok; i++)
-                    if (PowerMod(g, (m - 1) / divs[i], m) == 1)
+                    if (PowerModulo(g, (m - 1) / divs[i], m) == 1)
                         ok = false;
 
                 if (ok) return g;
             }
         }
 
-        public static long SafeMod(long x, long mod) => x % mod < 0 ? x % mod + mod : x % mod;
+        public static long SafeModulo(long value, long modulo) =>
+            value % modulo < 0 ? value % modulo + modulo : value % modulo;
     }
 }
