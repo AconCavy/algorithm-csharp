@@ -9,6 +9,16 @@ namespace AtCoderLibraryCSharp.Tests
         [Test]
         public void InitializeTest()
         {
+            Assert.DoesNotThrow(() => _ = new LazySegmentTree<int, int>(0, SimpleOperationDelegate, SimpleMonoidId,
+                SimpleMappingDelegate, SimpleCompositionDelegate, SimpleMapId));
+            Assert.DoesNotThrow(() => _ = new LazySegmentTree<int, int>(10, SimpleOperationDelegate, SimpleMonoidId,
+                SimpleMappingDelegate, SimpleCompositionDelegate, SimpleMapId));
+            Assert.DoesNotThrow(() => _ = new LazySegmentTree<int, int>(new int[0], SimpleOperationDelegate,
+                SimpleMonoidId, SimpleMappingDelegate, SimpleCompositionDelegate, SimpleMapId));
+            Assert.DoesNotThrow(() => _ = new LazySegmentTree<int, int>(Enumerable.Range(1, 10),
+                SimpleOperationDelegate, SimpleMonoidId, SimpleMappingDelegate, SimpleCompositionDelegate,
+                SimpleMapId));
+
             Assert.DoesNotThrow(() => _ = new LazySegmentTree<int, int>(0, SimpleOperation, SimpleMonoidId,
                 SimpleMapping, SimpleComposition, SimpleMapId));
             Assert.DoesNotThrow(() => _ = new LazySegmentTree<int, int>(10, SimpleOperation, SimpleMonoidId,
@@ -239,9 +249,13 @@ namespace AtCoderLibraryCSharp.Tests
 
         private const int SimpleMonoidId = -(int) 1e9;
         private const int SimpleMapId = 0;
+        private static readonly LazySegmentTree<int, int>.Operation SimpleOperationDelegate = SimpleOperation;
+        private static readonly LazySegmentTree<int, int>.Mapping SimpleMappingDelegate = SimpleMapping;
+        private static readonly LazySegmentTree<int, int>.Composition SimpleCompositionDelegate = SimpleComposition;
         private static int SimpleOperation(int a, int b) => System.Math.Max(a, b);
         private static int SimpleMapping(int a, int b) => a + b;
         private static int SimpleComposition(int a, int b) => a + b;
+
         private class TimeManager
         {
             private readonly int[] _times;

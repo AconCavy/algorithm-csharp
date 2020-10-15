@@ -6,25 +6,31 @@ namespace AtCoderLibraryCSharp
 {
     public class LazySegmentTree<TMonoid, TMap>
     {
+        public delegate TMonoid Operation(TMonoid a, TMonoid b);
+
+        public delegate TMonoid Mapping(TMap f, TMonoid x);
+
+        public delegate TMap Composition(TMap f, TMap g);
+
         private readonly int _length;
         private readonly int _size;
         private readonly int _log;
         private readonly TMonoid[] _data;
         private readonly TMap[] _lazy;
-        private readonly Func<TMonoid, TMonoid, TMonoid> _operation;
-        private readonly Func<TMap, TMonoid, TMonoid> _mapping;
-        private readonly Func<TMap, TMap, TMap> _composition;
+        private readonly Operation _operation;
+        private readonly Mapping _mapping;
+        private readonly Composition _composition;
         private readonly TMonoid _monoidId;
         private readonly TMap _mapId;
 
-        public LazySegmentTree(int length, Func<TMonoid, TMonoid, TMonoid> operation, TMonoid monoidId,
-            Func<TMap, TMonoid, TMonoid> mapping, Func<TMap, TMap, TMap> composition, TMap mapId) :
+        public LazySegmentTree(int length, Operation operation, TMonoid monoidId,
+            Mapping mapping, Composition composition, TMap mapId) :
             this(Enumerable.Repeat(monoidId, length), operation, monoidId, mapping, composition, mapId)
         {
         }
 
-        public LazySegmentTree(IEnumerable<TMonoid> data, Func<TMonoid, TMonoid, TMonoid> operation, TMonoid monoidId,
-            Func<TMap, TMonoid, TMonoid> mapping, Func<TMap, TMap, TMap> composition, TMap mapId)
+        public LazySegmentTree(IEnumerable<TMonoid> data, Operation operation, TMonoid monoidId,
+            Mapping mapping, Composition composition, TMap mapId)
         {
             var d = data.ToArray();
             _length = d.Length;
@@ -121,10 +127,10 @@ namespace AtCoderLibraryCSharp
             }
         }
 
-        public int MaxRight(int left, Func<TMonoid, bool> func)
+        public int MaxRight(int left, Predicate<TMonoid> predicate)
         {
             if (left < 0 || _length < left) throw new IndexOutOfRangeException(nameof(left));
-            if (!func(_monoidId)) throw new ArgumentException(nameof(func));
+            if (!predicate(_monoidId)) throw new ArgumentException(nameof(predicate));
             if (left == _length) return _length;
             left += _size;
             for (var i = _log; i >= 1; i--) Push(left >> i);
@@ -132,14 +138,14 @@ namespace AtCoderLibraryCSharp
             do
             {
                 while ((left & 1) == 0) left >>= 1;
-                if (!func(_operation(sm, _data[left])))
+                if (!predicate(_operation(sm, _data[left])))
                 {
                     while (left < _size)
                     {
                         Push(left);
                         left <<= 1;
                         var tmp = _operation(sm, _data[left]);
-                        if (!func(tmp)) continue;
+                        if (!predicate(tmp)) continue;
                         sm = tmp;
                         left++;
                     }
@@ -154,10 +160,10 @@ namespace AtCoderLibraryCSharp
             return _length;
         }
 
-        public int MinLeft(int right, Func<TMonoid, bool> func)
+        public int MinLeft(int right, Predicate<TMonoid> predicate)
         {
             if (right < 0 || _length < right) throw new IndexOutOfRangeException(nameof(right));
-            if (!func(_monoidId)) throw new ArgumentException(nameof(func));
+            if (!predicate(_monoidId)) throw new ArgumentException(nameof(predicate));
             if (right == 0) return 0;
             right += _size;
             for (var i = _log; i >= 1; i--) Push((right - 1) >> i);
@@ -166,14 +172,14 @@ namespace AtCoderLibraryCSharp
             {
                 right--;
                 while (right > 1 && (right & 1) == 1) right >>= 1;
-                if (!func(_operation(_data[right], sm)))
+                if (!predicate(_operation(_data[right], sm)))
                 {
                     while (right < _size)
                     {
                         Push(right);
                         right = (right << 1) + 1;
                         var tmp = _operation(_data[right], sm);
-                        if (!func(tmp)) continue;
+                        if (!predicate(tmp)) continue;
                         sm = tmp;
                         right--;
                     }

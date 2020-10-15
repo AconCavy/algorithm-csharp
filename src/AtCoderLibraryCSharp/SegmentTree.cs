@@ -6,19 +6,21 @@ namespace AtCoderLibraryCSharp
 {
     public class SegmentTree<TMonoid>
     {
+        public delegate TMonoid Operation(TMonoid a, TMonoid b);
+
         private readonly int _length;
         private readonly int _size;
         private readonly int _log;
         private readonly TMonoid[] _data;
-        private readonly Func<TMonoid, TMonoid, TMonoid> _operation;
+        private readonly Operation _operation;
         private readonly TMonoid _monoidId;
 
-        public SegmentTree(int length, Func<TMonoid, TMonoid, TMonoid> operation, TMonoid monoidId)
+        public SegmentTree(int length, Operation operation, TMonoid monoidId)
             : this(Enumerable.Repeat(monoidId, length), operation, monoidId)
         {
         }
 
-        public SegmentTree(IEnumerable<TMonoid> data, Func<TMonoid, TMonoid, TMonoid> operation, TMonoid monoidId)
+        public SegmentTree(IEnumerable<TMonoid> data, Operation operation, TMonoid monoidId)
         {
             var d = data.ToArray();
             _length = d.Length;
@@ -64,23 +66,23 @@ namespace AtCoderLibraryCSharp
 
         public TMonoid QueryToAll() => _data[1];
 
-        public int MaxRight(int left, Func<TMonoid, bool> func)
+        public int MaxRight(int left, Predicate<TMonoid> predicate)
         {
             if (left < 0 || _length < left) throw new IndexOutOfRangeException(nameof(left));
-            if (!func(_monoidId)) throw new ArgumentException(nameof(func));
+            if (!predicate(_monoidId)) throw new ArgumentException(nameof(predicate));
             if (left == _length) return _length;
             left += _size;
             var sm = _monoidId;
             do
             {
                 while ((left & 1) == 0) left >>= 1;
-                if (!func(_operation(sm, _data[left])))
+                if (!predicate(_operation(sm, _data[left])))
                 {
                     while (left < _size)
                     {
                         left <<= 1;
                         var tmp = _operation(sm, _data[left]);
-                        if (!func(tmp)) continue;
+                        if (!predicate(tmp)) continue;
                         sm = tmp;
                         left++;
                     }
@@ -95,10 +97,10 @@ namespace AtCoderLibraryCSharp
             return _length;
         }
 
-        public int MinLeft(int right, Func<TMonoid, bool> func)
+        public int MinLeft(int right, Predicate<TMonoid> predicate)
         {
             if (right < 0 || _length < right) throw new IndexOutOfRangeException(nameof(right));
-            if (!func(_monoidId)) throw new ArgumentException(nameof(func));
+            if (!predicate(_monoidId)) throw new ArgumentException(nameof(predicate));
             if (right == 0) return 0;
             right += _size;
             var sm = _monoidId;
@@ -106,13 +108,13 @@ namespace AtCoderLibraryCSharp
             {
                 right--;
                 while (right > 1 && (right & 1) == 1) right >>= 1;
-                if (!func(_operation(_data[right], sm)))
+                if (!predicate(_operation(_data[right], sm)))
                 {
                     while (right < _size)
                     {
                         right = (right << 1) + 1;
                         var tmp = _operation(_data[right], sm);
-                        if (!func(tmp)) continue;
+                        if (!predicate(tmp)) continue;
                         sm = tmp;
                         right--;
                     }

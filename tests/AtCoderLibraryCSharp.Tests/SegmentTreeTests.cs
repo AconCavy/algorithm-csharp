@@ -8,8 +8,43 @@ namespace AtCoderLibraryCSharp.Tests
         [Test]
         public void InitializeTest()
         {
+            Assert.DoesNotThrow(() => _ = new SegmentTree<string>(0, OperationDelegate, Id));
+            Assert.DoesNotThrow(() => _ = new SegmentTree<string>(10, OperationDelegate, Id));
+
             Assert.DoesNotThrow(() => _ = new SegmentTree<string>(0, Operation, Id));
             Assert.DoesNotThrow(() => _ = new SegmentTree<string>(10, Operation, Id));
+
+            Assert.DoesNotThrow(() => _ = new SegmentTree<string>(0, (a, b) =>
+            {
+                if (a == "$") return b;
+                if (b == "$") return a;
+                return a + b;
+            }, Id));
+            Assert.DoesNotThrow(() => _ = new SegmentTree<string>(10, (a, b) =>
+            {
+                if (a == "$") return b;
+                if (b == "$") return a;
+                return a + b;
+            }, Id));
+
+            Func<string, string, string> func = (a, b) =>
+            {
+                if (a == "$") return b;
+                if (b == "$") return a;
+                return a + b;
+            };
+            Assert.DoesNotThrow(() => _ = new SegmentTree<string>(0, func.Invoke, Id));
+            Assert.DoesNotThrow(() => _ = new SegmentTree<string>(10, func.Invoke, Id));
+
+            static string LocalFunc(string a, string b)
+            {
+                if (a == "$") return b;
+                if (b == "$") return a;
+                return a + b;
+            }
+
+            Assert.DoesNotThrow(() => _ = new SegmentTree<string>(0, LocalFunc, Id));
+            Assert.DoesNotThrow(() => _ = new SegmentTree<string>(10, LocalFunc, Id));
         }
 
         [Test]
@@ -26,7 +61,7 @@ namespace AtCoderLibraryCSharp.Tests
             var st = new SegmentTree<string>(10, Operation, Id);
             Assert.Throws<IndexOutOfRangeException>(() => st.Set(-1, "*"));
             Assert.Throws<IndexOutOfRangeException>(() => st.Set(10, "*"));
-            
+
             Assert.Throws<IndexOutOfRangeException>(() => st.Get(-1));
             Assert.Throws<IndexOutOfRangeException>(() => st.Get(10));
 
@@ -95,6 +130,7 @@ namespace AtCoderLibraryCSharp.Tests
         }
 
         private string _y = "";
+        private static readonly SegmentTree<string>.Operation OperationDelegate = Operation;
 
         private static string Operation(string a, string b)
         {
