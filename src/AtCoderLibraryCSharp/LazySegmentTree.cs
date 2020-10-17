@@ -41,8 +41,10 @@ namespace AtCoderLibraryCSharp
             _mapId = mapId;
             while (1 << _log < _length) _log++;
             _size = 1 << _log;
-            _data = Enumerable.Repeat(monoidId, _size << 1).ToArray();
-            _lazy = Enumerable.Repeat(mapId, _size).ToArray();
+            _data = new TMonoid[_size << 1];
+            for (var i = 0; i < _data.Length; i++) _data[i] = monoidId;
+            _lazy = new TMap[_size];
+            for (var i = 0; i < _lazy.Length; i++) _lazy[i] = mapId;
             d.CopyTo(_data, _size);
             for (var i = _size - 1; i >= 1; i--) Update(i);
         }

@@ -28,7 +28,8 @@ namespace AtCoderLibraryCSharp
             _monoidId = monoidId;
             while (1 << _log < _length) _log++;
             _size = 1 << _log;
-            _data = Enumerable.Repeat(monoidId, _size << 1).ToArray();
+            _data = new TMonoid[_size << 1];
+            for (var i = 0; i < _data.Length; i++) _data[i] = monoidId;
             d.CopyTo(_data, _size);
             for (var i = _size - 1; i >= 1; i--) Update(i);
         }
