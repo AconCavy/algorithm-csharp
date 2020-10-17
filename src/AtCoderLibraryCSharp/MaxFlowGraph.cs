@@ -132,9 +132,10 @@ namespace AtCoderLibraryCSharp
                     var re = _edges[e.To][e.Rev];
                     _edges[e.To][e.Rev] = new InternalEdge(re.To, re.Rev, re.Capacity - d);
                     ret += d;
-                    if (ret == up) break;
+                    if (ret == up) return ret;
                 }
 
+                depth[v] = _length;
                 return ret;
             }
 
@@ -144,12 +145,9 @@ namespace AtCoderLibraryCSharp
                 Bfs();
                 if (depth[t] == -1) break;
                 iter = new int[_length];
-                while (flow < flowLimit)
-                {
-                    var f = Dfs(t, flowLimit - flow);
-                    if (f == 0) break;
-                    flow += f;
-                }
+                var f = Dfs(t, flowLimit - flow);
+                if (f == 0) break;
+                flow += f;
             }
 
             return flow;
