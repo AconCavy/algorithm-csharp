@@ -110,18 +110,18 @@ namespace AtCoderLibraryCSharp
             if (s < 0 || _length <= s) throw new IndexOutOfRangeException(nameof(s));
             if (t < 0 || _length <= t) throw new IndexOutOfRangeException(nameof(t));
             if (s == t) throw new ArgumentException();
+            var dist = new long[_length];
             var dual = new long[_length];
-            int[] pv;
-            int[] pe;
+            var pv = new int[_length];
+            var pe = new int[_length];
+            var visited = new bool[_length];
 
             bool Bfs()
             {
-                var dist = Enumerable.Repeat(long.MaxValue, _length).ToArray();
-                var visited = new bool[_length];
-                pv = Enumerable.Repeat(-1, _length).ToArray();
-                pe = Enumerable.Repeat(-1, _length).ToArray();
-                var queue = new PriorityQueue<Q>();
+                Array.Fill(dist, long.MaxValue);
                 dist[s] = 0;
+                Array.Fill(visited, false);
+                var queue = new PriorityQueue<Q>();
                 queue.Enqueue(new Q(0, s));
                 while (queue.Any())
                 {
@@ -159,10 +159,7 @@ namespace AtCoderLibraryCSharp
             while (flow < flowLimit && Bfs())
             {
                 var c = flowLimit - flow;
-                for (var v = t; v != s; v = pv[v])
-                {
-                    c = System.Math.Min(c, _edges[pv[v]][pe[v]].Capacity);
-                }
+                for (var v = t; v != s; v = pv[v]) c = System.Math.Min(c, _edges[pv[v]][pe[v]].Capacity);
 
                 for (var v = t; v != s; v = pv[v])
                 {

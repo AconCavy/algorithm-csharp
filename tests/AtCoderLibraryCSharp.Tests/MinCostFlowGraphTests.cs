@@ -88,6 +88,84 @@ namespace AtCoderLibraryCSharp.Tests
             Assert.Throws<ArgumentException>(() => mcfg.Slope(1, 1));
         }
 
+        [Test]
+        public void StressTest()
+        {
+            for (var ph = 0; ph < 1000; ph++)
+            {
+                var n = Utilities.RandomInteger(2, 20);
+                var m = Utilities.RandomInteger(1, 100);
+                var (s, t) = Utilities.RandomPair(0, n - 1);
+                if (Utilities.RandomBool()) (s, t) = (t, s);
+
+                var mfg = new MaxFlowGraph(n);
+                var mcfg = new MinCostFlowGraph(n);
+                for (var i = 0; i < m; i++)
+                {
+                    var u = Utilities.RandomInteger(0, n - 1);
+                    var v = Utilities.RandomInteger(0, n - 1);
+                    var cap = Utilities.RandomInteger(0, 10);
+                    var cost = Utilities.RandomInteger(0, 10000);
+                    mcfg.AddEdge(u, v, cap, cost);
+                    mfg.AddEdge(u, v, cap);
+                }
+
+                var (flow, cost1) = mcfg.Flow(s, t);
+                Assert.That(flow, Is.EqualTo(mfg.Flow(s, t)));
+
+                var cost2 = 0L;
+                var capacities = new long[n];
+                foreach (var edge in mcfg.GetEdges())
+                {
+                    capacities[edge.From] -= edge.Flow;
+                    capacities[edge.To] += edge.Flow;
+                    cost2 += edge.Flow * edge.Cost;
+                }
+
+                Assert.That(cost1, Is.EqualTo(cost2));
+
+                for (var i = 0; i < n; i++)
+                {
+                    if (i == s) Assert.That(capacities[i], Is.EqualTo(-flow));
+                    else if (i == t) Assert.That(capacities[i], Is.EqualTo(flow));
+                    else Assert.That(capacities[i], Is.EqualTo(0));
+                }
+
+                Assert.DoesNotThrow(() =>
+                {
+                    var dist = new long[n];
+                    while (true)
+                    {
+                        var update = false;
+                        foreach (var edge in mcfg.GetEdges())
+                        {
+                            if (edge.Flow < edge.Capacity)
+                            {
+                                var ndist = dist[edge.From] + edge.Cost;
+                                if (ndist < dist[edge.To])
+                                {
+                                    update = true;
+                                    dist[edge.To] = ndist;
+                                }
+                            }
+                
+                            if (edge.Flow == 0) continue;
+                            {
+                                var ndist = dist[edge.To] - edge.Cost;
+                                if (ndist < dist[edge.From])
+                                {
+                                    update = true;
+                                    dist[edge.From] = ndist;
+                                }
+                            }
+                        }
+                
+                        if (!update) break;
+                    }
+                });
+            }
+        }
+
         private static void AssertEdge(MinCostFlowGraph.Edge actual, MinCostFlowGraph.Edge expected)
         {
             Assert.That(actual.From, Is.EqualTo(expected.From));
