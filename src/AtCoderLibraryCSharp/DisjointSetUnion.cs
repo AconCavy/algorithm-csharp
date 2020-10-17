@@ -11,8 +11,10 @@ namespace AtCoderLibraryCSharp
 
         public DisjointSetUnion(int length = 0)
         {
+            if (length < 0) throw new ArgumentException(nameof(length));
             _length = length;
-            _parentOrSize = Enumerable.Repeat(-1, length).ToArray();
+            _parentOrSize = new int[_length];
+            Array.Fill(_parentOrSize, -1);
         }
 
         public int Merge(int a, int b)

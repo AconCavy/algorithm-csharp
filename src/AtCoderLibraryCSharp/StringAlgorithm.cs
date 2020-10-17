@@ -8,7 +8,7 @@ namespace AtCoderLibraryCSharp
     {
         public static IEnumerable<int> CreateSuffixes(string str)
         {
-            return CreateSuffixesByInducedSorting(str.Select(x => x - 0), 255);
+            return CreateSuffixesByInducedSorting(str.Select(x => x - 0).ToArray(), 255);
         }
 
         public static IEnumerable<int> CreateSuffixes<T>(IEnumerable<T> items)
@@ -91,34 +91,33 @@ namespace AtCoderLibraryCSharp
             return z;
         }
 
-        private static IEnumerable<int> CreateSuffixesByInducedSorting(IEnumerable<int> items, int upper,
+        private static IEnumerable<int> CreateSuffixesByInducedSorting(int[] items, int upper,
             int naive = 10, int doubling = 40)
         {
-            var s = items.ToArray();
-            var n = s.Length;
+            var n = items.Length;
             switch (n)
             {
                 case 0: return new int[0];
                 case 1: return new[] {0};
-                case 2: return s[0] < s[1] ? new[] {0, 1} : new[] {1, 0};
+                case 2: return items[0] < items[1] ? new[] {0, 1} : new[] {1, 0};
             }
 
-            if (n < naive) return CreateSuffixesByNaive(s);
-            if (n < doubling) return CreateSuffixesByDoubling(s);
+            if (n < naive) return CreateSuffixesByNaive(items);
+            if (n < doubling) return CreateSuffixesByDoubling(items);
 
             var sa = new int[n];
             var ls = new bool[n];
             for (var i = n - 2; i >= 0; i--)
             {
-                ls[i] = s[i] == s[i + 1] ? ls[i + 1] : s[i] < s[i + 1];
+                ls[i] = items[i] == items[i + 1] ? ls[i + 1] : items[i] < items[i + 1];
             }
 
             var sumL = new int[upper + 1];
             var sumS = new int[upper + 1];
             for (var i = 0; i < n; i++)
             {
-                if (!ls[i]) sumS[s[i]]++;
-                else sumL[s[i] + 1]++;
+                if (!ls[i]) sumS[items[i]]++;
+                else sumL[items[i] + 1]++;
             }
 
             for (var i = 0; i <= upper; i++)
@@ -129,21 +128,21 @@ namespace AtCoderLibraryCSharp
 
             void Induce(IEnumerable<int> ilms)
             {
-                sa = Enumerable.Repeat(-1, sa.Length).ToArray();
+                Array.Fill(sa, -1);
                 var buffer = new int[upper + 1];
                 sumS.CopyTo(buffer, 0);
                 foreach (var d in ilms)
                 {
                     if (d == n) continue;
-                    sa[buffer[s[d]]++] = d;
+                    sa[buffer[items[d]]++] = d;
                 }
 
                 sumL.CopyTo(buffer, 0);
-                sa[buffer[s[n - 1]]++] = n - 1;
+                sa[buffer[items[n - 1]]++] = n - 1;
                 for (var i = 0; i < n; i++)
                 {
                     var v = sa[i];
-                    if (v >= 1 && !ls[v - 1]) sa[buffer[s[v - 1]]++] = v - 1;
+                    if (v >= 1 && !ls[v - 1]) sa[buffer[items[v - 1]]++] = v - 1;
                 }
 
                 sumL.CopyTo(buffer, 0);
@@ -152,12 +151,13 @@ namespace AtCoderLibraryCSharp
                     var v = sa[i];
                     if (v >= 1 && ls[v - 1])
                     {
-                        sa[--buffer[s[v - 1] + 1]] = v - 1;
+                        sa[--buffer[items[v - 1] + 1]] = v - 1;
                     }
                 }
             }
 
-            var lmsMap = Enumerable.Repeat(-1, n + 1).ToArray();
+            var lmsMap = new int[n + 1];
+            Array.Fill(lmsMap, -1);
             var m = 0;
             for (var i = 1; i < n; i++)
             {
@@ -188,13 +188,13 @@ namespace AtCoderLibraryCSharp
                 if (el - l != er - r) isSame = false;
                 else
                 {
-                    while (l < el && s[l] == s[r])
+                    while (l < el && items[l] == items[r])
                     {
                         l++;
                         r++;
                     }
 
-                    if (l == n || s[l] != s[r]) isSame = false;
+                    if (l == n || items[l] != items[r]) isSame = false;
                 }
 
                 if (!isSame) recUpper++;
@@ -211,10 +211,9 @@ namespace AtCoderLibraryCSharp
             return sa;
         }
 
-        private static IEnumerable<int> CreateSuffixesByNaive(IEnumerable<int> items)
+        private static IEnumerable<int> CreateSuffixesByNaive(int[] items)
         {
-            var s = items.ToArray();
-            var n = s.Length;
+            var n = items.Length;
             var sa = Enumerable.Range(0, n).ToArray();
 
             int Compare(int x, int y)
@@ -223,7 +222,7 @@ namespace AtCoderLibraryCSharp
                 if (x == y) return 0;
                 while (x < n && y < n)
                 {
-                    if (s[x] != s[y]) return comparer.Compare(s[x], s[y]);
+                    if (items[x] != items[y]) return comparer.Compare(items[x], items[y]);
                     x++;
                     y++;
                 }
@@ -235,10 +234,9 @@ namespace AtCoderLibraryCSharp
             return sa;
         }
 
-        private static IEnumerable<int> CreateSuffixesByDoubling(IEnumerable<int> items)
+        private static IEnumerable<int> CreateSuffixesByDoubling(int[] items)
         {
-            var rnk = items.ToArray();
-            var n = rnk.Length;
+            var n = items.Length;
             var sa = Enumerable.Range(0, n).ToArray();
 
             var tmp = new int[n];
@@ -247,9 +245,9 @@ namespace AtCoderLibraryCSharp
                 int Compare(int x, int y)
                 {
                     var comparer = Comparer<int>.Default;
-                    if (rnk[x] != rnk[y]) return comparer.Compare(rnk[x], rnk[y]);
-                    var rx = x + k < n ? rnk[x + k] : -1;
-                    var ry = y + k < n ? rnk[y + k] : -1;
+                    if (items[x] != items[y]) return comparer.Compare(items[x], items[y]);
+                    var rx = x + k < n ? items[x + k] : -1;
+                    var ry = y + k < n ? items[y + k] : -1;
                     return comparer.Compare(rx, ry);
                 }
 
@@ -260,7 +258,7 @@ namespace AtCoderLibraryCSharp
                     tmp[sa[i]] = tmp[sa[i - 1]] + (Compare(sa[i - 1], sa[i]) < 0 ? 1 : 0);
                 }
 
-                (tmp, rnk) = (rnk, tmp);
+                (tmp, items) = (items, tmp);
             }
 
             return sa;

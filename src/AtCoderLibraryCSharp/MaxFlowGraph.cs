@@ -95,12 +95,12 @@ namespace AtCoderLibraryCSharp
             if (t < 0 || _length <= t) throw new IndexOutOfRangeException(nameof(t));
             if (s == t) throw new ArgumentException();
             var queue = new Queue<int>();
-            int[] depth;
-            int[] iter;
+            var depth = new int[_length];
+            var iter = new int[_length];
 
             void Bfs()
             {
-                depth = Enumerable.Repeat(-1, _length).ToArray();
+                Array.Fill(depth, -1);
                 depth[s] = 0;
                 queue.Clear();
                 queue.Enqueue(s);
@@ -144,7 +144,7 @@ namespace AtCoderLibraryCSharp
             {
                 Bfs();
                 if (depth[t] == -1) break;
-                iter = new int[_length];
+                Array.Fill(iter, 0);
                 var f = Dfs(t, flowLimit - flow);
                 if (f == 0) break;
                 flow += f;

@@ -34,7 +34,8 @@ namespace AtCoderLibraryCSharp
             var (nowOrd, groupNum) = (0, 0);
             var visited = new Stack<int>(_length);
             var low = new int[_length];
-            var ord = Enumerable.Repeat(-1, _length).ToArray();
+            var ord = new int[_length];
+            Array.Fill(ord, -1);
             var ids = new int[_length];
 
             void Dfs(int v)
