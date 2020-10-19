@@ -7,37 +7,24 @@ namespace AtCoderLibraryCSharp.Tests
     public class LazySegmentTreeTests
     {
         [Test]
-        public void InitializeTest()
+        public void InitializeTest([Values(0, 10)] int n)
         {
-            Assert.DoesNotThrow(() => _ = new LazySegmentTree<int, int>(0, SimpleOperationDelegate, SimpleMonoidId,
+            Assert.DoesNotThrow(() => _ = new LazySegmentTree<int, int>(n, SimpleOperationDelegate, SimpleMonoidId,
                 SimpleMappingDelegate, SimpleCompositionDelegate, SimpleMapId));
-            Assert.DoesNotThrow(() => _ = new LazySegmentTree<int, int>(10, SimpleOperationDelegate, SimpleMonoidId,
-                SimpleMappingDelegate, SimpleCompositionDelegate, SimpleMapId));
-            Assert.DoesNotThrow(() => _ = new LazySegmentTree<int, int>(new int[0], SimpleOperationDelegate,
-                SimpleMonoidId, SimpleMappingDelegate, SimpleCompositionDelegate, SimpleMapId));
-            Assert.DoesNotThrow(() => _ = new LazySegmentTree<int, int>(Enumerable.Range(1, 10),
+            Assert.DoesNotThrow(() => _ = new LazySegmentTree<int, int>(Enumerable.Range(1, n),
                 SimpleOperationDelegate, SimpleMonoidId, SimpleMappingDelegate, SimpleCompositionDelegate,
                 SimpleMapId));
-
-            Assert.DoesNotThrow(() => _ = new LazySegmentTree<int, int>(0, SimpleOperation, SimpleMonoidId,
+            Assert.DoesNotThrow(() => _ = new LazySegmentTree<int, int>(n, SimpleOperation, SimpleMonoidId,
                 SimpleMapping, SimpleComposition, SimpleMapId));
-            Assert.DoesNotThrow(() => _ = new LazySegmentTree<int, int>(10, SimpleOperation, SimpleMonoidId,
-                SimpleMapping, SimpleComposition, SimpleMapId));
-            Assert.DoesNotThrow(() => _ = new LazySegmentTree<int, int>(new int[0], SimpleOperation, SimpleMonoidId,
-                SimpleMapping, SimpleComposition, SimpleMapId));
-            Assert.DoesNotThrow(() => _ = new LazySegmentTree<int, int>(Enumerable.Range(1, 10), SimpleOperation,
+            Assert.DoesNotThrow(() => _ = new LazySegmentTree<int, int>(Enumerable.Range(1, n), SimpleOperation,
                 SimpleMonoidId, SimpleMapping, SimpleComposition, SimpleMapId));
         }
 
         [Test]
-        public void ZeroTest()
+        public void ZeroTest([Values(0, 10)] int n)
         {
-            var lst = new LazySegmentTree<int, int>(0, SimpleOperation, SimpleMonoidId, SimpleMapping,
+            var lst = new LazySegmentTree<int, int>(n, SimpleOperation, SimpleMonoidId, SimpleMapping,
                 SimpleComposition, SimpleMapId);
-            Assert.That(lst.QueryToAll(), Is.EqualTo(-(int) 1e9));
-
-            lst = new LazySegmentTree<int, int>(10, SimpleOperation, SimpleMonoidId, SimpleMapping, SimpleComposition,
-                SimpleMapId);
             Assert.That(lst.QueryToAll(), Is.EqualTo(-(int) 1e9));
         }
 
@@ -76,130 +63,121 @@ namespace AtCoderLibraryCSharp.Tests
         }
 
         [Test]
-        public void SimpleQueryNaiveTest()
+        public void SimpleQueryNaiveTest([Range(0, 50)] int n)
         {
-            for (var n = 0; n <= 50; n++)
+            var lst = new LazySegmentTree<int, int>(n, SimpleOperation, SimpleMonoidId, SimpleMapping,
+                SimpleComposition, SimpleMapId);
+            var p = new int[n];
+            for (var i = 0; i < n; i++)
             {
-                var lst = new LazySegmentTree<int, int>(n, SimpleOperation, SimpleMonoidId, SimpleMapping,
-                    SimpleComposition, SimpleMapId);
-                var p = new int[n];
-                for (var i = 0; i < n; i++)
-                {
-                    p[i] = (i * i + 100) % 31;
-                    lst.Set(i, p[i]);
-                }
+                p[i] = (i * i + 100) % 31;
+                lst.Set(i, p[i]);
+            }
 
-                for (var l = 0; l <= n; l++)
+            for (var l = 0; l <= n; l++)
+            {
+                for (var r = l; r <= n; r++)
                 {
-                    for (var r = l; r <= n; r++)
+                    var e = -(int) 1e9;
+                    for (var i = l; i < r; i++) e = System.Math.Max(e, p[i]);
+                    Assert.That(lst.Query(l, r), Is.EqualTo(e));
+                }
+            }
+        }
+
+        [Test]
+        public void QueryNaiveStructTest([Range(1, 30)] int n)
+        {
+            for (var ph = 0; ph < 10; ph++)
+            {
+                var lst = new LazySegmentTree<MonoidStruct, MapStruct>(n, Operation, MonoidStructId, Mapping,
+                    Composition, MapStructId);
+                var timeManager = new TimeManager(n);
+                for (var i = 0; i < n; i++) lst.Set(i, new MonoidStruct(i, i + 1, -1));
+                var now = 0;
+                for (var q = 0; q < 3000; q++)
+                {
+                    var ty = Utilities.RandomInteger(0, 3);
+                    var (l, r) = Utilities.RandomPair(0, n);
+                    switch (ty)
                     {
-                        var e = -(int) 1e9;
-                        for (var i = l; i < r; i++) e = System.Math.Max(e, p[i]);
-                        Assert.That(lst.Query(l, r), Is.EqualTo(e));
+                        case 0:
+                        {
+                            var result = lst.Query(l, r);
+                            Assert.That(result.L, Is.EqualTo(l));
+                            Assert.That(result.R, Is.EqualTo(r));
+                            Assert.That(result.Time, Is.EqualTo(timeManager.Query(l, r)));
+                            break;
+                        }
+                        case 1:
+                        {
+                            var result = lst.Get(l);
+                            Assert.That(result.L, Is.EqualTo(l));
+                            Assert.That(result.L + 1, Is.EqualTo(l + 1));
+                            Assert.That(result.Time, Is.EqualTo(timeManager.Query(l, l + 1)));
+                            break;
+                        }
+                        case 2:
+                            now++;
+                            lst.Apply(l, r, new MapStruct(now));
+                            timeManager.Action(l, r, now);
+                            break;
+                        case 3:
+                            now++;
+                            lst.Apply(l, new MapStruct(now));
+                            timeManager.Action(l, l + 1, now);
+                            break;
+                        default:
+                            throw new InvalidOperationException();
                     }
                 }
             }
         }
 
         [Test]
-        public void QueryNaiveStructTest()
+        public void QueryNaiveClassTest([Range(1, 30)] int n)
         {
-            for (var n = 1; n <= 30; n++)
+            for (var ph = 0; ph < 10; ph++)
             {
-                for (var ph = 0; ph < 10; ph++)
+                var lst = new LazySegmentTree<MonoidClass, MapClass>(n, Operation, MonoidClassId, Mapping,
+                    Composition, MapClassId);
+                var timeManager = new TimeManager(n);
+                for (var i = 0; i < n; i++) lst.Set(i, new MonoidClass(i, i + 1, -1));
+                var now = 0;
+                for (var q = 0; q < 3000; q++)
                 {
-                    var lst = new LazySegmentTree<MonoidStruct, MapStruct>(n, Operation, MonoidStructId, Mapping,
-                        Composition, MapStructId);
-                    var timeManager = new TimeManager(n);
-                    for (var i = 0; i < n; i++) lst.Set(i, new MonoidStruct(i, i + 1, -1));
-                    var now = 0;
-                    for (var q = 0; q < 3000; q++)
+                    var ty = Utilities.RandomInteger(0, 3);
+                    var (l, r) = Utilities.RandomPair(0, n);
+                    switch (ty)
                     {
-                        var ty = Utilities.RandomInteger(0, 3);
-                        var (l, r) = Utilities.RandomPair(0, n);
-                        switch (ty)
+                        case 0:
                         {
-                            case 0:
-                            {
-                                var result = lst.Query(l, r);
-                                Assert.That(result.L, Is.EqualTo(l));
-                                Assert.That(result.R, Is.EqualTo(r));
-                                Assert.That(result.Time, Is.EqualTo(timeManager.Query(l, r)));
-                                break;
-                            }
-                            case 1:
-                            {
-                                var result = lst.Get(l);
-                                Assert.That(result.L, Is.EqualTo(l));
-                                Assert.That(result.L + 1, Is.EqualTo(l + 1));
-                                Assert.That(result.Time, Is.EqualTo(timeManager.Query(l, l + 1)));
-                                break;
-                            }
-                            case 2:
-                                now++;
-                                lst.Apply(l, r, new MapStruct(now));
-                                timeManager.Action(l, r, now);
-                                break;
-                            case 3:
-                                now++;
-                                lst.Apply(l, new MapStruct(now));
-                                timeManager.Action(l, l + 1, now);
-                                break;
-                            default:
-                                throw new InvalidOperationException();
+                            var result = lst.Query(l, r);
+                            Assert.That(result.L, Is.EqualTo(l));
+                            Assert.That(result.R, Is.EqualTo(r));
+                            Assert.That(result.Time, Is.EqualTo(timeManager.Query(l, r)));
+                            break;
                         }
-                    }
-                }
-            }
-        }
-
-        [Test]
-        public void QueryNaiveClassTest()
-        {
-            for (var n = 1; n <= 30; n++)
-            {
-                for (var ph = 0; ph < 10; ph++)
-                {
-                    var lst = new LazySegmentTree<MonoidClass, MapClass>(n, Operation, MonoidClassId, Mapping,
-                        Composition, MapClassId);
-                    var timeManager = new TimeManager(n);
-                    for (var i = 0; i < n; i++) lst.Set(i, new MonoidClass(i, i + 1, -1));
-                    var now = 0;
-                    for (var q = 0; q < 3000; q++)
-                    {
-                        var ty = Utilities.RandomInteger(0, 3);
-                        var (l, r) = Utilities.RandomPair(0, n);
-                        switch (ty)
+                        case 1:
                         {
-                            case 0:
-                            {
-                                var result = lst.Query(l, r);
-                                Assert.That(result.L, Is.EqualTo(l));
-                                Assert.That(result.R, Is.EqualTo(r));
-                                Assert.That(result.Time, Is.EqualTo(timeManager.Query(l, r)));
-                                break;
-                            }
-                            case 1:
-                            {
-                                var result = lst.Get(l);
-                                Assert.That(result.L, Is.EqualTo(l));
-                                Assert.That(result.L + 1, Is.EqualTo(l + 1));
-                                Assert.That(result.Time, Is.EqualTo(timeManager.Query(l, l + 1)));
-                                break;
-                            }
-                            case 2:
-                                now++;
-                                lst.Apply(l, r, new MapClass(now));
-                                timeManager.Action(l, r, now);
-                                break;
-                            case 3:
-                                now++;
-                                lst.Apply(l, new MapClass(now));
-                                timeManager.Action(l, l + 1, now);
-                                break;
-                            default:
-                                throw new InvalidOperationException();
+                            var result = lst.Get(l);
+                            Assert.That(result.L, Is.EqualTo(l));
+                            Assert.That(result.L + 1, Is.EqualTo(l + 1));
+                            Assert.That(result.Time, Is.EqualTo(timeManager.Query(l, l + 1)));
+                            break;
                         }
+                        case 2:
+                            now++;
+                            lst.Apply(l, r, new MapClass(now));
+                            timeManager.Action(l, r, now);
+                            break;
+                        case 3:
+                            now++;
+                            lst.Apply(l, new MapClass(now));
+                            timeManager.Action(l, l + 1, now);
+                            break;
+                        default:
+                            throw new InvalidOperationException();
                     }
                 }
             }
@@ -219,74 +197,68 @@ namespace AtCoderLibraryCSharp.Tests
         }
 
         [Test]
-        public void MaxRightTest()
+        public void MaxRightTest([Range(1, 30)] int n)
         {
-            for (var n = 1; n <= 30; n++)
+            for (var ph = 0; ph < 10; ph++)
             {
-                for (var ph = 0; ph < 10; ph++)
+                var lst = new LazySegmentTree<MonoidStruct, MapStruct>(n, Operation, MonoidStructId, Mapping,
+                    Composition, MapStructId);
+                var timeManager = new TimeManager(n);
+                for (var i = 0; i < n; i++) lst.Set(i, new MonoidStruct(i, i + 1, -1));
+                var now = 0;
+                for (var q = 0; q < 1000; q++)
                 {
-                    var lst = new LazySegmentTree<MonoidStruct, MapStruct>(n, Operation, MonoidStructId, Mapping,
-                        Composition, MapStructId);
-                    var timeManager = new TimeManager(n);
-                    for (var i = 0; i < n; i++) lst.Set(i, new MonoidStruct(i, i + 1, -1));
-                    var now = 0;
-                    for (var q = 0; q < 1000; q++)
+                    var ty = Utilities.RandomInteger(0, 2);
+                    var (l, r) = Utilities.RandomPair(0, n);
+                    if (ty == 0)
                     {
-                        var ty = Utilities.RandomInteger(0, 2);
-                        var (l, r) = Utilities.RandomPair(0, n);
-                        if (ty == 0)
+                        bool F(MonoidStruct s)
                         {
-                            bool F(MonoidStruct s)
-                            {
-                                if (s.L == -1) return true;
-                                return s.R <= r;
-                            }
+                            if (s.L == -1) return true;
+                            return s.R <= r;
+                        }
 
-                            Assert.That(lst.MaxRight(l, F), Is.EqualTo(r));
-                        }
-                        else
-                        {
-                            now++;
-                            lst.Apply(l, r, new MapStruct(now));
-                            timeManager.Action(l, r, now);
-                        }
+                        Assert.That(lst.MaxRight(l, F), Is.EqualTo(r));
+                    }
+                    else
+                    {
+                        now++;
+                        lst.Apply(l, r, new MapStruct(now));
+                        timeManager.Action(l, r, now);
                     }
                 }
             }
         }
 
         [Test]
-        public void MaxLeftTest()
+        public void MaxLeftTest([Range(1, 30)] int n)
         {
-            for (var n = 1; n <= 30; n++)
+            for (var ph = 0; ph < 10; ph++)
             {
-                for (var ph = 0; ph < 10; ph++)
+                var lst = new LazySegmentTree<MonoidStruct, MapStruct>(n, Operation, MonoidStructId, Mapping,
+                    Composition, MapStructId);
+                var timeManager = new TimeManager(n);
+                for (var i = 0; i < n; i++) lst.Set(i, new MonoidStruct(i, i + 1, -1));
+                var now = 0;
+                for (var q = 0; q < 1000; q++)
                 {
-                    var lst = new LazySegmentTree<MonoidStruct, MapStruct>(n, Operation, MonoidStructId, Mapping,
-                        Composition, MapStructId);
-                    var timeManager = new TimeManager(n);
-                    for (var i = 0; i < n; i++) lst.Set(i, new MonoidStruct(i, i + 1, -1));
-                    var now = 0;
-                    for (var q = 0; q < 1000; q++)
+                    var ty = Utilities.RandomInteger(0, 2);
+                    var (l, r) = Utilities.RandomPair(0, n);
+                    if (ty == 0)
                     {
-                        var ty = Utilities.RandomInteger(0, 2);
-                        var (l, r) = Utilities.RandomPair(0, n);
-                        if (ty == 0)
+                        bool F(MonoidStruct s)
                         {
-                            bool F(MonoidStruct s)
-                            {
-                                if (s.L == -1) return true;
-                                return l <= s.L;
-                            }
+                            if (s.L == -1) return true;
+                            return l <= s.L;
+                        }
 
-                            Assert.That(lst.MinLeft(r, F), Is.EqualTo(l));
-                        }
-                        else
-                        {
-                            now++;
-                            lst.Apply(l, r, new MapStruct(now));
-                            timeManager.Action(l, r, now);
-                        }
+                        Assert.That(lst.MinLeft(r, F), Is.EqualTo(l));
+                    }
+                    else
+                    {
+                        now++;
+                        lst.Apply(l, r, new MapStruct(now));
+                        timeManager.Action(l, r, now);
                     }
                 }
             }

@@ -6,21 +6,11 @@ namespace AtCoderLibraryCSharp.Tests
     public class SegmentTreeTests
     {
         [Test]
-        public void InitializeTest()
+        public void InitializeTest([Values(0, 10)] int n)
         {
-            Assert.DoesNotThrow(() => _ = new SegmentTree<string>(0, OperationDelegate, Id));
-            Assert.DoesNotThrow(() => _ = new SegmentTree<string>(10, OperationDelegate, Id));
-
-            Assert.DoesNotThrow(() => _ = new SegmentTree<string>(0, Operation, Id));
-            Assert.DoesNotThrow(() => _ = new SegmentTree<string>(10, Operation, Id));
-
-            Assert.DoesNotThrow(() => _ = new SegmentTree<string>(0, (a, b) =>
-            {
-                if (a == "$") return b;
-                if (b == "$") return a;
-                return a + b;
-            }, Id));
-            Assert.DoesNotThrow(() => _ = new SegmentTree<string>(10, (a, b) =>
+            Assert.DoesNotThrow(() => _ = new SegmentTree<string>(n, OperationDelegate, Id));
+            Assert.DoesNotThrow(() => _ = new SegmentTree<string>(n, Operation, Id));
+            Assert.DoesNotThrow(() => _ = new SegmentTree<string>(n, (a, b) =>
             {
                 if (a == "$") return b;
                 if (b == "$") return a;
@@ -33,8 +23,7 @@ namespace AtCoderLibraryCSharp.Tests
                 if (b == "$") return a;
                 return a + b;
             };
-            Assert.DoesNotThrow(() => _ = new SegmentTree<string>(0, func.Invoke, Id));
-            Assert.DoesNotThrow(() => _ = new SegmentTree<string>(10, func.Invoke, Id));
+            Assert.DoesNotThrow(() => _ = new SegmentTree<string>(n, func.Invoke, Id));
 
             static string LocalFunc(string a, string b)
             {
@@ -43,8 +32,7 @@ namespace AtCoderLibraryCSharp.Tests
                 return a + b;
             }
 
-            Assert.DoesNotThrow(() => _ = new SegmentTree<string>(0, LocalFunc, Id));
-            Assert.DoesNotThrow(() => _ = new SegmentTree<string>(10, LocalFunc, Id));
+            Assert.DoesNotThrow(() => _ = new SegmentTree<string>(n, LocalFunc, Id));
         }
 
         [Test]
@@ -93,39 +81,36 @@ namespace AtCoderLibraryCSharp.Tests
         }
 
         [Test]
-        public void CompareToNaiveTest()
+        public void CompareToNaiveTest([Range(0, 30)] int n)
         {
             bool SimpleQuery(string x) => x.Length <= _y.Length;
-            for (var n = 0; n < 30; n++)
+            var st = new SegmentTree<string>(n, Operation, Id);
+            var stn = new SegmentTreeNaive<string>(n, Operation, Id);
+            for (var i = 0; i < n; i++)
             {
-                var st = new SegmentTree<string>(n, Operation, Id);
-                var stn = new SegmentTreeNaive<string>(n, Operation, Id);
-                for (var i = 0; i < n; i++)
-                {
-                    var s = $"a{i}";
-                    st.Set(i, s);
-                    stn.Set(i, s);
-                }
+                var s = $"a{i}";
+                st.Set(i, s);
+                stn.Set(i, s);
+            }
 
-                for (var l = 0; l <= n; l++)
-                for (var r = l; r <= n; r++)
-                    Assert.That(st.Query(l, r), Is.EqualTo(stn.Query(l, r)));
+            for (var l = 0; l <= n; l++)
+            for (var r = l; r <= n; r++)
+                Assert.That(st.Query(l, r), Is.EqualTo(stn.Query(l, r)));
 
-                for (var l = 0; l <= n; l++)
-                for (var r = l; r <= n; r++)
-                {
-                    _y = st.Query(l, r);
-                    Assert.That(st.MaxRight(l, SimpleQuery), Is.EqualTo(stn.MaxRight(l, SimpleQuery)));
-                    Assert.That(st.MaxRight(l, SimpleQuery), Is.EqualTo(stn.MaxRight(l, x => x.Length <= _y.Length)));
-                }
+            for (var l = 0; l <= n; l++)
+            for (var r = l; r <= n; r++)
+            {
+                _y = st.Query(l, r);
+                Assert.That(st.MaxRight(l, SimpleQuery), Is.EqualTo(stn.MaxRight(l, SimpleQuery)));
+                Assert.That(st.MaxRight(l, SimpleQuery), Is.EqualTo(stn.MaxRight(l, x => x.Length <= _y.Length)));
+            }
 
-                for (var r = 0; r <= n; r++)
-                for (var l = 0; l <= r; l++)
-                {
-                    _y = st.Query(l, r);
-                    Assert.That(st.MinLeft(r, SimpleQuery), Is.EqualTo(stn.MinLeft(r, SimpleQuery)));
-                    Assert.That(st.MinLeft(r, SimpleQuery), Is.EqualTo(stn.MinLeft(r, x => x.Length <= _y.Length)));
-                }
+            for (var r = 0; r <= n; r++)
+            for (var l = 0; l <= r; l++)
+            {
+                _y = st.Query(l, r);
+                Assert.That(st.MinLeft(r, SimpleQuery), Is.EqualTo(stn.MinLeft(r, SimpleQuery)));
+                Assert.That(st.MinLeft(r, SimpleQuery), Is.EqualTo(stn.MinLeft(r, x => x.Length <= _y.Length)));
             }
         }
 

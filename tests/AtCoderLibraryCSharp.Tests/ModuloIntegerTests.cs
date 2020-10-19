@@ -9,29 +9,29 @@ namespace AtCoderLibraryCSharp.Tests
         [Test]
         public void DynamicBorderTest()
         {
-            const int modUpper = int.MaxValue;
-            for (var mod = modUpper; mod >= modUpper - 20; mod--)
+            const int moduloUpper = int.MaxValue;
+            for (var modulo = moduloUpper; modulo >= moduloUpper - 20; modulo--)
             {
-                ModuloInteger.SetModulo(mod);
+                ModuloInteger.SetModulo(modulo);
                 var values = new List<long>();
                 for (var i = 0; i < 10; i++)
                 {
                     values.Add(i);
-                    values.Add(mod - i);
-                    values.Add(mod / 2 + i);
-                    values.Add(mod / 2 - i);
+                    values.Add(modulo - i);
+                    values.Add(modulo / 2 + i);
+                    values.Add(modulo / 2 - i);
                 }
 
                 foreach (var a in values)
                 {
-                    Assert.That(new ModuloInteger(a).Power(3).Value, Is.EqualTo(a * a % mod * a % mod));
+                    Assert.That(new ModuloInteger(a).Power(3).Value, Is.EqualTo(a * a % modulo * a % modulo));
                     foreach (var b in values)
                     {
                         ModuloInteger l = a;
                         ModuloInteger r = b;
-                        Assert.That((l + r).Value, Is.EqualTo((a + b) % mod));
-                        Assert.That((l - r).Value, Is.EqualTo((a - b + mod) % mod));
-                        Assert.That((l * r).Value, Is.EqualTo(a * b % mod));
+                        Assert.That((l + r).Value, Is.EqualTo((a + b) % modulo));
+                        Assert.That((l - r).Value, Is.EqualTo((a - b + modulo) % modulo));
+                        Assert.That((l * r).Value, Is.EqualTo(a * b % modulo));
                     }
                 }
             }
@@ -42,12 +42,8 @@ namespace AtCoderLibraryCSharp.Tests
         {
             ModuloInteger.SetModulo(1);
             for (var i = 0; i < 100; i++)
-            {
-                for (var j = 0; j < 100; j++)
-                {
-                    Assert.That((i * (ModuloInteger) j).Value, Is.Zero);
-                }
-            }
+            for (var j = 0; j < 100; j++)
+                Assert.That((i * (ModuloInteger) j).Value, Is.Zero);
 
             ModuloInteger l = 1234;
             ModuloInteger r = 5678;
@@ -59,21 +55,11 @@ namespace AtCoderLibraryCSharp.Tests
         }
 
         [Test]
-        public void InverseTest()
+        public void InverseTest([Values(11, 12, 1000000007, 1000000008)]
+            int n)
         {
-            var n = 11;
             ModuloInteger.SetModulo(n);
-            for (var i = 1; i < n - 1; i++)
-            {
-                var x = ModuloInteger.Inverse(i);
-                var y = new ModuloInteger(i).Inverse();
-                Assert.That(x * i % n, Is.EqualTo(1));
-                Assert.That(x, Is.EqualTo(y));
-            }
-
-            n = 12;
-            ModuloInteger.SetModulo(n);
-            for (var i = 1; i < n - 1; i++)
+            for (var i = 1; i < System.Math.Min(n, 100000); i++)
             {
                 if (GreatestCommonDivisor(i, n) != 1) continue;
                 var x = ModuloInteger.Inverse(i);
@@ -81,28 +67,11 @@ namespace AtCoderLibraryCSharp.Tests
                 Assert.That(x * i % n, Is.EqualTo(1));
                 Assert.That(x, Is.EqualTo(y));
             }
+        }
 
-            n = (int) 1e9 + 7;
-            ModuloInteger.SetModulo1000000007();
-            for (var i = 1; i < 100000; i++)
-            {
-                var x = ModuloInteger.Inverse(i);
-                var y = new ModuloInteger(i).Inverse();
-                Assert.That(x * i % n, Is.EqualTo(1));
-                Assert.That(x, Is.EqualTo(y));
-            }
-
-            n = 1000000008;
-            ModuloInteger.SetModulo(n);
-            for (var i = 1; i < 100000; i++)
-            {
-                if (GreatestCommonDivisor(i, n) != 1) continue;
-                var x = ModuloInteger.Inverse(i);
-                var y = new ModuloInteger(i).Inverse();
-                Assert.That(x * i % n, Is.EqualTo(1));
-                Assert.That(x, Is.EqualTo(y));
-            }
-
+        [Test]
+        public void Inverse998244353Test()
+        {
             ModuloInteger.SetModulo998244353();
             for (var i = 1; i < 100000; i++)
             {
@@ -116,28 +85,25 @@ namespace AtCoderLibraryCSharp.Tests
         }
 
         [Test]
-        public void PowerTest()
+        public void PowerTest([Values(11, 12, 998244353, 1000000007, 1000000008)]
+            int modulo)
         {
-            var modulo = new[] {11, 12, 998244353, 1000000007, 1000000008};
-            foreach (var m in modulo)
+            ModuloInteger.SetModulo(modulo);
+            for (var i = 1; i < System.Math.Min(modulo, 1000); i++)
             {
-                ModuloInteger.SetModulo(m);
-                for (var i = 1; i < System.Math.Min(m - 1, 1000); i++)
+                var expected = 1L;
+                var x = ModuloInteger.Power(i, 0);
+                var y = new ModuloInteger(i).Power(0);
+                Assert.That(ModuloInteger.Power(i, 0).Value, Is.EqualTo(1));
+                Assert.That(x, Is.EqualTo(y));
+                for (var j = 1; j <= 100; j++)
                 {
-                    var expected = 1L;
-                    var x = ModuloInteger.Power(i, 0);
-                    var y = new ModuloInteger(i).Power(0);
-                    Assert.That(ModuloInteger.Power(i, 0).Value, Is.EqualTo(1));
+                    expected = expected * (i % modulo) % modulo;
+                    if (expected < 0) expected += modulo;
+                    x = ModuloInteger.Power(i, j);
+                    y = new ModuloInteger(i).Power(j);
+                    Assert.That(x.Value, Is.EqualTo(expected));
                     Assert.That(x, Is.EqualTo(y));
-                    for (var j = 1; j <= 100; j++)
-                    {
-                        expected = expected * (i % m) % m;
-                        if (expected < 0) expected += m;
-                        x = ModuloInteger.Power(i, j);
-                        y = new ModuloInteger(i).Power(j);
-                        Assert.That(x.Value, Is.EqualTo(expected));
-                        Assert.That(x, Is.EqualTo(y));
-                    }
                 }
             }
         }
@@ -211,19 +177,16 @@ namespace AtCoderLibraryCSharp.Tests
         }
 
         [Test]
-        public void GetHashCodeTest()
+        public void GetHashCodeTest([Values(11, 12, 998244353, 1000000007, 1000000008)]
+            int modulo)
         {
-            var modulo = new[] {11, 12, 998244353, 1000000007, 1000000008};
-            foreach (var m in modulo)
+            ModuloInteger.SetModulo(modulo);
+            for (var i = 1; i < System.Math.Min(modulo - 1, 1000); i++)
             {
-                ModuloInteger.SetModulo(m);
-                for (var i = 1; i < System.Math.Min(m - 1, 1000); i++)
-                {
-                    var x = new ModuloInteger(i);
-                    var y = x + m;
-                    Assert.That(x, Is.EqualTo(y));
-                    Assert.That(x.GetHashCode(), Is.EqualTo(y.GetHashCode()));
-                }
+                var x = new ModuloInteger(i);
+                var y = x + modulo;
+                Assert.That(x, Is.EqualTo(y));
+                Assert.That(x.GetHashCode(), Is.EqualTo(y.GetHashCode()));
             }
         }
 

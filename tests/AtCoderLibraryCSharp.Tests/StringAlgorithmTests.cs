@@ -75,87 +75,70 @@ namespace AtCoderLibraryCSharp.Tests
         }
 
         [Test]
-        public void SuffixesAllTest()
+        public void SuffixesAllTest([Range(1, 100)] int n)
         {
-            for (var n = 1; n <= 100; n++)
-            {
-                var s = Enumerable.Repeat(10, n).ToArray();
-                Assert.That(StringAlgorithm.CreateSuffixes(s), Is.EquivalentTo(CreateSuffixesNaive(s)));
-                Assert.That(StringAlgorithm.CreateSuffixes(s, 10), Is.EquivalentTo(CreateSuffixesNaive(s)));
-                Assert.That(StringAlgorithm.CreateSuffixes(s, 12), Is.EquivalentTo(CreateSuffixesNaive(s)));
-            }
+            var s = Enumerable.Repeat(10, n).ToArray();
+            Assert.That(StringAlgorithm.CreateSuffixes(s), Is.EquivalentTo(CreateSuffixesNaive(s)));
+            Assert.That(StringAlgorithm.CreateSuffixes(s, 10), Is.EquivalentTo(CreateSuffixesNaive(s)));
+            Assert.That(StringAlgorithm.CreateSuffixes(s, 12), Is.EquivalentTo(CreateSuffixesNaive(s)));
 
-            for (var n = 1; n <= 100; n++)
-            {
-                var s = new int[n];
-                for (var i = 0; i < n; i++) s[i] = i % 2;
-                Assert.That(StringAlgorithm.CreateSuffixes(s), Is.EquivalentTo(CreateSuffixesNaive(s)));
-                Assert.That(StringAlgorithm.CreateSuffixes(s, 3), Is.EquivalentTo(CreateSuffixesNaive(s)));
-            }
+            s = new int[n];
+            for (var i = 0; i < n; i++) s[i] = i % 2;
+            Assert.That(StringAlgorithm.CreateSuffixes(s), Is.EquivalentTo(CreateSuffixesNaive(s)));
+            Assert.That(StringAlgorithm.CreateSuffixes(s, 3), Is.EquivalentTo(CreateSuffixesNaive(s)));
 
-            for (var n = 1; n <= 100; n++)
-            {
-                var s = new int[n];
-                for (var i = 0; i < n; i++) s[i] = 1 - i % 2;
-                Assert.That(StringAlgorithm.CreateSuffixes(s), Is.EquivalentTo(CreateSuffixesNaive(s)));
-                Assert.That(StringAlgorithm.CreateSuffixes(s, 3), Is.EquivalentTo(CreateSuffixesNaive(s)));
-            }
+            s = new int[n];
+            for (var i = 0; i < n; i++) s[i] = 1 - i % 2;
+            Assert.That(StringAlgorithm.CreateSuffixes(s), Is.EquivalentTo(CreateSuffixesNaive(s)));
+            Assert.That(StringAlgorithm.CreateSuffixes(s, 3), Is.EquivalentTo(CreateSuffixesNaive(s)));
         }
 
         [Test]
-        public void SaLcpNaiveTest()
+        public void SaLcpNaiveTest([Values(4, 2)] int x)
         {
-            var sample = new[] {4, 2};
-            foreach (var x in sample)
+            for (var n = 1; n <= 20 / x; n++)
             {
-                for (var n = 1; n <= 20 / x; n++)
+                var m = 1;
+                for (var i = 0; i < n; i++) m *= x;
+                for (var f = 0; f < m; f++)
                 {
-                    var m = 1;
-                    for (var i = 0; i < n; i++) m *= x;
-                    for (var f = 0; f < m; f++)
+                    var s = new int[n];
+                    var g = f;
+                    var maxC = 0;
+                    for (var i = 0; i < n; i++)
                     {
-                        var s = new int[n];
-                        var g = f;
-                        var maxC = 0;
-                        for (var i = 0; i < n; i++)
-                        {
-                            s[i] = g % x;
-                            maxC = System.Math.Max(maxC, s[i]);
-                            g /= x;
-                        }
-
-                        var sa = CreateSuffixesNaive(s);
-                        Assert.That(StringAlgorithm.CreateSuffixes(s), Is.EquivalentTo(sa));
-                        Assert.That(StringAlgorithm.CreateSuffixes(s, maxC), Is.EquivalentTo(sa));
-                        Assert.That(StringAlgorithm.CreateLongestCommonPrefixes(s, sa),
-                            Is.EquivalentTo(CreateLongestCommonPrefixesNaive(s, sa)));
+                        s[i] = g % x;
+                        maxC = System.Math.Max(maxC, s[i]);
+                        g /= x;
                     }
+
+                    var sa = CreateSuffixesNaive(s);
+                    Assert.That(StringAlgorithm.CreateSuffixes(s), Is.EquivalentTo(sa));
+                    Assert.That(StringAlgorithm.CreateSuffixes(s, maxC), Is.EquivalentTo(sa));
+                    Assert.That(StringAlgorithm.CreateLongestCommonPrefixes(s, sa),
+                        Is.EquivalentTo(CreateLongestCommonPrefixesNaive(s, sa)));
                 }
             }
         }
 
         [Test]
-        public void ZAlgorithmNaiveTest()
+        public void ZAlgorithmNaiveTest([Values(4, 2)] int x)
         {
-            var sample = new[] {4, 2};
-            foreach (var x in sample)
+            for (var n = 1; n <= 20 / x; n++)
             {
-                for (var n = 1; n <= 20 / x; n++)
+                var m = 1;
+                for (var i = 0; i < n; i++) m *= x;
+                for (var f = 0; f < m; f++)
                 {
-                    var m = 1;
-                    for (var i = 0; i < n; i++) m *= x;
-                    for (var f = 0; f < m; f++)
+                    var s = new int[n];
+                    var g = f;
+                    for (var i = 0; i < n; i++)
                     {
-                        var s = new int[n];
-                        var g = f;
-                        for (var i = 0; i < n; i++)
-                        {
-                            s[i] = g % x;
-                            g /= x;
-                        }
-
-                        Assert.That(StringAlgorithm.ZAlgorithm(s), Is.EquivalentTo(ZAlgorithmNaive(s)));
+                        s[i] = g % x;
+                        g /= x;
                     }
+
+                    Assert.That(StringAlgorithm.ZAlgorithm(s), Is.EquivalentTo(ZAlgorithmNaive(s)));
                 }
             }
         }

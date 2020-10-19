@@ -123,32 +123,25 @@ namespace AtCoderLibraryCSharp.Tests
         }
 
         [Test]
-        public void InverseModuloTest()
+        public void InverseModuloTest([Range(1, 1000)] int modulo)
         {
             for (var a = -100; a <= 100; a++)
             {
-                for (var b = 1; b <= 1000; b++)
-                {
-                    if (GreatestCommonDivisor(Math.SafeModulo(a, b), b) != 1) continue;
-                    var c = Math.InverseModulo(a, b);
-                    Assert.That(c, Is.GreaterThanOrEqualTo(0));
-                    Assert.That(b, Is.GreaterThanOrEqualTo(c));
-                    Assert.That((a * c % b + b) % b, Is.EqualTo(1 % b));
-                }
+                if (GreatestCommonDivisor(Math.SafeModulo(a, modulo), modulo) != 1) continue;
+                var c = Math.InverseModulo(a, modulo);
+                Assert.That(c, Is.GreaterThanOrEqualTo(0));
+                Assert.That(modulo, Is.GreaterThanOrEqualTo(c));
+                Assert.That((a * c % modulo + modulo) % modulo, Is.EqualTo(1 % modulo));
             }
         }
 
         [Test]
-        public void InverseModuloZeroTest()
+        public void InverseModuloZeroTest([Range(0, 10)] int x)
         {
-            Assert.That(Math.InverseModulo(0, 1), Is.Zero);
-            for (var i = 0; i < 10; i++)
-            {
-                Assert.That(Math.InverseModulo(i, 1), Is.Zero);
-                Assert.That(Math.InverseModulo(-i, 1), Is.Zero);
-                Assert.That(Math.InverseModulo(long.MinValue + i, 1), Is.Zero);
-                Assert.That(Math.InverseModulo(long.MaxValue - i, 1), Is.Zero);
-            }
+            Assert.That(Math.InverseModulo(x, 1), Is.Zero);
+            Assert.That(Math.InverseModulo(-x, 1), Is.Zero);
+            Assert.That(Math.InverseModulo(long.MinValue + x, 1), Is.Zero);
+            Assert.That(Math.InverseModulo(long.MaxValue - x, 1), Is.Zero);
         }
 
         [Test]
@@ -169,24 +162,30 @@ namespace AtCoderLibraryCSharp.Tests
         }
 
         [Test]
-        public void IsPrimeTest()
+        public void IsPrimeTest([Range(0, 1000)] int n)
         {
-            for (var i = 0; i <= 10000; i++)
-                Assert.That(Math.IsPrime(i), Is.EqualTo(IsPrimeNaive(i)));
-            for (var i = 0; i <= 10000; i++)
+            Assert.That(Math.IsPrime(n), Is.EqualTo(IsPrimeNaive(n)));
+            var x = int.MaxValue - n;
+            Assert.That(Math.IsPrime(x), Is.EqualTo(IsPrimeNaive(x)));
+        }
+
+        [Test]
+        public void IsPrimeOverThan1000Test()
+        {
+            for (var i = 1001; i < 10000; i++)
             {
+                Assert.That(Math.IsPrime(i), Is.EqualTo(IsPrimeNaive(i)));
                 var x = int.MaxValue - i;
                 Assert.That(Math.IsPrime(x), Is.EqualTo(IsPrimeNaive(x)));
             }
         }
 
         [Test]
-        public void PowerModuloTest()
+        public void PowerModuloTest([Range(1, 100)] int modulo)
         {
-            for (var a = -100; a <= 100; a++)
-            for (var b = 0; b <= 100; b++)
-            for (var c = 1; c <= 100; c++)
-                Assert.That(Math.PowerModulo(a, b, c), Is.EqualTo(PowerModuloNaive(a, b, c)));
+            for (var x = -100; x <= 100; x++)
+            for (var n = 0; n <= 100; n++)
+                Assert.That(Math.PowerModulo(x, n, modulo), Is.EqualTo(PowerModuloNaive(x, n, modulo)));
         }
 
         [Test]
@@ -199,11 +198,31 @@ namespace AtCoderLibraryCSharp.Tests
         }
 
         [Test]
-        public void PrimitiveRootTest()
+        public void PrimitiveRootTest([Range(2, 1000)] int m)
         {
-            for (var m = 2; m <= 10000; m++)
+            if (!Math.IsPrime(m)) return;
+            var n = Math.PrimitiveRoot(m);
+            Assert.That(n, Is.GreaterThanOrEqualTo(1));
+            Assert.That(m, Is.GreaterThan(n));
+            var x = 1L;
+            for (var i = 1; i <= m - 2; i++)
             {
-                if (!Math.IsPrime(m)) continue;
+                x *= n;
+                x %= m;
+                Assert.That(x, Is.Not.EqualTo(1));
+            }
+
+            x *= n;
+            x %= m;
+            Assert.That(x, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void PrimitiveRootOverThan1000Test()
+        {
+            for (var m = 1001; m <= 10000; m++)
+            {
+                if (!Math.IsPrime(m)) return;
                 var n = Math.PrimitiveRoot(m);
                 Assert.That(n, Is.GreaterThanOrEqualTo(1));
                 Assert.That(m, Is.GreaterThan(n));
@@ -279,12 +298,12 @@ namespace AtCoderLibraryCSharp.Tests
             return true;
         }
 
-        private static long PowerModuloNaive(long x, long n, long mod)
+        private static long PowerModuloNaive(long x, long n, long modulo)
         {
-            var y = Math.SafeModulo(x, mod);
-            var z = 1L % mod;
-            for (var i = 0L; i < n; i++) z = z * y % mod;
-            return z % mod;
+            var y = Math.SafeModulo(x, modulo);
+            var z = 1L % modulo;
+            for (var i = 0L; i < n; i++) z = z * y % modulo;
+            return z % modulo;
         }
     }
 }
