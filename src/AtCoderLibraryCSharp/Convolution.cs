@@ -8,7 +8,6 @@ namespace AtCoderLibraryCSharp
     {
         private static ModuloInteger[] _sumE;
         private static ModuloInteger[] _sumIe;
-        private static int _primitiveRoot;
         private static long _modulo;
 
         public static IEnumerable<ModuloInteger> Execute(IEnumerable<ModuloInteger> a, IEnumerable<ModuloInteger> b)
@@ -16,9 +15,10 @@ namespace AtCoderLibraryCSharp
             var (a1, b1) = (a.ToArray(), b.ToArray());
             var (n, m) = (a1.Length, b1.Length);
             if (n < 1 || m < 1) return new ModuloInteger[0];
-            var ret = new ModuloInteger[n + m - 1];
+            ModuloInteger[] ret;
             if (System.Math.Min(n, m) <= 60)
             {
+                ret = new ModuloInteger[n + m - 1];
                 for (var i = 0; i < n; i++)
                 for (var j = 0; j < m; j++)
                     ret[i + j] += a1[i] * b1[j];
@@ -28,109 +28,13 @@ namespace AtCoderLibraryCSharp
             var z = 1 << CeilPower2(n + m - 1);
             Array.Resize(ref a1, z);
             Array.Resize(ref b1, z);
-            a1 = Butterfly(a1).ToArray();
-            b1 = Butterfly(b1).ToArray();
-            for (var i = 0; i < a1.Length; i++) a1[i] *= b1[i];
-            ret = ButterflyInverse(a1).ToArray();
-            Array.Resize(ref ret, n + m - 1);
+            Butterfly(a1);
+            Butterfly(b1);
+            ret = new ModuloInteger[z];
+            for (var i = 0; i < z; i++) ret[i] = a1[i] * b1[i];
+            ButterflyInverse(ret);
             var iz = ModuloInteger.Inverse(z);
-            return ret.Select(x => x * iz);
-        }
-
-        private static void Initialize()
-        {
-            if (ModuloInteger.Modulo != _modulo)
-            {
-                _modulo = ModuloInteger.Modulo;
-                _sumE = null;
-                _sumIe = null;
-            }
-
-            if (_sumE != null && _sumIe != null) return;
-            var m = ModuloInteger.Modulo;
-            _primitiveRoot = Math.PrimitiveRoot(m);
-            _sumE = new ModuloInteger[30];
-            _sumIe = new ModuloInteger[30];
-            var es = new ModuloInteger[30];
-            var ies = new ModuloInteger[30];
-            var count2 = BitScanForward(m - 1);
-            var e = new ModuloInteger(_primitiveRoot).Power((m - 1) >> count2);
-            var ie = e.Inverse();
-            for (var i = count2; i >= 2; i--)
-            {
-                es[i - 2] = e;
-                ies[i - 2] = ie;
-                e *= e;
-                ie *= ie;
-            }
-
-            ModuloInteger now = 1;
-            ModuloInteger inow = 1;
-            for (var i = 0; i <= count2 - 2; i++)
-            {
-                _sumE[i] = es[i] * now;
-                _sumIe[i] = ies[i] * inow;
-                now *= ies[i];
-                inow *= es[i];
-            }
-        }
-
-        private static IEnumerable<ModuloInteger> Butterfly(IEnumerable<ModuloInteger> items)
-        {
-            var ret = items.ToArray();
-            var h = CeilPower2(ret.Length);
-            Initialize();
-
-            for (var ph = 1; ph <= h; ph++)
-            {
-                var w = 1 << (ph - 1);
-                var p = 1 << (h - ph);
-                ModuloInteger now = 1;
-                for (var s = 0; s < w; s++)
-                {
-                    var offset = s << (h - ph + 1);
-                    for (var i = 0; i < p; i++)
-                    {
-                        var l = ret[i + offset];
-                        var r = ret[i + offset + p] * now;
-                        ret[i + offset] = l + r;
-                        ret[i + offset + p] = l - r;
-                    }
-
-                    now *= _sumE[BitScanForward(~s)];
-                }
-            }
-
-            return ret;
-        }
-
-        private static IEnumerable<ModuloInteger> ButterflyInverse(IEnumerable<ModuloInteger> items)
-        {
-            var ret = items.ToArray();
-            var h = CeilPower2(ret.Length);
-            Initialize();
-
-            for (var ph = h; ph >= 1; ph--)
-            {
-                var w = 1 << (ph - 1);
-                var p = 1 << (h - ph);
-                ModuloInteger inow = 1;
-                for (var s = 0; s < w; s++)
-                {
-                    var offset = s << (h - ph + 1);
-                    for (var i = 0; i < p; i++)
-                    {
-                        var l = ret[i + offset];
-                        var r = ret[i + offset + p];
-                        ret[i + offset] = l + r;
-                        ret[i + offset + p] = (l - r) * inow;
-                    }
-
-                    inow *= _sumIe[BitScanForward(~s)];
-                }
-            }
-
-            return ret;
+            return ret.Take(n + m - 1).Select(x => x * iz);
         }
 
         public static IEnumerable<long> Execute(IEnumerable<long> a, IEnumerable<long> b)
@@ -177,6 +81,87 @@ namespace AtCoderLibraryCSharp
             return ret;
         }
 
+        private static void Initialize()
+        {
+            _modulo = ModuloInteger.Modulo;
+            _sumE = new ModuloInteger[30];
+            _sumIe = new ModuloInteger[30];
+            var es = new ModuloInteger[30];
+            var ies = new ModuloInteger[30];
+            var bit = BitScanForward(_modulo - 1);
+            var e = ModuloInteger.Power(Math.PrimitiveRoot(_modulo), (_modulo - 1) >> bit);
+            var ie = e.Inverse();
+            for (var i = bit; i >= 2; i--)
+            {
+                es[i - 2] = e;
+                ies[i - 2] = ie;
+                e *= e;
+                ie *= ie;
+            }
+
+            ModuloInteger now = 1;
+            ModuloInteger inow = 1;
+            for (var i = 0; i <= bit - 2; i++)
+            {
+                _sumE[i] = es[i] * now;
+                _sumIe[i] = ies[i] * inow;
+                now *= ies[i];
+                inow *= es[i];
+            }
+        }
+
+        private static void Butterfly(IList<ModuloInteger> items)
+        {
+            var h = CeilPower2(items.Count);
+            if (ModuloInteger.Modulo != _modulo) Initialize();
+
+            for (var ph = 1; ph <= h; ph++)
+            {
+                var w = 1 << (ph - 1);
+                var p = 1 << (h - ph);
+                ModuloInteger now = 1;
+                for (var s = 0; s < w; s++)
+                {
+                    var offset = s << (h - ph + 1);
+                    for (var i = 0; i < p; i++)
+                    {
+                        var l = items[i + offset];
+                        var r = items[i + offset + p] * now;
+                        items[i + offset] = l + r;
+                        items[i + offset + p] = l - r;
+                    }
+
+                    now *= _sumE[BitScanForward(~s)];
+                }
+            }
+        }
+
+        private static void ButterflyInverse(IList<ModuloInteger> items)
+        {
+            var h = CeilPower2(items.Count);
+            if (ModuloInteger.Modulo != _modulo) Initialize();
+
+            for (var ph = h; ph >= 1; ph--)
+            {
+                var w = 1 << (ph - 1);
+                var p = 1 << (h - ph);
+                ModuloInteger inow = 1;
+                for (var s = 0; s < w; s++)
+                {
+                    var offset = s << (h - ph + 1);
+                    for (var i = 0; i < p; i++)
+                    {
+                        var l = items[i + offset];
+                        var r = items[i + offset + p];
+                        items[i + offset] = l + r;
+                        items[i + offset + p] = (l - r) * inow;
+                    }
+
+                    inow *= _sumIe[BitScanForward(~s)];
+                }
+            }
+        }
+
         private static int BitScanForward(long n)
         {
             if (n == 0) return 0;
@@ -188,7 +173,7 @@ namespace AtCoderLibraryCSharp
         private static int CeilPower2(int n)
         {
             var x = 0;
-            while ((1 << x) < n) x++;
+            while (1 << x < n) x++;
             return x;
         }
     }

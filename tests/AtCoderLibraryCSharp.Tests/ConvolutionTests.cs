@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 
@@ -108,7 +109,7 @@ namespace AtCoderLibraryCSharp.Tests
             Assert.That(Convolution.Execute(a, b), Is.EquivalentTo(ConvolutionNaive(a, b)));
         }
 
-        private static ModuloInteger[] ConvolutionNaive(ModuloInteger[] a, ModuloInteger[] b)
+        private static IEnumerable<ModuloInteger> ConvolutionNaive(ModuloInteger[] a, ModuloInteger[] b)
         {
             var n = a.Length;
             var m = b.Length;
@@ -120,7 +121,7 @@ namespace AtCoderLibraryCSharp.Tests
             return ret;
         }
 
-        private static long[] ConvolutionNaive(long[] a, long[] b)
+        private static IEnumerable<long> ConvolutionNaive(long[] a, long[] b)
         {
             var n = a.Length;
             var m = b.Length;
