@@ -22,6 +22,7 @@ The library is based on [ac-library](https://github.com/atcoder/ac-library) and 
 
 ## Optional Classes
 
+- EnumerationModulo
 - LowestCommonAncestor
 - PriorityQueue
 
