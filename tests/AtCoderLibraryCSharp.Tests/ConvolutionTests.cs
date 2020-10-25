@@ -12,22 +12,22 @@ namespace AtCoderLibraryCSharp.Tests
         {
             ModuloInteger.SetModulo998244353();
             Assert.That(Convolution.Execute(new ModuloInteger[0], new ModuloInteger[0]),
-                Is.EquivalentTo(new ModuloInteger[0]));
+                Is.EqualTo(new ModuloInteger[0]));
             Assert.That(Convolution.Execute(new ModuloInteger[0], new ModuloInteger[] {1, 2}),
-                Is.EquivalentTo(new ModuloInteger[0]));
+                Is.EqualTo(new ModuloInteger[0]));
             Assert.That(Convolution.Execute(new ModuloInteger[] {1, 2}, new ModuloInteger[0]),
-                Is.EquivalentTo(new ModuloInteger[0]));
+                Is.EqualTo(new ModuloInteger[0]));
             Assert.That(Convolution.Execute(new ModuloInteger[] {1}, new ModuloInteger[0]),
-                Is.EquivalentTo(new ModuloInteger[0]));
+                Is.EqualTo(new ModuloInteger[0]));
 
             Assert.That(Convolution.Execute(new long[0], new long[0]),
-                Is.EquivalentTo(new ModuloInteger[0]));
+                Is.EqualTo(new ModuloInteger[0]));
             Assert.That(Convolution.Execute(new long[0], new long[] {1, 2}),
-                Is.EquivalentTo(new ModuloInteger[0]));
+                Is.EqualTo(new ModuloInteger[0]));
             Assert.That(Convolution.Execute(new long[] {1, 2}, new long[0]),
-                Is.EquivalentTo(new ModuloInteger[0]));
+                Is.EqualTo(new ModuloInteger[0]));
             Assert.That(Convolution.Execute(new long[] {1}, new long[0]),
-                Is.EquivalentTo(new long[0]));
+                Is.EqualTo(new long[0]));
         }
 
         [Test]
@@ -37,7 +37,7 @@ namespace AtCoderLibraryCSharp.Tests
             var random = new Random(19937);
             var a = new ModuloInteger[1234].Select(_ => (ModuloInteger) random.Next()).ToArray();
             var b = new ModuloInteger[2345].Select(_ => (ModuloInteger) random.Next()).ToArray();
-            Assert.That(Convolution.Execute(a, b), Is.EquivalentTo(ConvolutionNaive(a, b)));
+            Assert.That(Convolution.Execute(a, b), Is.EqualTo(ConvolutionNaive(a, b)));
         }
 
         [Test]
@@ -48,7 +48,7 @@ namespace AtCoderLibraryCSharp.Tests
             ModuloInteger.SetModulo(mod);
             var a = new ModuloInteger[n].Select(_ => (ModuloInteger) random.Next()).ToArray();
             var b = new ModuloInteger[m].Select(_ => (ModuloInteger) random.Next()).ToArray();
-            Assert.That(Convolution.Execute(a, b), Is.EquivalentTo(ConvolutionNaive(a, b)));
+            Assert.That(Convolution.Execute(a, b), Is.EqualTo(ConvolutionNaive(a, b)));
         }
 
         [Test]
@@ -57,7 +57,7 @@ namespace AtCoderLibraryCSharp.Tests
             var random = new Random(19937);
             var a = new long[n].Select(_ => random.Next() % (long) 1e6 - (long) 5e5).ToArray();
             var b = new long[m].Select(_ => random.Next() % (long) 1e6 - (long) 5e5).ToArray();
-            Assert.That(Convolution.Execute(a, b), Is.EquivalentTo(ConvolutionNaive(a, b)));
+            Assert.That(Convolution.Execute(a, b), Is.EqualTo(ConvolutionNaive(a, b)));
         }
 
         [Test]
@@ -72,10 +72,10 @@ namespace AtCoderLibraryCSharp.Tests
 
             var a = new[] {-m12 - m13 - m23 + n};
             var b = new[] {1L};
-            Assert.That(Convolution.Execute(a, b), Is.EquivalentTo(ConvolutionNaive(a, b)));
+            Assert.That(Convolution.Execute(a, b), Is.EqualTo(ConvolutionNaive(a, b)));
 
             a = new[] {-m12 - m13 - m23 - n};
-            Assert.That(Convolution.Execute(a, b), Is.EquivalentTo(ConvolutionNaive(a, b)));
+            Assert.That(Convolution.Execute(a, b), Is.EqualTo(ConvolutionNaive(a, b)));
         }
 
         [Test]
@@ -83,10 +83,10 @@ namespace AtCoderLibraryCSharp.Tests
         {
             var a = new[] {long.MinValue + n};
             var b = new[] {1L};
-            Assert.That(Convolution.Execute(a, b), Is.EquivalentTo(ConvolutionNaive(a, b)));
+            Assert.That(Convolution.Execute(a, b), Is.EqualTo(ConvolutionNaive(a, b)));
 
             a = new[] {long.MaxValue - n};
-            Assert.That(Convolution.Execute(a, b), Is.EquivalentTo(ConvolutionNaive(a, b)));
+            Assert.That(Convolution.Execute(a, b), Is.EqualTo(ConvolutionNaive(a, b)));
         }
 
         [Test]
@@ -96,7 +96,7 @@ namespace AtCoderLibraryCSharp.Tests
             ModuloInteger.SetModulo(mod);
             var a = new ModuloInteger[64].Select(_ => (ModuloInteger) Utilities.RandomInteger(0, mod - 1)).ToArray();
             var b = new ModuloInteger[65].Select(_ => (ModuloInteger) Utilities.RandomInteger(0, mod - 1)).ToArray();
-            Assert.That(Convolution.Execute(a, b), Is.EquivalentTo(ConvolutionNaive(a, b)));
+            Assert.That(Convolution.Execute(a, b), Is.EqualTo(ConvolutionNaive(a, b)));
         }
 
         [Test]
@@ -106,7 +106,7 @@ namespace AtCoderLibraryCSharp.Tests
             ModuloInteger.SetModulo(mod);
             var a = new ModuloInteger[1024].Select(_ => (ModuloInteger) Utilities.RandomInteger(0, mod - 1)).ToArray();
             var b = new ModuloInteger[1025].Select(_ => (ModuloInteger) Utilities.RandomInteger(0, mod - 1)).ToArray();
-            Assert.That(Convolution.Execute(a, b), Is.EquivalentTo(ConvolutionNaive(a, b)));
+            Assert.That(Convolution.Execute(a, b), Is.EqualTo(ConvolutionNaive(a, b)));
         }
 
         private static IEnumerable<ModuloInteger> ConvolutionNaive(ModuloInteger[] a, ModuloInteger[] b)
