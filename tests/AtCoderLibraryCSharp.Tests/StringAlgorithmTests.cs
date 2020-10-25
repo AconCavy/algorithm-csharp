@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 
@@ -55,42 +54,42 @@ namespace AtCoderLibraryCSharp.Tests
         {
             const string str = "aab";
             var sa = StringAlgorithm.CreateSuffixes(str).ToArray();
-            Assert.That(sa, Is.EquivalentTo(new[] {0, 1, 2}));
+            Assert.That(sa, Is.EqualTo(new[] {0, 1, 2}));
             var lcp = StringAlgorithm.CreateLongestCommonPrefixes(str, sa).ToArray();
-            Assert.That(lcp, Is.EquivalentTo(new[] {1, 0}));
+            Assert.That(lcp, Is.EqualTo(new[] {1, 0}));
 
-            Assert.That(StringAlgorithm.CreateLongestCommonPrefixes(new[] {0, 0, 1}, sa), Is.EquivalentTo(lcp));
-            Assert.That(StringAlgorithm.CreateLongestCommonPrefixes(new[] {-100, -100, 100}, sa), Is.EquivalentTo(lcp));
+            Assert.That(StringAlgorithm.CreateLongestCommonPrefixes(new[] {0, 0, 1}, sa), Is.EqualTo(lcp));
+            Assert.That(StringAlgorithm.CreateLongestCommonPrefixes(new[] {-100, -100, 100}, sa), Is.EqualTo(lcp));
             Assert.That(StringAlgorithm.CreateLongestCommonPrefixes(new[] {int.MinValue, int.MinValue, 100}, sa),
-                Is.EquivalentTo(lcp));
+                Is.EqualTo(lcp));
         }
 
         [Test]
         public void ZAlgorithmTest()
         {
-            Assert.That(StringAlgorithm.ZAlgorithm("abab"), Is.EquivalentTo(new[] {4, 0, 2, 0}));
-            Assert.That(StringAlgorithm.ZAlgorithm(new[] {1, 10, 1, 10}), Is.EquivalentTo(new[] {4, 0, 2, 0}));
+            Assert.That(StringAlgorithm.ZAlgorithm("abab"), Is.EqualTo(new[] {4, 0, 2, 0}));
+            Assert.That(StringAlgorithm.ZAlgorithm(new[] {1, 10, 1, 10}), Is.EqualTo(new[] {4, 0, 2, 0}));
             Assert.That(StringAlgorithm.ZAlgorithm(new[] {0, 0, 0, 0, 0, 0, 0}),
-                Is.EquivalentTo(ZAlgorithmNaive(new[] {0, 0, 0, 0, 0, 0, 0})));
+                Is.EqualTo(ZAlgorithmNaive(new[] {0, 0, 0, 0, 0, 0, 0})));
         }
 
         [Test]
         public void SuffixesAllTest([Range(1, 100)] int n)
         {
             var s = Enumerable.Repeat(10, n).ToArray();
-            Assert.That(StringAlgorithm.CreateSuffixes(s), Is.EquivalentTo(CreateSuffixesNaive(s)));
-            Assert.That(StringAlgorithm.CreateSuffixes(s, 10), Is.EquivalentTo(CreateSuffixesNaive(s)));
-            Assert.That(StringAlgorithm.CreateSuffixes(s, 12), Is.EquivalentTo(CreateSuffixesNaive(s)));
+            Assert.That(StringAlgorithm.CreateSuffixes(s), Is.EqualTo(CreateSuffixesNaive(s)));
+            Assert.That(StringAlgorithm.CreateSuffixes(s, 10), Is.EqualTo(CreateSuffixesNaive(s)));
+            Assert.That(StringAlgorithm.CreateSuffixes(s, 12), Is.EqualTo(CreateSuffixesNaive(s)));
 
             s = new int[n];
             for (var i = 0; i < n; i++) s[i] = i % 2;
-            Assert.That(StringAlgorithm.CreateSuffixes(s), Is.EquivalentTo(CreateSuffixesNaive(s)));
-            Assert.That(StringAlgorithm.CreateSuffixes(s, 3), Is.EquivalentTo(CreateSuffixesNaive(s)));
+            Assert.That(StringAlgorithm.CreateSuffixes(s), Is.EqualTo(CreateSuffixesNaive(s)));
+            Assert.That(StringAlgorithm.CreateSuffixes(s, 3), Is.EqualTo(CreateSuffixesNaive(s)));
 
             s = new int[n];
             for (var i = 0; i < n; i++) s[i] = 1 - i % 2;
-            Assert.That(StringAlgorithm.CreateSuffixes(s), Is.EquivalentTo(CreateSuffixesNaive(s)));
-            Assert.That(StringAlgorithm.CreateSuffixes(s, 3), Is.EquivalentTo(CreateSuffixesNaive(s)));
+            Assert.That(StringAlgorithm.CreateSuffixes(s), Is.EqualTo(CreateSuffixesNaive(s)));
+            Assert.That(StringAlgorithm.CreateSuffixes(s, 3), Is.EqualTo(CreateSuffixesNaive(s)));
         }
 
         [Test]
@@ -113,10 +112,10 @@ namespace AtCoderLibraryCSharp.Tests
                     }
 
                     var sa = CreateSuffixesNaive(s);
-                    Assert.That(StringAlgorithm.CreateSuffixes(s), Is.EquivalentTo(sa));
-                    Assert.That(StringAlgorithm.CreateSuffixes(s, maxC), Is.EquivalentTo(sa));
+                    Assert.That(StringAlgorithm.CreateSuffixes(s), Is.EqualTo(sa));
+                    Assert.That(StringAlgorithm.CreateSuffixes(s, maxC), Is.EqualTo(sa));
                     Assert.That(StringAlgorithm.CreateLongestCommonPrefixes(s, sa),
-                        Is.EquivalentTo(CreateLongestCommonPrefixesNaive(s, sa)));
+                        Is.EqualTo(CreateLongestCommonPrefixesNaive(s, sa)));
                 }
             }
         }
@@ -138,7 +137,7 @@ namespace AtCoderLibraryCSharp.Tests
                         g /= x;
                     }
 
-                    Assert.That(StringAlgorithm.ZAlgorithm(s), Is.EquivalentTo(ZAlgorithmNaive(s)));
+                    Assert.That(StringAlgorithm.ZAlgorithm(s), Is.EqualTo(ZAlgorithmNaive(s)));
                 }
             }
         }
@@ -160,16 +159,15 @@ namespace AtCoderLibraryCSharp.Tests
             var sa = Enumerable.Range(0, n).ToArray();
             Array.Sort(sa, (l, r) =>
             {
-                var comparer = Comparer<int>.Default;
                 if (l == r) return 0;
                 while (l < n && r < n)
                 {
-                    if (s[l] != s[r]) return comparer.Compare(s[l], s[r]);
+                    if (s[l] != s[r]) return s[l].CompareTo(s[r]);
                     l++;
                     r++;
                 }
 
-                return comparer.Compare(l, n);
+                return r.CompareTo(l);
             });
             return sa;
         }

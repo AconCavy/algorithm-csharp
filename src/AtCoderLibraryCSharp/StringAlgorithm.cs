@@ -218,16 +218,15 @@ namespace AtCoderLibraryCSharp
 
             int Compare(int x, int y)
             {
-                var comparer = Comparer<int>.Default;
                 if (x == y) return 0;
                 while (x < n && y < n)
                 {
-                    if (items[x] != items[y]) return comparer.Compare(items[x], items[y]);
+                    if (items[x] != items[y]) return items[x].CompareTo(items[y]);
                     x++;
                     y++;
                 }
 
-                return comparer.Compare(x, n);
+                return y.CompareTo(x);
             }
 
             Array.Sort(sa, Compare);
@@ -244,11 +243,10 @@ namespace AtCoderLibraryCSharp
             {
                 int Compare(int x, int y)
                 {
-                    var comparer = Comparer<int>.Default;
-                    if (items[x] != items[y]) return comparer.Compare(items[x], items[y]);
+                    if (items[x] != items[y]) return items[x].CompareTo(items[y]);
                     var rx = x + k < n ? items[x + k] : -1;
                     var ry = y + k < n ? items[y + k] : -1;
-                    return comparer.Compare(rx, ry);
+                    return rx.CompareTo(ry);
                 }
 
                 Array.Sort(sa, Compare);
