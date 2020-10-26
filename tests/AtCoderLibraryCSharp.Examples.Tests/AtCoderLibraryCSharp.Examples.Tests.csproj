@@ -13,7 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\AtCoderLibraryCSharp.Examples\AtCoderLibraryCSharp.Examples.csproj" />
+      <ProjectReference Include="../../src/AtCoderLibraryCSharp.Examples/AtCoderLibraryCSharp.Examples.csproj" />
     </ItemGroup>
 
 </Project>

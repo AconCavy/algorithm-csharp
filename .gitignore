@@ -352,5 +352,3 @@ MigrationBackup/
 # Intellij
 .idea/
 
-# outputs files
-outputs/

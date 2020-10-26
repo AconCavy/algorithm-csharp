@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\AtCoderLibraryCSharp\AtCoderLibraryCSharp.csproj" />
+      <ProjectReference Include="../AtCoderLibraryCSharp/AtCoderLibraryCSharp.csproj" />
     </ItemGroup>
 
 </Project>
