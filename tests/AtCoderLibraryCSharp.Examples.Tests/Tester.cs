@@ -19,9 +19,9 @@ namespace AtCoderLibraryCSharp.Examples.Tests
             action();
 
             using var sr = new StringReader(builder.ToString());
-            var actual = sr.ReadToEnd().Replace(Environment.NewLine, "");
-            var expected = output.Replace(Environment.NewLine, "");
-            Assert.That(actual, Is.EqualTo(actual));
+            var actual = sr.ReadToEnd().Replace(Environment.NewLine, "").Replace("\n", "");
+            var expected = output.Replace(Environment.NewLine, "").Replace("\n", "");
+            Assert.That(actual, Is.EqualTo(expected));
         }
     }
 }
