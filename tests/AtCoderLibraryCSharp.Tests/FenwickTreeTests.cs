@@ -6,6 +6,13 @@ namespace AtCoderLibraryCSharp.Tests
     public class FenwickTreeTests
     {
         [Test]
+        public void InitializeTest()
+        {
+            Assert.DoesNotThrow(() => _ = new FenwickTree());
+            Assert.Throws<ArgumentOutOfRangeException>(() => _ = new FenwickTree(-1));
+        }
+
+        [Test]
         public void EmptyTest()
         {
             var ft = new FenwickTree();
@@ -68,20 +75,28 @@ namespace AtCoderLibraryCSharp.Tests
         }
 
         [Test]
-        public void InvalidArgumentsTest()
+        public void ArgumentOutOfRangeInAddTest([Values(-1, 10)] int i)
         {
-            Assert.Throws<OverflowException>(() => _ = new FenwickTree(-1));
-
             var ft = new FenwickTree(10);
-            Assert.Throws<IndexOutOfRangeException>(() => ft.Add(-1, 0));
-            Assert.Throws<IndexOutOfRangeException>(() => ft.Add(10, 0));
-
-            Assert.Throws<IndexOutOfRangeException>(() => ft.Sum(-1));
-            Assert.Throws<IndexOutOfRangeException>(() => ft.Sum(11));
-            Assert.Throws<IndexOutOfRangeException>(() => ft.Sum(-1, 3));
-            Assert.Throws<IndexOutOfRangeException>(() => ft.Sum(3, 11));
-            Assert.Throws<IndexOutOfRangeException>(() => ft.Sum(5, 3));
+            Assert.Throws<ArgumentOutOfRangeException>(() => ft.Add(i, 0));
         }
+
+        [Test]
+        public void ArgumentOutOfRangeInSumTest1([Values(-1, 11)] int i)
+        {
+            var ft = new FenwickTree(10);
+            Assert.Throws<ArgumentOutOfRangeException>(() => ft.Sum(i));
+        }
+
+        [TestCase(-1, 0)]
+        [TestCase(0, 11)]
+        [TestCase(1, 0)]
+        public void ArgumentOutOfRangeInSumTest2(int l, int r)
+        {
+            var ft = new FenwickTree(10);
+            Assert.Throws<ArgumentOutOfRangeException>(() => ft.Sum(l, r));
+        }
+
 
         [Test]
         public void BoundTest()

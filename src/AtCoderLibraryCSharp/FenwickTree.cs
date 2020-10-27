@@ -14,13 +14,14 @@ namespace AtCoderLibraryCSharp
 
         public FenwickTree(int length = 0)
         {
+            if (length < 0) throw new ArgumentOutOfRangeException(nameof(length));
             _length = length;
             _data = new long[length];
         }
 
         public void Add(int index, long item)
         {
-            if (index < 0 || _length <= index) throw new IndexOutOfRangeException(nameof(index));
+            if (index < 0 || _length <= index) throw new ArgumentOutOfRangeException(nameof(index));
             index++;
             while (index <= _length)
             {
@@ -31,7 +32,7 @@ namespace AtCoderLibraryCSharp
 
         public long Sum(int length)
         {
-            if (length < 0 || _length < length) throw new IndexOutOfRangeException(nameof(length));
+            if (length < 0 || _length < length) throw new ArgumentOutOfRangeException(nameof(length));
             var s = 0L;
             while (length > 0)
             {
@@ -44,7 +45,7 @@ namespace AtCoderLibraryCSharp
 
         public long Sum(int left, int right)
         {
-            if (left < 0 || right < left || _length < right) throw new IndexOutOfRangeException();
+            if (left < 0 || right < left || _length < right) throw new ArgumentOutOfRangeException();
             return Sum(right) - Sum(left);
         }
 
