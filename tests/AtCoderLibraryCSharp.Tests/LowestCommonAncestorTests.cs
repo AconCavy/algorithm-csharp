@@ -157,29 +157,29 @@ namespace AtCoderLibraryCSharp.Tests
         }
 
         [Test]
-        public void InvalidArgumentsInInitializeTest([Values(-1, 2)] int root)
+        public void ArgumentOutOfRangeInInitializeTest([Values(-1, 2)] int root)
         {
             var tree = new[] {new[] {1}, new int[0]};
-            Assert.Throws<IndexOutOfRangeException>(() => _ = new LowestCommonAncestor(tree, root));
+            Assert.Throws<ArgumentOutOfRangeException>(() => _ = new LowestCommonAncestor(tree, root));
             tree = new[] {new[] {1}, new[] {0}};
-            Assert.Throws<IndexOutOfRangeException>(() => _ = new LowestCommonAncestor(tree, root));
-            Assert.Throws<IndexOutOfRangeException>(() => _ = new LowestCommonAncestor(1, root));
+            Assert.Throws<ArgumentOutOfRangeException>(() => _ = new LowestCommonAncestor(tree, root));
+            Assert.Throws<ArgumentOutOfRangeException>(() => _ = new LowestCommonAncestor(1, root));
         }
 
         [TestCase(-1, 0)]
         [TestCase(6, 0)]
         [TestCase(0, -1)]
         [TestCase(0, 6)]
-        public void InvalidArgumentsInMethodTest(int u, int v)
+        public void ArgumentOutOfRangeInMethodTest(int u, int v)
         {
             const int length = 6;
             var lca = new LowestCommonAncestor(length);
-            Assert.Throws<IndexOutOfRangeException>(() => lca.AddEdge(u, v));
-            Assert.Throws<IndexOutOfRangeException>(() => _ = lca.Find(u, v));
-            Assert.Throws<IndexOutOfRangeException>(() => _ = lca.GetDistance(u, v));
-            Assert.Throws<IndexOutOfRangeException>(() => _ = lca.GetCost(u, v));
+            Assert.Throws<ArgumentOutOfRangeException>(() => lca.AddEdge(u, v));
+            Assert.Throws<ArgumentOutOfRangeException>(() => _ = lca.Find(u, v));
+            Assert.Throws<ArgumentOutOfRangeException>(() => _ = lca.GetDistance(u, v));
+            Assert.Throws<ArgumentOutOfRangeException>(() => _ = lca.GetCost(u, v));
             if (v < 0 || length <= v) return;
-            Assert.Throws<IndexOutOfRangeException>(() => _ = lca.GetAncestor(u, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(() => _ = lca.GetAncestor(u, 0));
         }
 
         private static (LowestCommonAncestor byArray, LowestCommonAncestor byLength) InitializeLca(int root = 0)

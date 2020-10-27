@@ -25,7 +25,7 @@ namespace AtCoderLibraryCSharp
 
         public LowestCommonAncestor(int length, int root = 0)
         {
-            if (root < 0 || length <= root) throw new IndexOutOfRangeException(nameof(root));
+            if (root < 0 || length <= root) throw new ArgumentOutOfRangeException(nameof(root));
             _length = length;
             _root = root;
             while (_length >> _log > 0) _log++;
@@ -38,8 +38,8 @@ namespace AtCoderLibraryCSharp
 
         public void AddEdge(int u, int v, long cost = 0)
         {
-            if (u < 0 || _length <= u) throw new IndexOutOfRangeException(nameof(u));
-            if (v < 0 || _length <= v) throw new IndexOutOfRangeException(nameof(v));
+            if (u < 0 || _length <= u) throw new ArgumentOutOfRangeException(nameof(u));
+            if (v < 0 || _length <= v) throw new ArgumentOutOfRangeException(nameof(v));
             _tree[u].Add(v);
             _tree[v].Add(u);
             _costTree[u][v] = _costTree[v][u] = cost;
@@ -48,8 +48,8 @@ namespace AtCoderLibraryCSharp
 
         public int Find(int u, int v)
         {
-            if (u < 0 || _length <= u) throw new IndexOutOfRangeException(nameof(u));
-            if (v < 0 || _length <= v) throw new IndexOutOfRangeException(nameof(v));
+            if (u < 0 || _length <= u) throw new ArgumentOutOfRangeException(nameof(u));
+            if (v < 0 || _length <= v) throw new ArgumentOutOfRangeException(nameof(v));
             if (!_isUpdated) Build();
 
             if (_depths[u] > _depths[v]) (u, v) = (v, u);
@@ -64,7 +64,7 @@ namespace AtCoderLibraryCSharp
 
         public int GetAncestor(int v, int height)
         {
-            if (v < 0 || _length <= v) throw new IndexOutOfRangeException(nameof(v));
+            if (v < 0 || _length <= v) throw new ArgumentOutOfRangeException(nameof(v));
             if (!_isUpdated) Build();
 
             var parent = v;
@@ -77,16 +77,16 @@ namespace AtCoderLibraryCSharp
 
         public int GetDistance(int u, int v)
         {
-            if (u < 0 || _length <= u) throw new IndexOutOfRangeException(nameof(u));
-            if (v < 0 || _length <= v) throw new IndexOutOfRangeException(nameof(v));
+            if (u < 0 || _length <= u) throw new ArgumentOutOfRangeException(nameof(u));
+            if (v < 0 || _length <= v) throw new ArgumentOutOfRangeException(nameof(v));
             var p = Find(u, v);
             return _depths[u] + _depths[v] - _depths[p] * 2;
         }
 
         public long GetCost(int u, int v)
         {
-            if (u < 0 || _length <= u) throw new IndexOutOfRangeException(nameof(u));
-            if (v < 0 || _length <= v) throw new IndexOutOfRangeException(nameof(v));
+            if (u < 0 || _length <= u) throw new ArgumentOutOfRangeException(nameof(u));
+            if (v < 0 || _length <= v) throw new ArgumentOutOfRangeException(nameof(v));
             var p = Find(u, v);
             return _costs[u] + _costs[v] - _costs[p] * 2;
         }
