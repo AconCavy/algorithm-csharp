@@ -11,6 +11,7 @@ namespace AtCoderLibraryCSharp.Tests
         {
             Assert.DoesNotThrow(() => _ = new MinCostFlowGraph());
             Assert.DoesNotThrow(() => _ = new MinCostFlowGraph(10));
+            Assert.Throws<ArgumentOutOfRangeException>(() => _ = new MinCostFlowGraph(-1));
         }
 
         [Test]
@@ -65,27 +66,6 @@ namespace AtCoderLibraryCSharp.Tests
             var actual = mcfg.Slope(0, 2).ToArray();
             Assert.That(actual[0], Is.EqualTo((0, 0)));
             Assert.That(actual[1], Is.EqualTo((3, 3)));
-        }
-
-        [Test]
-        public void InvalidArgumentsTest()
-        {
-            var mcfg = new MinCostFlowGraph(2);
-            Assert.Throws<IndexOutOfRangeException>(() => mcfg.AddEdge(-1, 0, 10, 1));
-            Assert.Throws<IndexOutOfRangeException>(() => mcfg.AddEdge(2, 0, 10, 1));
-            Assert.Throws<IndexOutOfRangeException>(() => mcfg.AddEdge(0, -1, 10, 1));
-            Assert.Throws<IndexOutOfRangeException>(() => mcfg.AddEdge(0, 2, 10, 1));
-            Assert.Throws<ArgumentException>(() => mcfg.AddEdge(0, 0, -1, 0));
-            Assert.Throws<ArgumentException>(() => mcfg.AddEdge(0, 0, 0, -1));
-
-            Assert.Throws<IndexOutOfRangeException>(() => mcfg.GetEdge(-1));
-            Assert.Throws<IndexOutOfRangeException>(() => mcfg.GetEdge(1));
-
-            Assert.Throws<IndexOutOfRangeException>(() => mcfg.Slope(-1, 1));
-            Assert.Throws<IndexOutOfRangeException>(() => mcfg.Slope(2, 1));
-            Assert.Throws<IndexOutOfRangeException>(() => mcfg.Slope(1, -1));
-            Assert.Throws<IndexOutOfRangeException>(() => mcfg.Slope(1, 2));
-            Assert.Throws<ArgumentException>(() => mcfg.Slope(1, 1));
         }
 
         [Test]
@@ -148,7 +128,7 @@ namespace AtCoderLibraryCSharp.Tests
                                     dist[edge.To] = ndist;
                                 }
                             }
-                
+
                             if (edge.Flow == 0) continue;
                             {
                                 var ndist = dist[edge.To] - edge.Cost;
@@ -159,11 +139,51 @@ namespace AtCoderLibraryCSharp.Tests
                                 }
                             }
                         }
-                
+
                         if (!update) break;
                     }
                 });
             }
+        }
+
+        [Test]
+        public void ArgumentOutOfRangeInAddEdge([Values(-1, 2)] int v)
+        {
+            var mcfg = new MinCostFlowGraph(2);
+            Assert.Throws<ArgumentOutOfRangeException>(() => mcfg.AddEdge(v, 0, 10, 1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => mcfg.AddEdge(0, v, 10, 1));
+        }
+
+        [Test]
+        public void InvalidArgumentInAddEdge()
+        {
+            var mcfg = new MinCostFlowGraph(2);
+            Assert.Throws<ArgumentException>(() => mcfg.AddEdge(0, 0, -1, 0));
+            Assert.Throws<ArgumentException>(() => mcfg.AddEdge(0, 0, 0, -1));
+        }
+
+        [Test]
+        public void ArgumentOutOfRangeInGetEdge([Values(-1, 1)] int v)
+        {
+            var mcfg = new MinCostFlowGraph(2);
+            Assert.Throws<ArgumentOutOfRangeException>(() => mcfg.GetEdge(v));
+        }
+
+        [TestCase(-1, 1)]
+        [TestCase(2, 1)]
+        [TestCase(1, -1)]
+        [TestCase(1, 2)]
+        public void ArgumentOutOfRangeInSlope(int u, int v)
+        {
+            var mcfg = new MinCostFlowGraph(2);
+            Assert.Throws<ArgumentOutOfRangeException>(() => mcfg.Slope(u, v));
+        }
+
+        [Test]
+        public void InvalidArgumentInSlope()
+        {
+            var mcfg = new MinCostFlowGraph(2);
+            Assert.Throws<ArgumentException>(() => mcfg.Slope(1, 1));
         }
 
         private static void AssertEdge(MinCostFlowGraph.Edge actual, MinCostFlowGraph.Edge expected)

@@ -14,14 +14,8 @@ namespace AtCoderLibraryCSharp
             public readonly long Flow;
             public readonly long Cost;
 
-            public Edge(int from, int to, long capacity, long flow, long cost)
-            {
-                From = from;
-                To = to;
-                Capacity = capacity;
-                Flow = flow;
-                Cost = cost;
-            }
+            public Edge(int from, int to, long capacity, long flow, long cost) =>
+                (From, To, Capacity, Flow, Cost) = (from, to, capacity, flow, cost);
         }
 
         private readonly struct InternalEdge
@@ -31,13 +25,8 @@ namespace AtCoderLibraryCSharp
             public readonly long Capacity;
             public readonly long Cost;
 
-            public InternalEdge(int to, int rev, long capacity, long cost)
-            {
-                To = to;
-                Rev = rev;
-                Capacity = capacity;
-                Cost = cost;
-            }
+            public InternalEdge(int to, int rev, long capacity, long cost) =>
+                (To, Rev, Capacity, Cost) = (to, rev, capacity, cost);
         }
 
         private readonly struct Q : IComparable<Q>
@@ -45,11 +34,7 @@ namespace AtCoderLibraryCSharp
             public readonly long Key;
             public readonly int To;
 
-            public Q(long key, int to)
-            {
-                Key = key;
-                To = to;
-            }
+            public Q(long key, int to) => (Key, To) = (key, to);
 
             public int CompareTo(Q other)
             {
@@ -65,6 +50,7 @@ namespace AtCoderLibraryCSharp
 
         public MinCostFlowGraph(int length = 0)
         {
+            if (length < 0) throw new ArgumentOutOfRangeException(nameof(length));
             _length = length;
             _edges = new List<InternalEdge>[length].Select(x => new List<InternalEdge>()).ToArray();
             _positions = new List<(int X, int Y)>();
@@ -72,8 +58,8 @@ namespace AtCoderLibraryCSharp
 
         public int AddEdge(int from, int to, long capacity, long cost)
         {
-            if (from < 0 || _length <= from) throw new IndexOutOfRangeException(nameof(from));
-            if (to < 0 || _length <= to) throw new IndexOutOfRangeException(nameof(to));
+            if (from < 0 || _length <= from) throw new ArgumentOutOfRangeException(nameof(from));
+            if (to < 0 || _length <= to) throw new ArgumentOutOfRangeException(nameof(to));
             if (capacity < 0) throw new ArgumentException(nameof(capacity));
             if (cost < 0) throw new ArgumentException(nameof(cost));
             var m = _positions.Count;
@@ -88,7 +74,7 @@ namespace AtCoderLibraryCSharp
 
         public Edge GetEdge(int index)
         {
-            if (index < 0 || _positions.Count <= index) throw new IndexOutOfRangeException(nameof(index));
+            if (index < 0 || _positions.Count <= index) throw new ArgumentOutOfRangeException(nameof(index));
             var e = _edges[_positions[index].X][_positions[index].Y];
             var re = _edges[e.To][e.Rev];
             return new Edge(_positions[index].X, e.To, e.Capacity + re.Capacity, re.Capacity, e.Cost);
@@ -107,8 +93,8 @@ namespace AtCoderLibraryCSharp
 
         public IEnumerable<(long, long)> Slope(int s, int t, long flowLimit)
         {
-            if (s < 0 || _length <= s) throw new IndexOutOfRangeException(nameof(s));
-            if (t < 0 || _length <= t) throw new IndexOutOfRangeException(nameof(t));
+            if (s < 0 || _length <= s) throw new ArgumentOutOfRangeException(nameof(s));
+            if (t < 0 || _length <= t) throw new ArgumentOutOfRangeException(nameof(t));
             if (s == t) throw new ArgumentException();
             var dist = new long[_length];
             var dual = new long[_length];
