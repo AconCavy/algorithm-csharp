@@ -11,7 +11,7 @@ namespace AtCoderLibraryCSharp
 
         public DisjointSetUnion(int length = 0)
         {
-            if (length < 0) throw new ArgumentException(nameof(length));
+            if (length < 0) throw new ArgumentOutOfRangeException(nameof(length));
             _length = length;
             _parentOrSize = new int[_length];
             Array.Fill(_parentOrSize, -1);
@@ -19,8 +19,8 @@ namespace AtCoderLibraryCSharp
 
         public int Merge(int a, int b)
         {
-            if (a < 0 || _length <= a) throw new IndexOutOfRangeException(nameof(a));
-            if (b < 0 || _length <= b) throw new IndexOutOfRangeException(nameof(b));
+            if (a < 0 || _length <= a) throw new ArgumentOutOfRangeException(nameof(a));
+            if (b < 0 || _length <= b) throw new ArgumentOutOfRangeException(nameof(b));
             var (x, y) = (LeaderOf(a), LeaderOf(b));
             if (x == y) return x;
             if (-_parentOrSize[x] < -_parentOrSize[y]) (x, y) = (y, x);
@@ -31,21 +31,21 @@ namespace AtCoderLibraryCSharp
 
         public bool IsSame(int a, int b)
         {
-            if (a < 0 || _length <= a) throw new IndexOutOfRangeException(nameof(a));
-            if (b < 0 || _length <= b) throw new IndexOutOfRangeException(nameof(b));
+            if (a < 0 || _length <= a) throw new ArgumentOutOfRangeException(nameof(a));
+            if (b < 0 || _length <= b) throw new ArgumentOutOfRangeException(nameof(b));
             return LeaderOf(a) == LeaderOf(b);
         }
 
         public int LeaderOf(int a)
         {
-            if (a < 0 || _length <= a) throw new IndexOutOfRangeException(nameof(a));
+            if (a < 0 || _length <= a) throw new ArgumentOutOfRangeException(nameof(a));
             if (_parentOrSize[a] < 0) return a;
             return _parentOrSize[a] = LeaderOf(_parentOrSize[a]);
         }
 
         public int SizeOf(int a)
         {
-            if (a < 0 || _length <= a) throw new IndexOutOfRangeException(nameof(a));
+            if (a < 0 || _length <= a) throw new ArgumentOutOfRangeException(nameof(a));
             return -_parentOrSize[LeaderOf(a)];
         }
 

@@ -11,7 +11,7 @@ namespace AtCoderLibraryCSharp.Tests
         {
             Assert.DoesNotThrow(() => _ = new DisjointSetUnion());
             Assert.DoesNotThrow(() => _ = new DisjointSetUnion(2));
-            Assert.Throws<ArgumentException>(() => _ = new DisjointSetUnion(-1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => _ = new DisjointSetUnion(-1));
         }
 
         [Test]
@@ -47,28 +47,26 @@ namespace AtCoderLibraryCSharp.Tests
             Assert.That(dsu.GetGroups().Count(), Is.EqualTo(1));
         }
 
-        [Test]
-        public void InvalidArgumentsTest()
+        [TestCase(-1, 1)]
+        [TestCase(2, 1)]
+        [TestCase(1, -1)]
+        [TestCase(1, 2)]
+        [TestCase(-1, 2)]
+        public void ArgumentOutOfRangeInMergeAndIsSameTest(int u, int v)
         {
             var dsu = new DisjointSetUnion(2);
-            Assert.Throws<IndexOutOfRangeException>(() => dsu.Merge(-1, 1));
-            Assert.Throws<IndexOutOfRangeException>(() => dsu.Merge(2, 1));
-            Assert.Throws<IndexOutOfRangeException>(() => dsu.Merge(1, -1));
-            Assert.Throws<IndexOutOfRangeException>(() => dsu.Merge(1, 2));
-            Assert.Throws<IndexOutOfRangeException>(() => dsu.Merge(-1, 2));
-
-            Assert.Throws<IndexOutOfRangeException>(() => dsu.IsSame(-1, 1));
-            Assert.Throws<IndexOutOfRangeException>(() => dsu.IsSame(2, 1));
-            Assert.Throws<IndexOutOfRangeException>(() => dsu.IsSame(1, -1));
-            Assert.Throws<IndexOutOfRangeException>(() => dsu.IsSame(1, 2));
-            Assert.Throws<IndexOutOfRangeException>(() => dsu.IsSame(-1, 2));
-
-            Assert.Throws<IndexOutOfRangeException>(() => dsu.LeaderOf(-1));
-            Assert.Throws<IndexOutOfRangeException>(() => dsu.LeaderOf(2));
-
-            Assert.Throws<IndexOutOfRangeException>(() => dsu.SizeOf(-1));
-            Assert.Throws<IndexOutOfRangeException>(() => dsu.SizeOf(2));
+            Assert.Throws<ArgumentOutOfRangeException>(() => dsu.Merge(u, v));
+            Assert.Throws<ArgumentOutOfRangeException>(() => dsu.IsSame(u, v));
         }
+
+        [Test]
+        public void ArgumentOutOfRangeInLeaderOfAndSizeOfTest([Values(-1, 2)] int v)
+        {
+            var dsu = new DisjointSetUnion(2);
+            Assert.Throws<ArgumentOutOfRangeException>(() => dsu.LeaderOf(v));
+            Assert.Throws<ArgumentOutOfRangeException>(() => dsu.SizeOf(v));
+        }
+
 
         [Test]
         public void SameLeaderTest()
