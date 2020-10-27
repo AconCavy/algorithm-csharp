@@ -11,6 +11,7 @@ namespace AtCoderLibraryCSharp.Tests
         {
             Assert.DoesNotThrow(() => _ = new MaxFlowGraph());
             Assert.DoesNotThrow(() => _ = new MaxFlowGraph(10));
+            Assert.Throws<ArgumentOutOfRangeException>(() => _ = new MaxFlowGraph(-1));
         }
 
         [Test]
@@ -112,33 +113,6 @@ namespace AtCoderLibraryCSharp.Tests
         }
 
         [Test]
-        public void InvalidArgumentsTest()
-        {
-            var mfg = new MaxFlowGraph(3);
-            Assert.Throws<IndexOutOfRangeException>(() => mfg.AddEdge(-1, 1, 10));
-            Assert.Throws<IndexOutOfRangeException>(() => mfg.AddEdge(3, 1, 10));
-            Assert.Throws<IndexOutOfRangeException>(() => mfg.AddEdge(0, -1, 10));
-            Assert.Throws<IndexOutOfRangeException>(() => mfg.AddEdge(0, 3, 10));
-            Assert.Throws<ArgumentException>(() => mfg.AddEdge(0, 1, -10));
-
-            Assert.Throws<IndexOutOfRangeException>(() => mfg.GetEdge(-1));
-            Assert.Throws<IndexOutOfRangeException>(() => mfg.GetEdge(3));
-
-            mfg.AddEdge(0, 1, 100);
-            mfg.AddEdge(1, 2, 100);
-            Assert.Throws<IndexOutOfRangeException>(() => mfg.ChangeEdge(-1, 100, 10));
-            Assert.Throws<IndexOutOfRangeException>(() => mfg.ChangeEdge(3, 100, 10));
-            Assert.Throws<ArgumentException>(() => mfg.ChangeEdge(1, 10, -10));
-            Assert.Throws<ArgumentException>(() => mfg.ChangeEdge(1, 10, 100));
-
-            Assert.Throws<IndexOutOfRangeException>(() => mfg.Flow(-1, 0));
-            Assert.Throws<IndexOutOfRangeException>(() => mfg.Flow(0, 3));
-            Assert.Throws<IndexOutOfRangeException>(() => mfg.Flow(-1, 3));
-            Assert.Throws<ArgumentException>(() => mfg.Flow(0, 0));
-            Assert.Throws<ArgumentException>(() => mfg.Flow(0, 0, 0));
-        }
-
-        [Test]
         public void StressTest()
         {
             for (var ph = 0; ph < 10000; ph++)
@@ -178,6 +152,61 @@ namespace AtCoderLibraryCSharp.Tests
                     Assert.That(flows[i], Is.Zero);
                 }
             }
+        }
+
+        [Test]
+        public void ArgumentOutOfRangeInAddEdgeAndGetEdge([Values(-1, 3)] int v)
+        {
+            var mfg = new MaxFlowGraph(3);
+            Assert.Throws<ArgumentOutOfRangeException>(() => mfg.AddEdge(v, 1, 10));
+            Assert.Throws<ArgumentOutOfRangeException>(() => mfg.AddEdge(0, v, 10));
+            Assert.Throws<ArgumentOutOfRangeException>(() => mfg.GetEdge(v));
+        }
+
+        [Test]
+        public void InvalidArgumentInAddEdge()
+        {
+            var mfg = new MaxFlowGraph(3);
+            Assert.Throws<ArgumentException>(() => mfg.AddEdge(0, 1, -10));
+        }
+
+        [Test]
+        public void ArgumentOutOfRangeInChangeEdge([Values(-1, 3)] int v)
+        {
+            var mfg = new MaxFlowGraph(3);
+            mfg.AddEdge(0, 1, 100);
+            mfg.AddEdge(1, 2, 100);
+            Assert.Throws<ArgumentOutOfRangeException>(() => mfg.ChangeEdge(v, 100, 10));
+        }
+
+        [Test]
+        public void InvalidArgumentInChangeEdge([Values(-10, 100)] int f)
+        {
+            var mfg = new MaxFlowGraph(3);
+            mfg.AddEdge(0, 1, 100);
+            mfg.AddEdge(1, 2, 100);
+            Assert.Throws<ArgumentException>(() => mfg.ChangeEdge(1, 10, f));
+        }
+
+        [TestCase(-1, 0)]
+        [TestCase(0, 3)]
+        [TestCase(-1, 3)]
+        public void ArgumentOutOfRangeInFlow(int u, int v)
+        {
+            var mfg = new MaxFlowGraph(3);
+            mfg.AddEdge(0, 1, 100);
+            mfg.AddEdge(1, 2, 100);
+            Assert.Throws<ArgumentOutOfRangeException>(() => mfg.Flow(u, v));
+        }
+
+        [Test]
+        public void InvalidArgumentInFlow()
+        {
+            var mfg = new MaxFlowGraph(3);
+            mfg.AddEdge(0, 1, 100);
+            mfg.AddEdge(1, 2, 100);
+            Assert.Throws<ArgumentException>(() => mfg.Flow(0, 0));
+            Assert.Throws<ArgumentException>(() => mfg.Flow(0, 0, 0));
         }
 
         private static void AssertEdge(MaxFlowGraph.Edge actual, MaxFlowGraph.Edge expected)

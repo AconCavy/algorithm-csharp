@@ -13,13 +13,8 @@ namespace AtCoderLibraryCSharp
             public readonly long Capacity;
             public readonly long Flow;
 
-            public Edge(int from, int to, long capacity, long flow)
-            {
-                From = from;
-                To = to;
-                Capacity = capacity;
-                Flow = flow;
-            }
+            public Edge(int from, int to, long capacity, long flow) =>
+                (From, To, Capacity, Flow) = (from, to, capacity, flow);
         }
 
         private readonly struct InternalEdge
@@ -27,13 +22,7 @@ namespace AtCoderLibraryCSharp
             public readonly int To;
             public readonly int Rev;
             public readonly long Capacity;
-
-            public InternalEdge(int to, int rev, long capacity)
-            {
-                To = to;
-                Rev = rev;
-                Capacity = capacity;
-            }
+            public InternalEdge(int to, int rev, long capacity) => (To, Rev, Capacity) = (to, rev, capacity);
         }
 
         private readonly int _length;
@@ -42,6 +31,7 @@ namespace AtCoderLibraryCSharp
 
         public MaxFlowGraph(int length = 0)
         {
+            if (length < 0) throw new ArgumentOutOfRangeException(nameof(length));
             _length = length;
             _edges = new List<InternalEdge>[length].Select(x => new List<InternalEdge>()).ToArray();
             _positions = new List<(int X, int Y)>();
@@ -49,8 +39,8 @@ namespace AtCoderLibraryCSharp
 
         public int AddEdge(int from, int to, long capacity)
         {
-            if (from < 0 || _length <= from) throw new IndexOutOfRangeException(nameof(from));
-            if (to < 0 || _length <= to) throw new IndexOutOfRangeException(nameof(to));
+            if (from < 0 || _length <= from) throw new ArgumentOutOfRangeException(nameof(from));
+            if (to < 0 || _length <= to) throw new ArgumentOutOfRangeException(nameof(to));
             if (capacity < 0) throw new ArgumentException(nameof(capacity));
             var count = _positions.Count;
             _positions.Add((from, _edges[from].Count));
@@ -65,7 +55,7 @@ namespace AtCoderLibraryCSharp
         public Edge GetEdge(int index)
         {
             var m = _positions.Count;
-            if (index < 0 || m <= index) throw new IndexOutOfRangeException(nameof(index));
+            if (index < 0 || m <= index) throw new ArgumentOutOfRangeException(nameof(index));
             var e = _edges[_positions[index].X][_positions[index].Y];
             var re = _edges[e.To][e.Rev];
             return new Edge(_positions[index].X, e.To, e.Capacity + re.Capacity, re.Capacity);
@@ -79,7 +69,7 @@ namespace AtCoderLibraryCSharp
         public void ChangeEdge(int index, long newCapacity, long newFlow)
         {
             var count = _positions.Count;
-            if (index < 0 || count <= index) throw new IndexOutOfRangeException(nameof(index));
+            if (index < 0 || count <= index) throw new ArgumentOutOfRangeException(nameof(index));
             if (newFlow < 0 || newCapacity < newFlow) throw new ArgumentException();
             var e = _edges[_positions[index].X][_positions[index].Y];
             var re = _edges[e.To][e.Rev];
@@ -91,8 +81,8 @@ namespace AtCoderLibraryCSharp
 
         public long Flow(int s, int t, long flowLimit)
         {
-            if (s < 0 || _length <= s) throw new IndexOutOfRangeException(nameof(s));
-            if (t < 0 || _length <= t) throw new IndexOutOfRangeException(nameof(t));
+            if (s < 0 || _length <= s) throw new ArgumentOutOfRangeException(nameof(s));
+            if (t < 0 || _length <= t) throw new ArgumentOutOfRangeException(nameof(t));
             if (s == t) throw new ArgumentException();
             var queue = new Queue<int>();
             var depth = new int[_length];
