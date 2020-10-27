@@ -17,14 +17,15 @@ namespace AtCoderLibraryCSharp
 
         public StronglyConnectedComponent(int length = 0)
         {
+            if (length < 0) throw new ArgumentOutOfRangeException(nameof(length));
             _length = length;
             _edges = new List<(int, Edge)>();
         }
 
         public void AddEdge(int from, int to)
         {
-            if (from < 0 || _length <= from) throw new IndexOutOfRangeException(nameof(from));
-            if (to < 0 || _length <= to) throw new IndexOutOfRangeException(nameof(to));
+            if (from < 0 || _length <= from) throw new ArgumentOutOfRangeException(nameof(from));
+            if (to < 0 || _length <= to) throw new ArgumentOutOfRangeException(nameof(to));
             _edges.Add((from, new Edge(to)));
         }
 
