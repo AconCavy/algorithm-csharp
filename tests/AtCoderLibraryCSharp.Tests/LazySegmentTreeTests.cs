@@ -9,64 +9,34 @@ namespace AtCoderLibraryCSharp.Tests
         [Test]
         public void InitializeTest([Values(0, 10)] int n)
         {
-            Assert.DoesNotThrow(() => _ = new LazySegmentTree<int, int>(n, SimpleOperationDelegate, SimpleMonoidId,
-                SimpleMappingDelegate, SimpleCompositionDelegate, SimpleMapId));
-            Assert.DoesNotThrow(() => _ = new LazySegmentTree<int, int>(Enumerable.Range(1, n),
-                SimpleOperationDelegate, SimpleMonoidId, SimpleMappingDelegate, SimpleCompositionDelegate,
-                SimpleMapId));
-            Assert.DoesNotThrow(() => _ = new LazySegmentTree<int, int>(n, SimpleOperation, SimpleMonoidId,
-                SimpleMapping, SimpleComposition, SimpleMapId));
-            Assert.DoesNotThrow(() => _ = new LazySegmentTree<int, int>(Enumerable.Range(1, n), SimpleOperation,
-                SimpleMonoidId, SimpleMapping, SimpleComposition, SimpleMapId));
+            Assert.DoesNotThrow(() => _ = new LazySegmentTree<int, int>(n, new SimpleOracle()));
+            Assert.DoesNotThrow(() => _ = new LazySegmentTree<int, int>(Enumerable.Range(1, n), new SimpleOracle()));
+            Assert.Throws<ArgumentOutOfRangeException>(() => _ = new LazySegmentTree<int, int>(-1, new SimpleOracle()));
         }
 
         [Test]
         public void ZeroTest([Values(0, 10)] int n)
         {
-            var lst = new LazySegmentTree<int, int>(n, SimpleOperation, SimpleMonoidId, SimpleMapping,
-                SimpleComposition, SimpleMapId);
+            var lst = new LazySegmentTree<int, int>(n, new SimpleOracle());
             Assert.That(lst.QueryToAll(), Is.EqualTo(-(int) 1e9));
         }
 
         [Test]
-        public void InvalidArgumentsTest()
+        public void SimpleUsageTest()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() =>
-                _ = new LazySegmentTree<int, int>(-1, SimpleOperation, SimpleMonoidId, SimpleMapping, SimpleComposition,
-                    SimpleMapId));
-            var lst = new LazySegmentTree<int, int>(10, SimpleOperation, SimpleMonoidId, SimpleMapping,
-                SimpleComposition, SimpleMapId);
-            Assert.Throws<IndexOutOfRangeException>(() => lst.Set(-1, 1));
-            Assert.Throws<IndexOutOfRangeException>(() => lst.Set(10, 1));
-
-            Assert.Throws<IndexOutOfRangeException>(() => lst.Get(-1));
-            Assert.Throws<IndexOutOfRangeException>(() => lst.Get(10));
-
-            Assert.Throws<IndexOutOfRangeException>(() => lst.Query(-1, -1));
-            Assert.Throws<IndexOutOfRangeException>(() => lst.Query(3, 2));
-            Assert.Throws<IndexOutOfRangeException>(() => lst.Query(0, 11));
-            Assert.Throws<IndexOutOfRangeException>(() => lst.Query(-1, 11));
-
-            Assert.Throws<IndexOutOfRangeException>(() => lst.Apply(-1, map: 1));
-            Assert.Throws<IndexOutOfRangeException>(() => lst.Apply(11, map: 1));
-            Assert.Throws<IndexOutOfRangeException>(() => lst.Apply(-1, -1, 1));
-            Assert.Throws<IndexOutOfRangeException>(() => lst.Apply(3, 2, 1));
-            Assert.Throws<IndexOutOfRangeException>(() => lst.Apply(0, 11, 1));
-            Assert.Throws<IndexOutOfRangeException>(() => lst.Apply(-1, 11, 1));
-
-            Assert.Throws<IndexOutOfRangeException>(() => lst.MaxRight(-1, s => true));
-            Assert.Throws<IndexOutOfRangeException>(() => lst.MaxRight(11, s => true));
-            Assert.Throws<IndexOutOfRangeException>(() => lst.MinLeft(-1, s => true));
-            Assert.Throws<IndexOutOfRangeException>(() => lst.MinLeft(11, s => true));
-            Assert.Throws<ArgumentException>(() => lst.MaxRight(0, s => false));
-            Assert.Throws<ArgumentException>(() => lst.MinLeft(10, s => false));
+            var lst = new LazySegmentTree<int, int>(new int[10], new SimpleOracle());
+            Assert.That(lst.QueryToAll(), Is.Zero);
+            lst.Apply(0, 3, 5);
+            Assert.That(lst.QueryToAll(), Is.EqualTo(5));
+            lst.Apply(2, -10);
+            Assert.That(lst.Query(2, 3), Is.EqualTo(-5));
+            Assert.That(lst.Query(2, 4), Is.Zero);
         }
 
         [Test]
         public void SimpleQueryNaiveTest([Range(0, 50)] int n)
         {
-            var lst = new LazySegmentTree<int, int>(n, SimpleOperation, SimpleMonoidId, SimpleMapping,
-                SimpleComposition, SimpleMapId);
+            var lst = new LazySegmentTree<int, int>(n, new SimpleOracle());
             var p = new int[n];
             for (var i = 0; i < n; i++)
             {
@@ -86,14 +56,13 @@ namespace AtCoderLibraryCSharp.Tests
         }
 
         [Test]
-        public void QueryNaiveStructTest([Range(1, 30)] int n)
+        public void QueryNaiveTest([Range(1, 30)] int n)
         {
             for (var ph = 0; ph < 10; ph++)
             {
-                var lst = new LazySegmentTree<MonoidStruct, MapStruct>(n, Operation, MonoidStructId, Mapping,
-                    Composition, MapStructId);
+                var lst = new LazySegmentTree<Monoid, Map>(n, new Oracle());
                 var timeManager = new TimeManager(n);
-                for (var i = 0; i < n; i++) lst.Set(i, new MonoidStruct(i, i + 1, -1));
+                for (var i = 0; i < n; i++) lst.Set(i, new Monoid(i, i + 1, -1));
                 var now = 0;
                 for (var q = 0; q < 3000; q++)
                 {
@@ -119,12 +88,12 @@ namespace AtCoderLibraryCSharp.Tests
                         }
                         case 2:
                             now++;
-                            lst.Apply(l, r, new MapStruct(now));
+                            lst.Apply(l, r, new Map(now));
                             timeManager.Action(l, r, now);
                             break;
                         case 3:
                             now++;
-                            lst.Apply(l, new MapStruct(now));
+                            lst.Apply(l, new Map(now));
                             timeManager.Action(l, l + 1, now);
                             break;
                         default:
@@ -132,68 +101,6 @@ namespace AtCoderLibraryCSharp.Tests
                     }
                 }
             }
-        }
-
-        [Test]
-        public void QueryNaiveClassTest([Range(1, 30)] int n)
-        {
-            for (var ph = 0; ph < 10; ph++)
-            {
-                var lst = new LazySegmentTree<MonoidClass, MapClass>(n, Operation, MonoidClassId, Mapping,
-                    Composition, MapClassId);
-                var timeManager = new TimeManager(n);
-                for (var i = 0; i < n; i++) lst.Set(i, new MonoidClass(i, i + 1, -1));
-                var now = 0;
-                for (var q = 0; q < 3000; q++)
-                {
-                    var ty = Utilities.RandomInteger(0, 3);
-                    var (l, r) = Utilities.RandomPair(0, n);
-                    switch (ty)
-                    {
-                        case 0:
-                        {
-                            var result = lst.Query(l, r);
-                            Assert.That(result.L, Is.EqualTo(l));
-                            Assert.That(result.R, Is.EqualTo(r));
-                            Assert.That(result.Time, Is.EqualTo(timeManager.Query(l, r)));
-                            break;
-                        }
-                        case 1:
-                        {
-                            var result = lst.Get(l);
-                            Assert.That(result.L, Is.EqualTo(l));
-                            Assert.That(result.L + 1, Is.EqualTo(l + 1));
-                            Assert.That(result.Time, Is.EqualTo(timeManager.Query(l, l + 1)));
-                            break;
-                        }
-                        case 2:
-                            now++;
-                            lst.Apply(l, r, new MapClass(now));
-                            timeManager.Action(l, r, now);
-                            break;
-                        case 3:
-                            now++;
-                            lst.Apply(l, new MapClass(now));
-                            timeManager.Action(l, l + 1, now);
-                            break;
-                        default:
-                            throw new InvalidOperationException();
-                    }
-                }
-            }
-        }
-
-        [Test]
-        public void SimpleUsageTest()
-        {
-            var lst = new LazySegmentTree<int, int>(new int[10], SimpleOperation,
-                SimpleMonoidId, SimpleMapping, SimpleComposition, SimpleMapId);
-            Assert.That(lst.QueryToAll(), Is.Zero);
-            lst.Apply(0, 3, 5);
-            Assert.That(lst.QueryToAll(), Is.EqualTo(5));
-            lst.Apply(2, -10);
-            Assert.That(lst.Query(2, 3), Is.EqualTo(-5));
-            Assert.That(lst.Query(2, 4), Is.Zero);
         }
 
         [Test]
@@ -201,10 +108,9 @@ namespace AtCoderLibraryCSharp.Tests
         {
             for (var ph = 0; ph < 10; ph++)
             {
-                var lst = new LazySegmentTree<MonoidStruct, MapStruct>(n, Operation, MonoidStructId, Mapping,
-                    Composition, MapStructId);
+                var lst = new LazySegmentTree<Monoid, Map>(n, new Oracle());
                 var timeManager = new TimeManager(n);
-                for (var i = 0; i < n; i++) lst.Set(i, new MonoidStruct(i, i + 1, -1));
+                for (var i = 0; i < n; i++) lst.Set(i, new Monoid(i, i + 1, -1));
                 var now = 0;
                 for (var q = 0; q < 1000; q++)
                 {
@@ -212,7 +118,7 @@ namespace AtCoderLibraryCSharp.Tests
                     var (l, r) = Utilities.RandomPair(0, n);
                     if (ty == 0)
                     {
-                        bool F(MonoidStruct s)
+                        bool F(Monoid s)
                         {
                             if (s.L == -1) return true;
                             return s.R <= r;
@@ -223,7 +129,7 @@ namespace AtCoderLibraryCSharp.Tests
                     else
                     {
                         now++;
-                        lst.Apply(l, r, new MapStruct(now));
+                        lst.Apply(l, r, new Map(now));
                         timeManager.Action(l, r, now);
                     }
                 }
@@ -235,10 +141,9 @@ namespace AtCoderLibraryCSharp.Tests
         {
             for (var ph = 0; ph < 10; ph++)
             {
-                var lst = new LazySegmentTree<MonoidStruct, MapStruct>(n, Operation, MonoidStructId, Mapping,
-                    Composition, MapStructId);
+                var lst = new LazySegmentTree<Monoid, Map>(n, new Oracle());
                 var timeManager = new TimeManager(n);
-                for (var i = 0; i < n; i++) lst.Set(i, new MonoidStruct(i, i + 1, -1));
+                for (var i = 0; i < n; i++) lst.Set(i, new Monoid(i, i + 1, -1));
                 var now = 0;
                 for (var q = 0; q < 1000; q++)
                 {
@@ -246,7 +151,7 @@ namespace AtCoderLibraryCSharp.Tests
                     var (l, r) = Utilities.RandomPair(0, n);
                     if (ty == 0)
                     {
-                        bool F(MonoidStruct s)
+                        bool F(Monoid s)
                         {
                             if (s.L == -1) return true;
                             return l <= s.L;
@@ -257,7 +162,7 @@ namespace AtCoderLibraryCSharp.Tests
                     else
                     {
                         now++;
-                        lst.Apply(l, r, new MapStruct(now));
+                        lst.Apply(l, r, new Map(now));
                         timeManager.Action(l, r, now);
                     }
                 }
@@ -267,21 +172,77 @@ namespace AtCoderLibraryCSharp.Tests
         [Test]
         public void EdgeTest()
         {
-            var lst = new LazySegmentTree<MonoidStruct, MapStruct>(10, Operation, MonoidStructId, Mapping, Composition,
-                MapStructId);
-            for (var i = 0; i < 10; i++) lst.Set(i, new MonoidStruct(i, i + 1, -1));
+            var lst = new LazySegmentTree<Monoid, Map>(10, new Oracle());
+            for (var i = 0; i < 10; i++) lst.Set(i, new Monoid(i, i + 1, -1));
             Assert.That(lst.MaxRight(10, x => true), Is.EqualTo(10));
             Assert.That(lst.MinLeft(0, x => true), Is.Zero);
         }
 
-        private const int SimpleMonoidId = -(int) 1e9;
-        private const int SimpleMapId = 0;
-        private static readonly LazySegmentTree<int, int>.Operation SimpleOperationDelegate = SimpleOperation;
-        private static readonly LazySegmentTree<int, int>.Mapping SimpleMappingDelegate = SimpleMapping;
-        private static readonly LazySegmentTree<int, int>.Composition SimpleCompositionDelegate = SimpleComposition;
-        private static int SimpleOperation(int a, int b) => System.Math.Max(a, b);
-        private static int SimpleMapping(int a, int b) => a + b;
-        private static int SimpleComposition(int a, int b) => a + b;
+        [Test]
+        public void ArgumentOutOfRangeInSetGetTest([Values(-1, 10)] int i)
+        {
+            var lst = new LazySegmentTree<int, int>(10, new SimpleOracle());
+            Assert.Throws<ArgumentOutOfRangeException>(() => lst.Set(i, 1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => lst.Get(i));
+        }
+
+        [TestCase(-1, 0)]
+        [TestCase(0, 11)]
+        [TestCase(1, 0)]
+        [TestCase(-1, 11)]
+        public void ArgumentOutOfRangeInQueryTest(int l, int r)
+        {
+            var lst = new LazySegmentTree<int, int>(10, new SimpleOracle());
+            Assert.Throws<ArgumentOutOfRangeException>(() => lst.Query(l, r));
+        }
+
+        [TestCase(-1, 0)]
+        [TestCase(0, 11)]
+        [TestCase(1, 0)]
+        [TestCase(-1, 11)]
+        public void ArgumentOutOfRangeInApplyTest(int l, int r)
+        {
+            var lst = new LazySegmentTree<int, int>(10, new SimpleOracle());
+            if (l < 0) Assert.Throws<ArgumentOutOfRangeException>(() => lst.Apply(l, 1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => lst.Apply(l, r, 1));
+        }
+
+        [Test]
+        public void ArgumentOutOfRangeInMaxRightMinLeftTest([Values(-1, 11)] int i)
+        {
+            var lst = new LazySegmentTree<int, int>(10, new SimpleOracle());
+            Assert.Throws<ArgumentOutOfRangeException>(() => _ = lst.MaxRight(i, monoid => true));
+            Assert.Throws<ArgumentOutOfRangeException>(() => _ = lst.MinLeft(i, monoid => true));
+        }
+
+        [Test]
+        public void InvalidArgumentInMaxRightMinLeftTest()
+        {
+            var lst = new LazySegmentTree<int, int>(10, new SimpleOracle());
+            Assert.Throws<ArgumentException>(() => _ = lst.MaxRight(10, monoid => false));
+            Assert.Throws<ArgumentException>(() => _ = lst.MinLeft(0, monoid => false));
+        }
+
+        [Test]
+        public void NullPredicateInMaxRightMinLeftTest()
+        {
+            var lst = new LazySegmentTree<int, int>(10, new SimpleOracle());
+            Assert.Throws<ArgumentNullException>(() => _ = lst.MaxRight(10, null));
+            Assert.Throws<ArgumentNullException>(() => _ = lst.MinLeft(0, null));
+        }
+
+        private class SimpleOracle : IOracle<int, int>
+        {
+            public int MonoidIdentity { get; } = -(int) 1e9;
+
+            public int Operation(in int a, in int b) => System.Math.Max(a, b);
+
+            public int MapIdentity { get; } = 0;
+
+            public int Mapping(in int f, in int x) => f + x;
+
+            public int Composition(in int f, in int g) => f + g;
+        }
 
         private class TimeManager
         {
@@ -302,96 +263,61 @@ namespace AtCoderLibraryCSharp.Tests
             }
         }
 
-        private readonly struct MonoidStruct
+        private readonly struct Monoid : IEquatable<Monoid>
         {
             public readonly int L;
             public readonly int R;
             public readonly int Time;
 
-            public MonoidStruct(int l, int r, int time)
-            {
-                L = l;
-                R = r;
-                Time = time;
-            }
+            public Monoid(int l, int r, int time) => (L, R, Time) = (l, r, time);
+
+            public bool Equals(Monoid other) => L == other.L && R == other.R && Time == other.Time;
+
+            public override bool Equals(object obj) => obj is Monoid other && Equals(other);
+
+            public override int GetHashCode() => HashCode.Combine(L, R, Time);
         }
 
-        private readonly struct MapStruct
+        private readonly struct Map : IEquatable<Map>
         {
             public readonly int NewTime;
-            public MapStruct(int newTime) => NewTime = newTime;
+            public Map(int newTime) => NewTime = newTime;
+
+            public bool Equals(Map other) => NewTime == other.NewTime;
+
+            public override bool Equals(object obj) => obj is Map other && Equals(other);
+
+            public override int GetHashCode() => NewTime;
         }
 
-        private static MonoidStruct MonoidStructId => new MonoidStruct(-1, -1, -1);
-        private static MapStruct MapStructId => new MapStruct(-1);
-
-        private static MonoidStruct Operation(MonoidStruct l, MonoidStruct r)
+        private class Oracle : IOracle<Monoid, Map>
         {
-            if (l.L == -1) return r;
-            if (r.L == -1) return l;
-            if (l.R != r.L) throw new ArgumentException();
-            return new MonoidStruct(l.L, r.R, System.Math.Max(l.Time, r.Time));
-        }
+            public Monoid MonoidIdentity { get; } = new Monoid(-1, -1, -1);
 
-        private static MonoidStruct Mapping(MapStruct l, MonoidStruct r)
-        {
-            if (l.NewTime == -1) return r;
-            if (r.Time >= l.NewTime) throw new ArgumentException();
-            return new MonoidStruct(r.L, r.R, l.NewTime);
-        }
-
-        private static MapStruct Composition(MapStruct l, MapStruct r)
-        {
-            if (l.NewTime == -1) return r;
-            if (r.NewTime == -1) return l;
-            if (l.NewTime <= r.NewTime) throw new ArgumentException();
-            return l;
-        }
-
-        private class MonoidClass
-        {
-            public readonly int L;
-            public readonly int R;
-            public readonly int Time;
-
-            public MonoidClass(int l, int r, int time)
+            public Monoid Operation(in Monoid a, in Monoid b)
             {
-                L = l;
-                R = r;
-                Time = time;
+                if (a.L == -1) return b;
+                if (b.L == -1) return a;
+                if (a.R != b.L) throw new ArgumentException();
+                return new Monoid(a.L, b.R, System.Math.Max(a.Time, b.Time));
             }
-        }
 
-        private class MapClass
-        {
-            public readonly int NewTime;
-            public MapClass(int newTime) => NewTime = newTime;
-        }
+            public Map MapIdentity { get; } = new Map(-1);
 
-        private static MonoidClass MonoidClassId => new MonoidClass(-1, -1, -1);
-        private static MapClass MapClassId => new MapClass(-1);
+            public Monoid Mapping(in Map f, in Monoid x)
+            {
+                if (f.NewTime == -1) return x;
+                if (x.Time >= f.NewTime) throw new ArgumentException();
+                return new Monoid(x.L, x.R, f.NewTime);
+            }
 
-        private static MonoidClass Operation(MonoidClass l, MonoidClass r)
-        {
-            if (l.L == -1) return r;
-            if (r.L == -1) return l;
-            if (l.R != r.L) throw new ArgumentException();
-            return new MonoidClass(l.L, r.R, System.Math.Max(l.Time, r.Time));
-        }
-
-        private static MonoidClass Mapping(MapClass l, MonoidClass r)
-        {
-            if (l.NewTime == -1) return r;
-            if (r.Time >= l.NewTime) throw new ArgumentException();
-            return new MonoidClass(r.L, r.R, l.NewTime);
-        }
-
-        private static MapClass Composition(MapClass l, MapClass r)
-        {
-            if (l.NewTime == -1) return r;
-            if (r.NewTime == -1) return l;
-            if (l.NewTime <= r.NewTime) throw new ArgumentException();
-            return l;
+            public Map Composition(in Map f, in Map g)
+            {
+                if (f.NewTime == -1) return g;
+                if (g.NewTime == -1) return f;
+                if (f.NewTime <= g.NewTime) throw new ArgumentException();
+                return f;
+            }
         }
     }
 }

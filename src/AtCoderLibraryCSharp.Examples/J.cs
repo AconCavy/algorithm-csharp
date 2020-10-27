@@ -10,7 +10,7 @@ namespace AtCoderLibraryCSharp.Examples
             var NQ = Console.ReadLine().Split(" ").Select(int.Parse).ToArray();
             var (N, Q) = (NQ[0], NQ[1]);
             var A = Console.ReadLine().Split(" ").Select(int.Parse).ToArray();
-            var st = new SegmentTree<int>(A, (a, b) => System.Math.Max(a, b), -1);
+            var st = new SegmentTree<int>(A, new Oracle());
 
             for (var i = 0; i < Q; i++)
             {
@@ -30,6 +30,12 @@ namespace AtCoderLibraryCSharp.Examples
                         break;
                 }
             }
+        }
+
+        public class Oracle : IOracle<int>
+        {
+            public int MonoidIdentity { get; } = -1;
+            public int Operation(in int a, in int b) => System.Math.Max(a, b);
         }
     }
 }

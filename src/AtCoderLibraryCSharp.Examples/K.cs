@@ -6,56 +6,54 @@ namespace AtCoderLibraryCSharp.Examples
 {
     public static class K
     {
-        public static void Solve()
+        public static void Main()
         {
             var sw = new StreamWriter(Console.OpenStandardOutput()) {AutoFlush = false};
-             Console.SetOut(sw);
+            Console.SetOut(sw);
+            Solve();
+            Console.Out.Flush();
+        }
 
-             var NQ = Console.ReadLine().Split(" ").Select(int.Parse).ToArray();
-             var (N, Q) = (NQ[0], NQ[1]);
-             var A = Console.ReadLine().Split(" ").Select(x => new S(int.Parse(x), 1)).ToArray();
+        public static void Solve()
+        {
+            var NQ = Console.ReadLine().Split(" ").Select(int.Parse).ToArray();
+            var (N, Q) = (NQ[0], NQ[1]);
+            var A = Console.ReadLine().Split(" ").Select(x => new S(int.Parse(x), 1)).ToArray();
 
-             var identityS = new S(0, 0);
-             var identityF = new F(1, 0);
+            var lst = new LazySegmentTree<S, F>(A, new Oracle());
 
-             static S Operation(S l, S r) => new S(l.A + r.A, l.Size + r.Size);
-             static S Mapping(F l, S r) => new S(r.A * l.A + r.Size * l.B, r.Size);
-             static F Composition(F l, F r) => new F(r.A * l.A, r.B * l.A + l.B);
-
-             var lst = new LazySegmentTree<S, F>(A, Operation, identityS, Mapping, Composition, identityF);
-
-             for (var i = 0; i < Q; i++)
-             {
-                 var q = Console.ReadLine().Split(" ").Select(int.Parse).ToArray();
-                 if (q[0] == 0) lst.Apply(q[1], q[2], new F(q[3], q[4]));
-                 else Console.WriteLine(lst.Query(q[1], q[2]).A);
-             }
-
-             Console.Out.Flush();
+            for (var i = 0; i < Q; i++)
+            {
+                var q = Console.ReadLine().Split(" ").Select(int.Parse).ToArray();
+                if (q[0] == 0) lst.Apply(q[1], q[2], new F(q[3], q[4]));
+                else Console.WriteLine(lst.Query(q[1], q[2]).A);
+            }
         }
 
         public readonly struct S
         {
             public readonly ModuloInteger A;
             public readonly int Size;
-
-            public S(ModuloInteger a, int size)
-            {
-                A = a;
-                Size = size;
-            }
+            public S(ModuloInteger a, int size) => (A, Size) = (a, size);
         }
 
         public readonly struct F
         {
             public readonly ModuloInteger A;
             public readonly ModuloInteger B;
+            public F(ModuloInteger a, ModuloInteger b) => (A, B) = (a, b);
+        }
 
-            public F(ModuloInteger a, ModuloInteger b)
-            {
-                A = a;
-                B = b;
-            }
+        public class Oracle : IOracle<S, F>
+        {
+            public S MonoidIdentity { get; } = new S(0, 0);
+            public S Operation(in S a, in S b) => new S(a.A + b.A, a.Size + b.Size);
+
+            public F MapIdentity { get; } = new F(1, 0);
+
+            public S Mapping(in F f, in S x) => new S(f.A * x.A + f.B * x.Size, x.Size);
+
+            public F Composition(in F f, in F g) => new F(f.A * g.A, f.A * g.B + f.B);
         }
     }
 }

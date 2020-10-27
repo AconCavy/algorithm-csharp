@@ -12,15 +12,7 @@ namespace AtCoderLibraryCSharp.Examples
             var A = Console.ReadLine().Split(" ").Select(int.Parse)
                 .Select(x => x == 0 ? new S(1, 0, 0) : new S(0, 1, 0)).ToArray();
 
-            static S Operation(S l, S r) =>
-                new S(l.Zero + r.Zero, l.One + r.One, l.Inversion + r.Inversion + l.One * r.Zero);
-
-            var identityS = new S(0, 0, 0);
-            static S Mapping(bool l, S r) => l ? new S(r.One, r.Zero, r.One * r.Zero - r.Inversion) : r;
-            static bool Composition(bool l, bool r) => (l && !r) || (!l && r);
-            const bool identityF = false;
-
-            var lst = new LazySegmentTree<S, bool>(A, Operation, identityS, Mapping, Composition, identityF);
+            var lst = new LazySegmentTree<S, bool>(A, new Oracle());
             for (var i = 0; i < Q; i++)
             {
                 var TLR = Console.ReadLine().Split(" ").Select(int.Parse).ToArray();
@@ -31,18 +23,26 @@ namespace AtCoderLibraryCSharp.Examples
             }
         }
 
-        public struct S
+        public readonly struct S
         {
-            public long Zero;
-            public long One;
-            public long Inversion;
+            public readonly long Zero;
+            public readonly long One;
+            public readonly long Inversion;
 
-            public S(long zero, long one, long inversion)
-            {
-                Zero = zero;
-                One = one;
-                Inversion = inversion;
-            }
+            public S(long zero, long one, long inversion) => (Zero, One, Inversion) = (zero, one, inversion);
+        }
+
+        public class Oracle : IOracle<S, bool>
+        {
+            public S MonoidIdentity { get; } = new S(0, 0, 0);
+
+            public S Operation(in S a, in S b) =>
+                new S(a.Zero + b.Zero, a.One + b.One, a.Inversion + b.Inversion + a.One * b.Zero);
+
+            public bool MapIdentity { get; } = false;
+            public S Mapping(in bool f, in S x) => f ? new S(x.One, x.Zero, x.One * x.Zero - x.Inversion) : x;
+
+            public bool Composition(in bool f, in bool g) => f && !g || !f && g;
         }
     }
 }
