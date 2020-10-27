@@ -11,6 +11,7 @@ namespace AtCoderLibraryCSharp.Tests
         {
             Assert.DoesNotThrow(() => _ = new TwoSatisfiability());
             Assert.DoesNotThrow(() => _ = new TwoSatisfiability(2));
+            Assert.Throws<ArgumentOutOfRangeException>(() => _ = new TwoSatisfiability(-1));
         }
 
         [Test]
@@ -94,15 +95,16 @@ namespace AtCoderLibraryCSharp.Tests
             }
         }
 
-        [Test]
-        public void InvalidArgumentsTest()
+        [TestCase(-1, 1)]
+        [TestCase(2, 1)]
+        [TestCase(1, -1)]
+        [TestCase(1, 2)]
+        [TestCase(-1, 2)]
+        [TestCase(2, -1)]
+        public void InvalidArgumentsTest(int i, int j)
         {
             var ts = new TwoSatisfiability(2);
-            Assert.Throws<IndexOutOfRangeException>(() => ts.AddClause(-1, true, 1, true));
-            Assert.Throws<IndexOutOfRangeException>(() => ts.AddClause(2, true, 1, true));
-            Assert.Throws<IndexOutOfRangeException>(() => ts.AddClause(1, true, -1, true));
-            Assert.Throws<IndexOutOfRangeException>(() => ts.AddClause(1, true, 2, true));
-            Assert.Throws<IndexOutOfRangeException>(() => ts.AddClause(-1, true, 2, true));
+            Assert.Throws<ArgumentOutOfRangeException>(() => ts.AddClause(i, true, j, true));
         }
     }
 }
