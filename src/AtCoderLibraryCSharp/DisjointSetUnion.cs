@@ -17,11 +17,11 @@ namespace AtCoderLibraryCSharp
             Array.Fill(_parentOrSize, -1);
         }
 
-        public int Merge(int a, int b)
+        public int Merge(int u, int v)
         {
-            if (a < 0 || _length <= a) throw new ArgumentOutOfRangeException(nameof(a));
-            if (b < 0 || _length <= b) throw new ArgumentOutOfRangeException(nameof(b));
-            var (x, y) = (LeaderOf(a), LeaderOf(b));
+            if (u < 0 || _length <= u) throw new ArgumentOutOfRangeException(nameof(u));
+            if (v < 0 || _length <= v) throw new ArgumentOutOfRangeException(nameof(v));
+            var (x, y) = (LeaderOf(u), LeaderOf(v));
             if (x == y) return x;
             if (-_parentOrSize[x] < -_parentOrSize[y]) (x, y) = (y, x);
             _parentOrSize[x] += _parentOrSize[y];
@@ -29,38 +29,30 @@ namespace AtCoderLibraryCSharp
             return x;
         }
 
-        public bool IsSame(int a, int b)
+        public bool IsSame(int u, int v)
         {
-            if (a < 0 || _length <= a) throw new ArgumentOutOfRangeException(nameof(a));
-            if (b < 0 || _length <= b) throw new ArgumentOutOfRangeException(nameof(b));
-            return LeaderOf(a) == LeaderOf(b);
+            if (u < 0 || _length <= u) throw new ArgumentOutOfRangeException(nameof(u));
+            if (v < 0 || _length <= v) throw new ArgumentOutOfRangeException(nameof(v));
+            return LeaderOf(u) == LeaderOf(v);
         }
 
-        public int LeaderOf(int a)
+        public int LeaderOf(int v)
         {
-            if (a < 0 || _length <= a) throw new ArgumentOutOfRangeException(nameof(a));
-            if (_parentOrSize[a] < 0) return a;
-            return _parentOrSize[a] = LeaderOf(_parentOrSize[a]);
+            if (v < 0 || _length <= v) throw new ArgumentOutOfRangeException(nameof(v));
+            if (_parentOrSize[v] < 0) return v;
+            return _parentOrSize[v] = LeaderOf(_parentOrSize[v]);
         }
 
-        public int SizeOf(int a)
+        public int SizeOf(int v)
         {
-            if (a < 0 || _length <= a) throw new ArgumentOutOfRangeException(nameof(a));
-            return -_parentOrSize[LeaderOf(a)];
+            if (v < 0 || _length <= v) throw new ArgumentOutOfRangeException(nameof(v));
+            return -_parentOrSize[LeaderOf(v)];
         }
 
         public IEnumerable<IEnumerable<int>> GetGroups()
         {
-            var leaders = new int[_length];
-            var groupSize = new int[_length];
-            for (var i = 0; i < _length; i++)
-            {
-                leaders[i] = LeaderOf(i);
-                groupSize[leaders[i]]++;
-            }
-
             var ret = new List<int>[_length].Select(x => new List<int>()).ToArray();
-            for (var i = 0; i < _length; i++) ret[leaders[i]].Add(i);
+            for (var i = 0; i < _length; i++) ret[LeaderOf(i)].Add(i);
             return ret.Where(x => x.Any());
         }
     }
