@@ -191,6 +191,17 @@ namespace AtCoderLibraryCSharp.Tests
         }
 
         [Test]
+        public void OperatorsTest()
+        {
+            ModuloInteger.SetModulo(11);
+            Assert.That(new ModuloInteger(1) + new ModuloInteger(1), Is.EqualTo(new ModuloInteger(2)));
+            Assert.That(new ModuloInteger(11) - new ModuloInteger(1), Is.EqualTo(new ModuloInteger(10)));
+            Assert.That(new ModuloInteger(2) * new ModuloInteger(5), Is.EqualTo(new ModuloInteger(10)));
+            Assert.That(new ModuloInteger(10) / new ModuloInteger(2), Is.EqualTo(new ModuloInteger(5)));
+            Assert.That(new ModuloInteger(2) / new ModuloInteger(5), Is.EqualTo(new ModuloInteger(7)));
+        }
+
+        [Test]
         public void CastIntTest()
         {
             ModuloInteger.SetModulo(11);
@@ -208,7 +219,12 @@ namespace AtCoderLibraryCSharp.Tests
             Assert.That(new ModuloInteger(11) - 1, Is.EqualTo(new ModuloInteger(10)));
             Assert.That(new ModuloInteger(2) * 5, Is.EqualTo(new ModuloInteger(10)));
             Assert.That(new ModuloInteger(10) / 2, Is.EqualTo(new ModuloInteger(5)));
+            Assert.That(new ModuloInteger(2) / 5, Is.EqualTo(new ModuloInteger(7)));
+            Assert.That(1 + new ModuloInteger(1), Is.EqualTo(new ModuloInteger(2)));
+            Assert.That(11 - new ModuloInteger(1), Is.EqualTo(new ModuloInteger(10)));
+            Assert.That(5 * new ModuloInteger(2), Is.EqualTo(new ModuloInteger(10)));
             Assert.That(10 / new ModuloInteger(5), Is.EqualTo(new ModuloInteger(2)));
+            Assert.That(2 / new ModuloInteger(5), Is.EqualTo(new ModuloInteger(7)));
         }
 
         [Test]
@@ -229,7 +245,12 @@ namespace AtCoderLibraryCSharp.Tests
             Assert.That(new ModuloInteger(11) - 1L, Is.EqualTo(new ModuloInteger(10)));
             Assert.That(new ModuloInteger(2) * 5L, Is.EqualTo(new ModuloInteger(10)));
             Assert.That(new ModuloInteger(10) / 2L, Is.EqualTo(new ModuloInteger(5)));
+            Assert.That(new ModuloInteger(2) / 5L, Is.EqualTo(new ModuloInteger(7)));
+            Assert.That(1L + new ModuloInteger(1), Is.EqualTo(new ModuloInteger(2)));
+            Assert.That(11L - new ModuloInteger(1), Is.EqualTo(new ModuloInteger(10)));
+            Assert.That(5L * new ModuloInteger(2), Is.EqualTo(new ModuloInteger(10)));
             Assert.That(10L / new ModuloInteger(5), Is.EqualTo(new ModuloInteger(2)));
+            Assert.That(2L / new ModuloInteger(5), Is.EqualTo(new ModuloInteger(7)));
         }
 
         private static long GreatestCommonDivisor(long a, long b)

@@ -14,7 +14,8 @@ namespace AtCoderLibraryCSharp
         // The constant modulo will be recommended to use for performances in use cases.
         // public const long Modulo = 998244353;
 
-        public ModuloInteger(long value) => Value = 0 <= value % Modulo ? value % Modulo : value % Modulo + Modulo;
+        public ModuloInteger(int value) => Value = 0 <= value ? value % Modulo : value % Modulo + Modulo;
+        public ModuloInteger(long value) => Value = 0 <= value ? value % Modulo : value % Modulo + Modulo;
         public static implicit operator int(ModuloInteger mint) => (int) mint.Value;
         public static implicit operator long(ModuloInteger mint) => mint.Value;
         public static implicit operator ModuloInteger(int value) => new ModuloInteger(value);
@@ -23,6 +24,22 @@ namespace AtCoderLibraryCSharp
         public static ModuloInteger operator -(in ModuloInteger a, in ModuloInteger b) => a.Value - b.Value;
         public static ModuloInteger operator *(in ModuloInteger a, in ModuloInteger b) => a.Value * b.Value;
         public static ModuloInteger operator /(in ModuloInteger a, in ModuloInteger b) => a * b.Inverse();
+        public static ModuloInteger operator +(in ModuloInteger a, int b) => a.Value + b;
+        public static ModuloInteger operator +(int a, in ModuloInteger b) => a + b.Value;
+        public static ModuloInteger operator -(in ModuloInteger a, int b) => a.Value - b;
+        public static ModuloInteger operator -(int a, in ModuloInteger b) => a - b.Value;
+        public static ModuloInteger operator *(in ModuloInteger a, int b) => a.Value * b;
+        public static ModuloInteger operator *(int a, in ModuloInteger b) => a * b.Value;
+        public static ModuloInteger operator /(in ModuloInteger a, int b) => a * Inverse(b);
+        public static ModuloInteger operator /(int a, in ModuloInteger b) => a * b.Inverse();
+        public static ModuloInteger operator +(in ModuloInteger a, long b) => a.Value + b;
+        public static ModuloInteger operator +(long a, in ModuloInteger b) => a + b.Value;
+        public static ModuloInteger operator -(in ModuloInteger a, long b) => a.Value - b;
+        public static ModuloInteger operator -(long a, in ModuloInteger b) => a - b.Value;
+        public static ModuloInteger operator *(in ModuloInteger a, long b) => a.Value * b;
+        public static ModuloInteger operator *(long a, in ModuloInteger b) => a * b.Value;
+        public static ModuloInteger operator /(in ModuloInteger a, long b) => a * Inverse(b);
+        public static ModuloInteger operator /(long a, in ModuloInteger b) => a * b.Inverse();
         public static bool operator ==(in ModuloInteger a, in ModuloInteger b) => a.Value == b.Value;
         public static bool operator !=(in ModuloInteger a, in ModuloInteger b) => a.Value != b.Value;
         public bool Equals(ModuloInteger other) => Value == other.Value;
