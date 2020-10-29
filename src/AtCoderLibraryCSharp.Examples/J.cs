@@ -35,7 +35,7 @@ namespace AtCoderLibraryCSharp.Examples
         public class Oracle : IOracle<int>
         {
             public int MonoidIdentity { get; } = -1;
-            public int Operation(in int a, in int b) => System.Math.Max(a, b);
+            public int Operate(in int a, in int b) => System.Math.Max(a, b);
         }
     }
 }

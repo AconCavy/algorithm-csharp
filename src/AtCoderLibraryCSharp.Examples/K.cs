@@ -47,13 +47,13 @@ namespace AtCoderLibraryCSharp.Examples
         public class Oracle : IOracle<S, F>
         {
             public S MonoidIdentity { get; } = new S(0, 0);
-            public S Operation(in S a, in S b) => new S(a.A + b.A, a.Size + b.Size);
+            public S Operate(in S a, in S b) => new S(a.A + b.A, a.Size + b.Size);
 
             public F MapIdentity { get; } = new F(1, 0);
 
-            public S Mapping(in F f, in S x) => new S(f.A * x.A + f.B * x.Size, x.Size);
+            public S Map(in F f, in S x) => new S(f.A * x.A + f.B * x.Size, x.Size);
 
-            public F Composition(in F f, in F g) => new F(f.A * g.A, f.A * g.B + f.B);
+            public F Compose(in F f, in F g) => new F(f.A * g.A, f.A * g.B + f.B);
         }
     }
 }

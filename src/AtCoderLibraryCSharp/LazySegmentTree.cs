@@ -69,13 +69,13 @@ namespace AtCoderLibraryCSharp
             var (sml, smr) = (_monoidId, _monoidId);
             while (left < right)
             {
-                if ((left & 1) == 1) sml = _oracle.Operation(sml, _data[left++]);
-                if ((right & 1) == 1) smr = _oracle.Operation(_data[--right], smr);
+                if ((left & 1) == 1) sml = _oracle.Operate(sml, _data[left++]);
+                if ((right & 1) == 1) smr = _oracle.Operate(_data[--right], smr);
                 left >>= 1;
                 right >>= 1;
             }
 
-            return _oracle.Operation(sml, smr);
+            return _oracle.Operate(sml, smr);
         }
 
         public TMonoid QueryToAll() => _data[1];
@@ -85,7 +85,7 @@ namespace AtCoderLibraryCSharp
             if (index < 0 || _length <= index) throw new ArgumentOutOfRangeException(nameof(index));
             index += _size;
             for (var i = _log; i >= 1; i--) Push(index >> i);
-            _data[index] = _oracle.Mapping(map, _data[index]);
+            _data[index] = _oracle.Map(map, _data[index]);
             for (var i = 1; i <= _log; i++) Update(index >> i);
         }
 
@@ -129,13 +129,13 @@ namespace AtCoderLibraryCSharp
             do
             {
                 while ((left & 1) == 0) left >>= 1;
-                if (!predicate(_oracle.Operation(sm, _data[left])))
+                if (!predicate(_oracle.Operate(sm, _data[left])))
                 {
                     while (left < _size)
                     {
                         Push(left);
                         left <<= 1;
-                        var tmp = _oracle.Operation(sm, _data[left]);
+                        var tmp = _oracle.Operate(sm, _data[left]);
                         if (!predicate(tmp)) continue;
                         sm = tmp;
                         left++;
@@ -144,7 +144,7 @@ namespace AtCoderLibraryCSharp
                     return left - _size;
                 }
 
-                sm = _oracle.Operation(sm, _data[left]);
+                sm = _oracle.Operate(sm, _data[left]);
                 left++;
             } while ((left & -left) != left);
 
@@ -164,13 +164,13 @@ namespace AtCoderLibraryCSharp
             {
                 right--;
                 while (right > 1 && (right & 1) == 1) right >>= 1;
-                if (!predicate(_oracle.Operation(_data[right], sm)))
+                if (!predicate(_oracle.Operate(_data[right], sm)))
                 {
                     while (right < _size)
                     {
                         Push(right);
                         right = (right << 1) + 1;
-                        var tmp = _oracle.Operation(_data[right], sm);
+                        var tmp = _oracle.Operate(_data[right], sm);
                         if (!predicate(tmp)) continue;
                         sm = tmp;
                         right--;
@@ -179,18 +179,18 @@ namespace AtCoderLibraryCSharp
                     return right + 1 - _size;
                 }
 
-                sm = _oracle.Operation(_data[right], sm);
+                sm = _oracle.Operate(_data[right], sm);
             } while ((right & -right) != right);
 
             return 0;
         }
 
-        private void Update(int k) => _data[k] = _oracle.Operation(_data[k << 1], _data[(k << 1) + 1]);
+        private void Update(int k) => _data[k] = _oracle.Operate(_data[k << 1], _data[(k << 1) + 1]);
 
         private void ApplyToAll(int k, in TMap map)
         {
-            _data[k] = _oracle.Mapping(map, _data[k]);
-            if (k < _size) _lazy[k] = _oracle.Composition(map, _lazy[k]);
+            _data[k] = _oracle.Map(map, _data[k]);
+            if (k < _size) _lazy[k] = _oracle.Compose(map, _lazy[k]);
         }
 
         private void Push(int k)

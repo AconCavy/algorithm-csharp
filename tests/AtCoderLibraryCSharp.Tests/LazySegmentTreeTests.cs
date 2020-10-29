@@ -235,13 +235,13 @@ namespace AtCoderLibraryCSharp.Tests
         {
             public int MonoidIdentity { get; } = -(int) 1e9;
 
-            public int Operation(in int a, in int b) => System.Math.Max(a, b);
+            public int Operate(in int a, in int b) => System.Math.Max(a, b);
 
             public int MapIdentity { get; } = 0;
 
-            public int Mapping(in int f, in int x) => f + x;
+            public int Map(in int f, in int x) => f + x;
 
-            public int Composition(in int f, in int g) => f + g;
+            public int Compose(in int f, in int g) => f + g;
         }
 
         private class TimeManager
@@ -294,7 +294,7 @@ namespace AtCoderLibraryCSharp.Tests
         {
             public Monoid MonoidIdentity { get; } = new Monoid(-1, -1, -1);
 
-            public Monoid Operation(in Monoid a, in Monoid b)
+            public Monoid Operate(in Monoid a, in Monoid b)
             {
                 if (a.L == -1) return b;
                 if (b.L == -1) return a;
@@ -304,14 +304,14 @@ namespace AtCoderLibraryCSharp.Tests
 
             public Map MapIdentity { get; } = new Map(-1);
 
-            public Monoid Mapping(in Map f, in Monoid x)
+            public Monoid Map(in Map f, in Monoid x)
             {
                 if (f.NewTime == -1) return x;
                 if (x.Time >= f.NewTime) throw new ArgumentException();
                 return new Monoid(x.L, x.R, f.NewTime);
             }
 
-            public Map Composition(in Map f, in Map g)
+            public Map Compose(in Map f, in Map g)
             {
                 if (f.NewTime == -1) return g;
                 if (g.NewTime == -1) return f;

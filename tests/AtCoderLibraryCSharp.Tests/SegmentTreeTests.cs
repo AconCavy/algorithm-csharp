@@ -143,7 +143,7 @@ namespace AtCoderLibraryCSharp.Tests
             public TMonoid Query(int l, int r)
             {
                 var sum = _id;
-                for (var i = l; i < r; i++) sum = _oracle.Operation(sum, _data[i]);
+                for (var i = l; i < r; i++) sum = _oracle.Operate(sum, _data[i]);
                 return sum;
             }
 
@@ -152,7 +152,7 @@ namespace AtCoderLibraryCSharp.Tests
                 var sum = _id;
                 for (var i = l; i < _n; i++)
                 {
-                    sum = _oracle.Operation(sum, _data[i]);
+                    sum = _oracle.Operate(sum, _data[i]);
                     if (!func(sum)) return i;
                 }
 
@@ -164,7 +164,7 @@ namespace AtCoderLibraryCSharp.Tests
                 var sum = _id;
                 for (var i = r - 1; i >= 0; i--)
                 {
-                    sum = _oracle.Operation(_data[i], sum);
+                    sum = _oracle.Operate(_data[i], sum);
                     if (!func(sum)) return i + 1;
                 }
 
@@ -188,7 +188,7 @@ namespace AtCoderLibraryCSharp.Tests
         {
             public Monoid MonoidIdentity { get; } = new Monoid("$");
 
-            public Monoid Operation(in Monoid a, in Monoid b)
+            public Monoid Operate(in Monoid a, in Monoid b)
             {
                 if (a.Value == "$") return b;
                 if (b.Value == "$") return a;

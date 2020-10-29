@@ -36,13 +36,13 @@ namespace AtCoderLibraryCSharp.Examples
         {
             public S MonoidIdentity { get; } = new S(0, 0, 0);
 
-            public S Operation(in S a, in S b) =>
+            public S Operate(in S a, in S b) =>
                 new S(a.Zero + b.Zero, a.One + b.One, a.Inversion + b.Inversion + a.One * b.Zero);
 
             public bool MapIdentity { get; } = false;
-            public S Mapping(in bool f, in S x) => f ? new S(x.One, x.Zero, x.One * x.Zero - x.Inversion) : x;
+            public S Map(in bool f, in S x) => f ? new S(x.One, x.Zero, x.One * x.Zero - x.Inversion) : x;
 
-            public bool Composition(in bool f, in bool g) => f && !g || !f && g;
+            public bool Compose(in bool f, in bool g) => f && !g || !f && g;
         }
     }
 }
