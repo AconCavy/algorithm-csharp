@@ -1,19 +1,10 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 
 namespace AtCoderLibraryCSharp.Examples
 {
     public static class K
     {
-        public static void Main()
-        {
-            var sw = new StreamWriter(Console.OpenStandardOutput()) {AutoFlush = false};
-            Console.SetOut(sw);
-            Solve();
-            Console.Out.Flush();
-        }
-
         public static void Solve()
         {
             var NQ = Console.ReadLine().Split(" ").Select(int.Parse).ToArray();
@@ -50,9 +41,7 @@ namespace AtCoderLibraryCSharp.Examples
             public S Operate(in S a, in S b) => new S(a.A + b.A, a.Size + b.Size);
 
             public F MapIdentity { get; } = new F(1, 0);
-
             public S Map(in F f, in S x) => new S(f.A * x.A + f.B * x.Size, x.Size);
-
             public F Compose(in F f, in F g) => new F(f.A * g.A, f.A * g.B + f.B);
         }
     }

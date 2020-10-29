@@ -9,8 +9,8 @@ namespace AtCoderLibraryCSharp.Examples
         {
             var NQ = Console.ReadLine().Split(" ").Select(int.Parse).ToArray();
             var (N, Q) = (NQ[0], NQ[1]);
-            var A = Console.ReadLine().Split(" ").Select(int.Parse).ToArray();
-            var st = new SegmentTree<int>(A, new Oracle());
+            var A = Console.ReadLine().Split(" ").Select(x => new S(int.Parse(x))).ToArray();
+            var st = new SegmentTree<S>(A, new Oracle());
 
             for (var i = 0; i < Q; i++)
             {
@@ -20,22 +20,28 @@ namespace AtCoderLibraryCSharp.Examples
                 switch (T)
                 {
                     case 1:
-                        st.Set(X, V);
+                        st.Set(X, new S(V));
                         break;
                     case 2:
-                        Console.WriteLine(st.Query(X, V));
+                        Console.WriteLine(st.Query(X, V).Value);
                         break;
                     case 3:
-                        Console.WriteLine(st.MaxRight(X, v => v < V) + 1);
+                        Console.WriteLine(st.MaxRight(X, v => v.Value < V) + 1);
                         break;
                 }
             }
         }
 
-        public class Oracle : IOracle<int>
+        public readonly struct S
         {
-            public int MonoidIdentity { get; } = -1;
-            public int Operate(in int a, in int b) => System.Math.Max(a, b);
+            public readonly int Value;
+            public S(int value) => Value = value;
+        }
+
+        public class Oracle : IOracle<S>
+        {
+            public S MonoidIdentity { get; } = new S(-1);
+            public S Operate(in S a, in S b) => new S(System.Math.Max(a.Value, b.Value));
         }
     }
 }
