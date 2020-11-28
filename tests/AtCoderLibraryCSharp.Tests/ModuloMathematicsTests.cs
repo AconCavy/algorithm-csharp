@@ -4,14 +4,14 @@ using NUnit.Framework;
 
 namespace AtCoderLibraryCSharp.Tests
 {
-    public class EnumerationModuloTests
+    public class ModuloMathematicsTests
     {
         [Test]
         public void FactorialTest([Values(11, 998244353, 1000000007)] int modulo)
         {
             ModuloInteger.SetModulo(modulo);
             for (var n = 10000; n >= 1; n--)
-                Assert.That(EnumerationModulo.Factorial(n).Value, Is.EqualTo(Enumeration.Factorial(n, modulo)));
+                Assert.That(ModuloMathematics.Factorial(n).Value, Is.EqualTo(Enumeration.Factorial(n, modulo)));
         }
 
         [Test]
@@ -20,7 +20,7 @@ namespace AtCoderLibraryCSharp.Tests
             ModuloInteger.SetModulo(modulo);
             const int n = 10000;
             for (var r = 1; r <= n; r++)
-                Assert.That(EnumerationModulo.Combination(n, r).Value,
+                Assert.That(ModuloMathematics.Combination(n, r).Value,
                     Is.EqualTo(Enumeration.Combination(n, r, modulo)));
         }
 
@@ -30,17 +30,25 @@ namespace AtCoderLibraryCSharp.Tests
             ModuloInteger.SetModulo(modulo);
             const int n = 10000;
             for (var r = 1; r <= n; r++)
-                Assert.That(EnumerationModulo.Permutation(n, r).Value,
+                Assert.That(ModuloMathematics.Permutation(n, r).Value,
                     Is.EqualTo(Enumeration.Permutation(n, r, modulo)));
         }
 
-        [TestCase(-1, 1)]
-        [TestCase(1, -1)]
-        [TestCase(1, 2)]
-        public void InvalidArgumentsTest(int n, int r)
+        [Test]
+        public void NLessThan0Test()
         {
-            Assert.Throws<ArgumentException>(() => _ = EnumerationModulo.Combination(n, r));
-            Assert.Throws<ArgumentException>(() => _ = EnumerationModulo.Permutation(n, r));
+            const int n = -1;
+            Assert.Throws<ArgumentException>(() => _ = ModuloMathematics.Factorial(n));
+            Assert.Throws<ArgumentException>(() => _ = ModuloMathematics.Combination(n, 5));
+            Assert.Throws<ArgumentException>(() => _ = ModuloMathematics.Permutation(n, 5));
+        }
+
+        [Test]
+        public void LessThanAndGreaterThanNTest([Values(-1, 3)] int r)
+        {
+            const int n = 2;
+            Assert.Throws<ArgumentException>(() => _ = ModuloMathematics.Combination(n, r));
+            Assert.Throws<ArgumentException>(() => _ = ModuloMathematics.Permutation(n, r));
         }
 
         private static class Enumeration

@@ -2,14 +2,14 @@
 
 namespace AtCoderLibraryCSharp
 {
-    public static class EnumerationModulo
+    public static class ModuloMathematics
     {
         private const int DefaultLength = 32;
         private static ModuloInteger[] _factorial;
         private static ModuloInteger[] _factorialInverse;
         private static int _length;
 
-        static EnumerationModulo()
+        static ModuloMathematics()
         {
             _factorial = new ModuloInteger[DefaultLength + 1];
             _factorial[0] = 1;
@@ -38,6 +38,7 @@ namespace AtCoderLibraryCSharp
 
         public static ModuloInteger Factorial(int n)
         {
+            if (n < 0) throw new ArgumentException(nameof(n));
             if (_length < n) Initialize(n);
             return _factorial[n];
         }
