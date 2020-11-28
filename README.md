@@ -11,7 +11,7 @@ The library is based on [ac-library](https://github.com/atcoder/ac-library) and 
 - DisjointSetUnion
 - FenwickTree
 - LazySegmentTree
-- Math
+- Mathematics
 - MaxFlowGraph
 - MinCostFlowGraph
 - ModuloInteger

@@ -75,7 +75,7 @@ namespace AtCoderLibraryCSharp.Tests
             {
                 var top = Factorial(n, modulo);
                 var bottom = Factorial(n - r, modulo);
-                return top * Math.PowerModulo(bottom, modulo - 2, modulo) % modulo;
+                return top * Mathematics.PowerModulo(bottom, modulo - 2, modulo) % modulo;
             }
 
             public static long Combination(long n, long r, long modulo)
@@ -83,7 +83,7 @@ namespace AtCoderLibraryCSharp.Tests
                 r = System.Math.Min(r, n - r);
                 var top = Factorial(n, modulo);
                 var bottom = Factorial(r, modulo) * Factorial(n - r, modulo) % modulo;
-                return top * Math.PowerModulo(bottom, modulo - 2, modulo) % modulo;
+                return top * Mathematics.PowerModulo(bottom, modulo - 2, modulo) % modulo;
             }
         }
     }

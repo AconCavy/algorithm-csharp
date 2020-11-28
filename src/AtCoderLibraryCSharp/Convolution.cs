@@ -16,7 +16,7 @@ namespace AtCoderLibraryCSharp
             var (n, m) = (a1.Length, b1.Length);
             if (n < 1 || m < 1) return new ModuloInteger[0];
             ModuloInteger[] ret;
-            if (System.Math.Min(n, m) <= 60)
+            if (Math.Min(n, m) <= 60)
             {
                 ret = new ModuloInteger[n + m - 1];
                 for (var i = 0; i < n; i++)
@@ -53,9 +53,9 @@ namespace AtCoderLibraryCSharp
                 const long m12 = mod1 * mod2;
                 const ulong m123 = (ulong) mod1 * (ulong) mod2 * (ulong) mod3;
 
-                var i1 = (ulong) Math.InverseGreatestCommonDivisor(m23, mod1).im;
-                var i2 = (ulong) Math.InverseGreatestCommonDivisor(m13, mod2).im;
-                var i3 = (ulong) Math.InverseGreatestCommonDivisor(m12, mod3).im;
+                var i1 = (ulong) Mathematics.InverseGreatestCommonDivisor(m23, mod1).im;
+                var i2 = (ulong) Mathematics.InverseGreatestCommonDivisor(m13, mod2).im;
+                var i3 = (ulong) Mathematics.InverseGreatestCommonDivisor(m12, mod3).im;
 
                 ModuloInteger.SetModulo(mod1);
                 var c1 = Execute(a1.Select(x => (ModuloInteger) x), b1.Select(x => (ModuloInteger) x)).ToArray();
@@ -70,7 +70,7 @@ namespace AtCoderLibraryCSharp
                     x += (ulong) c2[i].Value * i2 % mod2 * m13;
                     x += (ulong) c3[i].Value * i3 % mod3 * m12;
                     var tmp = x % mod1;
-                    var diff = (long) c1[i] - Math.SafeModulo((long) tmp, mod1);
+                    var diff = (long) c1[i] - Mathematics.SafeModulo((long) tmp, mod1);
                     if (diff < 0) diff += mod1;
                     var offset = new[] {0UL, 0UL, m123, m123 * 2, m123 * 3};
                     x -= offset[diff % 5];
@@ -89,7 +89,7 @@ namespace AtCoderLibraryCSharp
             var es = new ModuloInteger[30];
             var ies = new ModuloInteger[30];
             var bit = BitScanForward(_modulo - 1);
-            var e = ModuloInteger.Power(Math.PrimitiveRoot(_modulo), (_modulo - 1) >> bit);
+            var e = ModuloInteger.Power(Mathematics.PrimitiveRoot(_modulo), (_modulo - 1) >> bit);
             var ie = e.Inverse();
             for (var i = bit; i >= 2; i--)
             {

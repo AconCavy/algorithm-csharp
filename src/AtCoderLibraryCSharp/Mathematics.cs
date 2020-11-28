@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace AtCoderLibraryCSharp
 {
-    public static class Math
+    public static class Mathematics
     {
         public static (long rem, long mod) ChineseRemainderTheorem(IEnumerable<long> r, IEnumerable<long> m)
         {
