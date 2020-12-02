@@ -10,7 +10,7 @@ namespace AtCoderLibraryCSharp.Examples
             var NM = Console.ReadLine().Split(" ").Select(int.Parse).ToArray();
             var (N, M) = (NM[0], NM[1]);
             var G = new char[N][].Select(x => Console.ReadLine().ToCharArray()).ToArray();
-            var mfg = new MaxFlowGraph(N * M + 2);
+            var fg = new FlowGraph(N * M + 2);
             var s = N * M;
             var t = N * M + 1;
 
@@ -20,8 +20,8 @@ namespace AtCoderLibraryCSharp.Examples
                 {
                     if (G[i][j] == '#') continue;
                     var v = i * M + j;
-                    if ((i + j) % 2 == 0) mfg.AddEdge(s, v, 1);
-                    else mfg.AddEdge(v, t, 1);
+                    if ((i + j) % 2 == 0) fg.AddEdge(s, v, 1);
+                    else fg.AddEdge(v, t, 1);
                 }
             }
 
@@ -41,14 +41,14 @@ namespace AtCoderLibraryCSharp.Examples
                         if (cj < 0 || M <= cj) continue;
                         if (G[ci][cj] != '.') continue;
                         var v1 = ci * M + cj;
-                        mfg.AddEdge(v0, v1, 1);
+                        fg.AddEdge(v0, v1, 1);
                     }
                 }
             }
 
-            Console.WriteLine(mfg.Flow(s, t));
+            Console.WriteLine(fg.MaxFlow(s, t));
 
-            foreach (var edge in mfg.GetEdges().Where(x => x.From != s && x.To != t && x.Flow != 0))
+            foreach (var edge in fg.GetEdges().Where(x => x.From != s && x.To != t && x.Flow != 0))
             {
                 var (i0, j0) = (edge.From / M, edge.From % M);
                 var (i1, j1) = (edge.To / M, edge.To % M);

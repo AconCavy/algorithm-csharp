@@ -12,8 +12,7 @@ The library is based on [ac-library](https://github.com/atcoder/ac-library) and 
 - FenwickTree
 - LazySegmentTree
 - Mathematics
-- MaxFlowGraph
-- MinCostFlowGraph
+- FlowGraph (MaxFlow and MinCostFlow)
 - ModuloInteger
 - SegmentTree
 - StringAlgorithm
