@@ -93,7 +93,7 @@ namespace AtCoderLibraryCSharp
 
         private void Build()
         {
-            _isUpdated = false;
+            _isUpdated = true;
             var queue = new Queue<(int current, int from, int distance, long cost)>();
             queue.Enqueue((_root, -1, 0, 0));
             var used = new bool[_length];
