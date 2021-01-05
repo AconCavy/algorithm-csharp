@@ -21,6 +21,7 @@ The library is based on [ac-library](https://github.com/atcoder/ac-library).
 
 ## Additional Classes
 
+- FenwickTree2D
 - LowestCommonAncestor
 - ModuloMathematics
 - PriorityQueue
