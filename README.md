@@ -1,10 +1,10 @@
-# AtCoderLibraryCSharp
+# AlgorithmSharp
 
-AtCoderLibraryCSharp is the **UNOFFICIAL** AtCoderLibrary for C#.
+AlgorithmSharp is an algorithm library for competitive programming contests to use C#.
 
-The library is based on [ac-library](https://github.com/atcoder/ac-library) and written by C#.
+The library is based on [ac-library](https://github.com/atcoder/ac-library).
 
-## Main Classes
+## AtCoderLibrary Classes
 
 - CompressedSparseRow
 - Convolution
@@ -19,7 +19,7 @@ The library is based on [ac-library](https://github.com/atcoder/ac-library) and 
 - StronglyConnectedComponent
 - TwoSatisfiability
 
-## Optional Classes
+## Additional Classes
 
 - LowestCommonAncestor
 - ModuloMathematics
@@ -39,5 +39,3 @@ The library is based on [ac-library](https://github.com/atcoder/ac-library) and 
 - [x] J - Segment Tree
 - [x] K - Range Affine Range Sum
 - [x] L - Lazy Segment Tree
-
-[Submissions](https://atcoder.jp/contests/practice2/submissions?f.User=AconCavy)
