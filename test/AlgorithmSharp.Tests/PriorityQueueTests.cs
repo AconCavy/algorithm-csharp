@@ -139,17 +139,11 @@ namespace AlgorithmSharp.Tests
             Assert.That(queue.Contains(1), Is.False);
         }
 
-        private static int DescendingComparison<T>(T x, T y)
-        {
-            return Comparer<T>.Default.Compare(y, x);
-        }
+        private static int DescendingComparison<T>(T x, T y) => Comparer<T>.Default.Compare(y, x);
 
         private class DescendingComparer<T> : IComparer<T>
         {
-            public int Compare(T x, T y)
-            {
-                return Comparer<T>.Default.Compare(y, x);
-            }
+            public int Compare(T x, T y) => Comparer<T>.Default.Compare(y, x);
         }
     }
 }

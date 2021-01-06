@@ -6,10 +6,7 @@ namespace AlgorithmSharp.Tests
     {
         private static readonly Random Random = new Random(100);
 
-        public static int RandomInteger(int lower, int upper)
-        {
-            return Random.Next(lower, upper + 1);
-        }
+        public static int RandomInteger(int lower, int upper) => Random.Next(lower, upper + 1);
 
         public static (int, int) RandomPair(int lower, int upper)
         {
@@ -23,9 +20,6 @@ namespace AlgorithmSharp.Tests
             return a <= b ? (a, b) : (b, a);
         }
 
-        public static bool RandomBool()
-        {
-            return RandomInteger(0, 1) == 0;
-        }
+        public static bool RandomBool() => RandomInteger(0, 1) == 0;
     }
 }

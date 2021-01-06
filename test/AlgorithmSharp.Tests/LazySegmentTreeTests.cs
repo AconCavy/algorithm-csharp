@@ -18,7 +18,7 @@ namespace AlgorithmSharp.Tests
         public void ZeroTest([Values(0, 10)] int n)
         {
             var lst = new LazySegmentTree<int, int>(n, new SimpleOracle());
-            Assert.That(lst.QueryToAll(), Is.EqualTo(-(int) 1e9));
+            Assert.That(lst.QueryToAll(), Is.EqualTo(-(int)1e9));
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace AlgorithmSharp.Tests
             for (var l = 0; l <= n; l++)
             for (var r = l; r <= n; r++)
             {
-                var e = -(int) 1e9;
+                var e = -(int)1e9;
                 for (var i = l; i < r; i++) e = Math.Max(e, p[i]);
                 Assert.That(lst.Query(l, r), Is.EqualTo(e));
             }
@@ -231,34 +231,22 @@ namespace AlgorithmSharp.Tests
 
         private class SimpleOracle : IOracle<int, int>
         {
-            public int MonoidIdentity { get; } = -(int) 1e9;
+            public int MonoidIdentity { get; } = -(int)1e9;
 
-            public int Operate(in int a, in int b)
-            {
-                return Math.Max(a, b);
-            }
+            public int Operate(in int a, in int b) => Math.Max(a, b);
 
             public int MapIdentity { get; } = 0;
 
-            public int Map(in int f, in int x)
-            {
-                return f + x;
-            }
+            public int Map(in int f, in int x) => f + x;
 
-            public int Compose(in int f, in int g)
-            {
-                return f + g;
-            }
+            public int Compose(in int f, in int g) => f + g;
         }
 
         private class TimeManager
         {
             private readonly int[] _times;
 
-            public TimeManager(int n)
-            {
-                _times = Enumerable.Repeat(-1, n).ToArray();
-            }
+            public TimeManager(int n) => _times = Enumerable.Repeat(-1, n).ToArray();
 
             public void Action(int l, int r, int time)
             {
@@ -279,50 +267,26 @@ namespace AlgorithmSharp.Tests
             public readonly int R;
             public readonly int Time;
 
-            public Monoid(int l, int r, int time)
-            {
-                (L, R, Time) = (l, r, time);
-            }
+            public Monoid(int l, int r, int time) => (L, R, Time) = (l, r, time);
 
-            public bool Equals(Monoid other)
-            {
-                return L == other.L && R == other.R && Time == other.Time;
-            }
+            public bool Equals(Monoid other) => L == other.L && R == other.R && Time == other.Time;
 
-            public override bool Equals(object obj)
-            {
-                return obj is Monoid other && Equals(other);
-            }
+            public override bool Equals(object obj) => obj is Monoid other && Equals(other);
 
-            public override int GetHashCode()
-            {
-                return HashCode.Combine(L, R, Time);
-            }
+            public override int GetHashCode() => HashCode.Combine(L, R, Time);
         }
 
         private readonly struct Map : IEquatable<Map>
         {
             public readonly int NewTime;
 
-            public Map(int newTime)
-            {
-                NewTime = newTime;
-            }
+            public Map(int newTime) => NewTime = newTime;
 
-            public bool Equals(Map other)
-            {
-                return NewTime == other.NewTime;
-            }
+            public bool Equals(Map other) => NewTime == other.NewTime;
 
-            public override bool Equals(object obj)
-            {
-                return obj is Map other && Equals(other);
-            }
+            public override bool Equals(object obj) => obj is Map other && Equals(other);
 
-            public override int GetHashCode()
-            {
-                return NewTime;
-            }
+            public override int GetHashCode() => NewTime;
         }
 
         private class Oracle : IOracle<Monoid, Map>

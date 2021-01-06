@@ -40,15 +40,9 @@ namespace AlgorithmSharp
 
         public int Count => _heap.Count;
 
-        public IEnumerator<T> GetEnumerator()
-        {
-            return _heap.GetEnumerator();
-        }
+        public IEnumerator<T> GetEnumerator() => _heap.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         public void Enqueue(T item)
         {
@@ -114,14 +108,8 @@ namespace AlgorithmSharp
             return false;
         }
 
-        public void Clear()
-        {
-            _heap.Clear();
-        }
+        public void Clear() => _heap.Clear();
 
-        public bool Contains(T item)
-        {
-            return _heap.Contains(item);
-        }
+        public bool Contains(T item) => _heap.Contains(item);
     }
 }

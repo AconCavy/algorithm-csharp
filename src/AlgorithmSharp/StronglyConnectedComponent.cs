@@ -86,10 +86,7 @@ namespace AlgorithmSharp
         {
             public readonly int To;
 
-            public Edge(int to)
-            {
-                To = to;
-            }
+            public Edge(int to) => To = to;
         }
     }
 }

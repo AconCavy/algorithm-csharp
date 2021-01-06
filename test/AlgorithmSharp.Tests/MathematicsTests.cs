@@ -265,7 +265,7 @@ namespace AlgorithmSharp.Tests
             foreach (var b in list)
             {
                 if (b <= 0) continue;
-                var value = ((ulong) (a % b) + (ulong) b) % (ulong) b;
+                var value = ((ulong)(a % b) + (ulong)b) % (ulong)b;
                 Assert.That(value, Is.EqualTo(Mathematics.SafeModulo(a, b)));
             }
         }

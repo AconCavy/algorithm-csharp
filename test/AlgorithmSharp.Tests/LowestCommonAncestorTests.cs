@@ -127,12 +127,7 @@ namespace AlgorithmSharp.Tests
         [Test]
         public void OneWayTreeTest()
         {
-            var tree = new[]
-            {
-                new[] {1, 2},
-                new[] {3, 4}, new[] {5},
-                new int[0], new int[0], new int[0]
-            };
+            var tree = new[] {new[] {1, 2}, new[] {3, 4}, new[] {5}, new int[0], new int[0], new int[0]};
             var lca = new LowestCommonAncestor(tree);
             Assert.That(lca.Find(0, 1), Is.EqualTo(0));
             Assert.That(lca.Find(1, 2), Is.EqualTo(0));
@@ -184,12 +179,8 @@ namespace AlgorithmSharp.Tests
 
         private static (LowestCommonAncestor byArray, LowestCommonAncestor byLength) InitializeLca(int root = 0)
         {
-            var lca1 = new LowestCommonAncestor(new[]
-            {
-                new[] {1, 2},
-                new[] {0, 3, 4}, new[] {0, 5},
-                new[] {1}, new[] {1}, new[] {2}
-            }, root);
+            var lca1 = new LowestCommonAncestor(
+                new[] {new[] {1, 2}, new[] {0, 3, 4}, new[] {0, 5}, new[] {1}, new[] {1}, new[] {2}}, root);
             var lca2 = new LowestCommonAncestor(6, root);
             lca2.AddEdge(0, 1);
             lca2.AddEdge(0, 2);

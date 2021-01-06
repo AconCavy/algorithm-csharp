@@ -26,10 +26,7 @@ namespace AlgorithmSharp.Examples
             public readonly ModuloInteger A;
             public readonly int Size;
 
-            public S(ModuloInteger a, int size)
-            {
-                (A, Size) = (a, size);
-            }
+            public S(ModuloInteger a, int size) => (A, Size) = (a, size);
         }
 
         public readonly struct F
@@ -37,32 +34,20 @@ namespace AlgorithmSharp.Examples
             public readonly ModuloInteger A;
             public readonly ModuloInteger B;
 
-            public F(ModuloInteger a, ModuloInteger b)
-            {
-                (A, B) = (a, b);
-            }
+            public F(ModuloInteger a, ModuloInteger b) => (A, B) = (a, b);
         }
 
         public class Oracle : IOracle<S, F>
         {
             public S MonoidIdentity { get; } = new S(0, 0);
 
-            public S Operate(in S a, in S b)
-            {
-                return new S(a.A + b.A, a.Size + b.Size);
-            }
+            public S Operate(in S a, in S b) => new S(a.A + b.A, a.Size + b.Size);
 
             public F MapIdentity { get; } = new F(1, 0);
 
-            public S Map(in F f, in S x)
-            {
-                return new S(f.A * x.A + f.B * x.Size, x.Size);
-            }
+            public S Map(in F f, in S x) => new S(f.A * x.A + f.B * x.Size, x.Size);
 
-            public F Compose(in F f, in F g)
-            {
-                return new F(f.A * g.A, f.A * g.B + f.B);
-            }
+            public F Compose(in F f, in F g) => new F(f.A * g.A, f.A * g.B + f.B);
         }
     }
 }

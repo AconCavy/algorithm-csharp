@@ -46,10 +46,7 @@ namespace AlgorithmSharp.Tests
         {
             var y = "";
 
-            bool SimpleQuery(Monoid x)
-            {
-                return x.Value.Length <= y.Length;
-            }
+            bool SimpleQuery(Monoid x) => x.Value.Length <= y.Length;
 
             var oracle = new Oracle();
             var st = new SegmentTree<Monoid>(n, oracle);
@@ -142,15 +139,9 @@ namespace AlgorithmSharp.Tests
                 _id = _oracle.MonoidIdentity;
             }
 
-            public void Set(int p, TMonoid x)
-            {
-                _data[p] = x;
-            }
+            public void Set(int p, TMonoid x) => _data[p] = x;
 
-            public TMonoid Get(int p)
-            {
-                return _data[p];
-            }
+            public TMonoid Get(int p) => _data[p];
 
             public TMonoid Query(int l, int r)
             {
@@ -188,25 +179,13 @@ namespace AlgorithmSharp.Tests
         {
             public readonly string Value;
 
-            public Monoid(string value)
-            {
-                Value = value;
-            }
+            public Monoid(string value) => Value = value;
 
-            public bool Equals(Monoid other)
-            {
-                return Value == other.Value;
-            }
+            public bool Equals(Monoid other) => Value == other.Value;
 
-            public override bool Equals(object obj)
-            {
-                return obj is Monoid other && Equals(other);
-            }
+            public override bool Equals(object obj) => obj is Monoid other && Equals(other);
 
-            public override int GetHashCode()
-            {
-                return Value != null ? Value.GetHashCode() : 0;
-            }
+            public override int GetHashCode() => Value != null ? Value.GetHashCode() : 0;
         }
 
         private class Oracle : IOracle<Monoid>

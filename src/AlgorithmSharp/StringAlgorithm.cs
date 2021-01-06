@@ -6,10 +6,8 @@ namespace AlgorithmSharp
 {
     public static class StringAlgorithm
     {
-        public static IEnumerable<int> CreateSuffixes(string str)
-        {
-            return CreateSuffixesByInducedSorting(str.Select(x => x - 0).ToArray(), 255);
-        }
+        public static IEnumerable<int> CreateSuffixes(string str) =>
+            CreateSuffixesByInducedSorting(str.Select(x => x - 0).ToArray(), 255);
 
         public static IEnumerable<int> CreateSuffixes<T>(IEnumerable<T> items)
         {
@@ -36,10 +34,8 @@ namespace AlgorithmSharp
             return CreateSuffixesByInducedSorting(s, upper);
         }
 
-        public static IEnumerable<int> CreateLongestCommonPrefixes(string str, IEnumerable<int> suffixArray)
-        {
-            return CreateLongestCommonPrefixes(str.Select(x => x - 0), suffixArray);
-        }
+        public static IEnumerable<int> CreateLongestCommonPrefixes(string str, IEnumerable<int> suffixArray) =>
+            CreateLongestCommonPrefixes(str.Select(x => x - 0), suffixArray);
 
         public static IEnumerable<int> CreateLongestCommonPrefixes<T>(IEnumerable<T> items,
             IEnumerable<int> suffixArray)
@@ -69,10 +65,7 @@ namespace AlgorithmSharp
             return lcp;
         }
 
-        public static IEnumerable<int> ZAlgorithm(string str)
-        {
-            return ZAlgorithm(str.Select(x => x - 0));
-        }
+        public static IEnumerable<int> ZAlgorithm(string str) => ZAlgorithm(str.Select(x => x - 0));
 
         public static IEnumerable<int> ZAlgorithm<T>(IEnumerable<T> items)
         {

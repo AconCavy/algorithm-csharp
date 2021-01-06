@@ -43,7 +43,7 @@ namespace AlgorithmSharp.Tests
             ModuloInteger.SetModulo(1);
             for (var i = 0; i < 100; i++)
             for (var j = 0; j < 100; j++)
-                Assert.That((i * (ModuloInteger) j).Value, Is.Zero);
+                Assert.That((i * (ModuloInteger)j).Value, Is.Zero);
 
             ModuloInteger l = 1234;
             ModuloInteger r = 5678;
@@ -205,10 +205,10 @@ namespace AlgorithmSharp.Tests
         public void CastIntTest()
         {
             ModuloInteger.SetModulo(11);
-            Assert.That((int) new ModuloInteger(1), Is.EqualTo(1));
-            Assert.That((int) new ModuloInteger(12), Is.EqualTo(1));
-            Assert.That((ModuloInteger) 1, Is.EqualTo(new ModuloInteger(1)));
-            Assert.That((ModuloInteger) 12, Is.EqualTo(new ModuloInteger(1)));
+            Assert.That((int)new ModuloInteger(1), Is.EqualTo(1));
+            Assert.That((int)new ModuloInteger(12), Is.EqualTo(1));
+            Assert.That((ModuloInteger)1, Is.EqualTo(new ModuloInteger(1)));
+            Assert.That((ModuloInteger)12, Is.EqualTo(new ModuloInteger(1)));
         }
 
         [Test]
@@ -231,10 +231,10 @@ namespace AlgorithmSharp.Tests
         public void CastLongTest()
         {
             ModuloInteger.SetModulo(11);
-            Assert.That((long) new ModuloInteger(1L), Is.EqualTo(1));
-            Assert.That((long) new ModuloInteger(12L), Is.EqualTo(1));
-            Assert.That((ModuloInteger) 1L, Is.EqualTo(new ModuloInteger(1)));
-            Assert.That((ModuloInteger) 12L, Is.EqualTo(new ModuloInteger(1)));
+            Assert.That((long)new ModuloInteger(1L), Is.EqualTo(1));
+            Assert.That((long)new ModuloInteger(12L), Is.EqualTo(1));
+            Assert.That((ModuloInteger)1L, Is.EqualTo(new ModuloInteger(1)));
+            Assert.That((ModuloInteger)12L, Is.EqualTo(new ModuloInteger(1)));
         }
 
         [Test]

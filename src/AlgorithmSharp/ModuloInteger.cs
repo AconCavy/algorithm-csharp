@@ -16,7 +16,7 @@ namespace AlgorithmSharp
 
         public ModuloInteger(int value) => Value = 0 <= value ? value % Modulo : value % Modulo + Modulo;
         public ModuloInteger(long value) => Value = 0 <= value ? value % Modulo : value % Modulo + Modulo;
-        public static implicit operator int(ModuloInteger mint) => (int) mint.Value;
+        public static implicit operator int(ModuloInteger mint) => (int)mint.Value;
         public static implicit operator long(ModuloInteger mint) => mint.Value;
         public static implicit operator ModuloInteger(int value) => new ModuloInteger(value);
         public static implicit operator ModuloInteger(long value) => new ModuloInteger(value);
