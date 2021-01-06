@@ -47,15 +47,9 @@ namespace AlgorithmSharp
             return Sum(right) - Sum(left);
         }
 
-        public int LowerBound(long item)
-        {
-            return CommonBound(item, _lowerBound);
-        }
+        public int LowerBound(long item) => CommonBound(item, _lowerBound);
 
-        public int UpperBound(long item)
-        {
-            return CommonBound(item, _upperBound);
-        }
+        public int UpperBound(long item) => CommonBound(item, _upperBound);
 
         private int CommonBound(long item, Compare compare)
         {

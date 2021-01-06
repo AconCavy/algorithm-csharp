@@ -29,42 +29,28 @@ namespace AlgorithmSharp.Examples
             public readonly long One;
             public readonly long Inversion;
 
-            public S(long zero, long one, long inversion)
-            {
-                (Zero, One, Inversion) = (zero, one, inversion);
-            }
+            public S(long zero, long one, long inversion) => (Zero, One, Inversion) = (zero, one, inversion);
         }
 
         public readonly struct F
         {
             public readonly bool Flag;
 
-            public F(bool flag)
-            {
-                Flag = flag;
-            }
+            public F(bool flag) => Flag = flag;
         }
 
         public class Oracle : IOracle<S, F>
         {
             public S MonoidIdentity { get; } = new S(0, 0, 0);
 
-            public S Operate(in S a, in S b)
-            {
-                return new S(a.Zero + b.Zero, a.One + b.One, a.Inversion + b.Inversion + a.One * b.Zero);
-            }
+            public S Operate(in S a, in S b) =>
+                new S(a.Zero + b.Zero, a.One + b.One, a.Inversion + b.Inversion + a.One * b.Zero);
 
             public F MapIdentity { get; } = new F(false);
 
-            public S Map(in F f, in S x)
-            {
-                return f.Flag ? new S(x.One, x.Zero, x.Zero * x.One - x.Inversion) : x;
-            }
+            public S Map(in F f, in S x) => f.Flag ? new S(x.One, x.Zero, x.Zero * x.One - x.Inversion) : x;
 
-            public F Compose(in F f, in F g)
-            {
-                return new F(f.Flag && !g.Flag || !f.Flag && g.Flag);
-            }
+            public F Compose(in F f, in F g) => new F(f.Flag && !g.Flag || !f.Flag && g.Flag);
         }
     }
 }

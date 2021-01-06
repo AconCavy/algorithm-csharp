@@ -15,7 +15,7 @@ namespace AlgorithmSharp.Examples
             var fg = new FlowGraph(N * 2 + 2);
             var s = N * 2;
             var t = N * 2 + 1;
-            const long inf = (long) 1e9;
+            const long inf = (long)1e9;
             fg.AddEdge(s, t, N * K, inf);
             for (var i = 0; i < N; i++)
             {

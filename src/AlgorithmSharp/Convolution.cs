@@ -51,30 +51,30 @@ namespace AlgorithmSharp
                 const long m23 = mod2 * mod3;
                 const long m13 = mod1 * mod3;
                 const long m12 = mod1 * mod2;
-                const ulong m123 = (ulong) mod1 * (ulong) mod2 * (ulong) mod3;
+                const ulong m123 = (ulong)mod1 * (ulong)mod2 * (ulong)mod3;
 
-                var i1 = (ulong) Mathematics.InverseGreatestCommonDivisor(m23, mod1).im;
-                var i2 = (ulong) Mathematics.InverseGreatestCommonDivisor(m13, mod2).im;
-                var i3 = (ulong) Mathematics.InverseGreatestCommonDivisor(m12, mod3).im;
+                var i1 = (ulong)Mathematics.InverseGreatestCommonDivisor(m23, mod1).im;
+                var i2 = (ulong)Mathematics.InverseGreatestCommonDivisor(m13, mod2).im;
+                var i3 = (ulong)Mathematics.InverseGreatestCommonDivisor(m12, mod3).im;
 
                 ModuloInteger.SetModulo(mod1);
-                var c1 = Execute(a1.Select(x => (ModuloInteger) x), b1.Select(x => (ModuloInteger) x)).ToArray();
+                var c1 = Execute(a1.Select(x => (ModuloInteger)x), b1.Select(x => (ModuloInteger)x)).ToArray();
                 ModuloInteger.SetModulo(mod2);
-                var c2 = Execute(a1.Select(x => (ModuloInteger) x), b1.Select(x => (ModuloInteger) x)).ToArray();
+                var c2 = Execute(a1.Select(x => (ModuloInteger)x), b1.Select(x => (ModuloInteger)x)).ToArray();
                 ModuloInteger.SetModulo(mod3);
-                var c3 = Execute(a1.Select(x => (ModuloInteger) x), b1.Select(x => (ModuloInteger) x)).ToArray();
+                var c3 = Execute(a1.Select(x => (ModuloInteger)x), b1.Select(x => (ModuloInteger)x)).ToArray();
                 for (var i = 0; i < ret.Length; i++)
                 {
                     var x = 0UL;
-                    x += (ulong) c1[i].Value * i1 % mod1 * m23;
-                    x += (ulong) c2[i].Value * i2 % mod2 * m13;
-                    x += (ulong) c3[i].Value * i3 % mod3 * m12;
+                    x += (ulong)c1[i].Value * i1 % mod1 * m23;
+                    x += (ulong)c2[i].Value * i2 % mod2 * m13;
+                    x += (ulong)c3[i].Value * i3 % mod3 * m12;
                     var tmp = x % mod1;
-                    var diff = (long) c1[i] - Mathematics.SafeModulo((long) tmp, mod1);
+                    var diff = (long)c1[i] - Mathematics.SafeModulo((long)tmp, mod1);
                     if (diff < 0) diff += mod1;
                     var offset = new[] {0UL, 0UL, m123, m123 * 2, m123 * 3};
                     x -= offset[diff % 5];
-                    ret[i] = (long) x;
+                    ret[i] = (long)x;
                 }
             }
 

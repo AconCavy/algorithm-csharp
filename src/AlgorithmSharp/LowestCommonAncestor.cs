@@ -18,10 +18,8 @@ namespace AlgorithmSharp
         private bool _isUpdated;
 
         public LowestCommonAncestor(IReadOnlyCollection<IReadOnlyCollection<int>> tree, int root = 0)
-            : this(tree.Count, root)
-        {
+            : this(tree.Count, root) =>
             _tree = tree.Select(x => x.ToList()).ToArray();
-        }
 
         public LowestCommonAncestor(int length, int root = 0)
         {

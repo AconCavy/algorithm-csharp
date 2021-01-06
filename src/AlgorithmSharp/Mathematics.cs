@@ -170,9 +170,7 @@ namespace AlgorithmSharp
             }
         }
 
-        public static long SafeModulo(long value, long modulo)
-        {
-            return value % modulo < 0 ? value % modulo + modulo : value % modulo;
-        }
+        public static long SafeModulo(long value, long modulo) =>
+            value % modulo < 0 ? value % modulo + modulo : value % modulo;
     }
 }

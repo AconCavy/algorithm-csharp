@@ -35,8 +35,8 @@ namespace AlgorithmSharp.Tests
         {
             ModuloInteger.SetModulo998244353();
             var random = new Random(19937);
-            var a = new ModuloInteger[1234].Select(_ => (ModuloInteger) random.Next()).ToArray();
-            var b = new ModuloInteger[2345].Select(_ => (ModuloInteger) random.Next()).ToArray();
+            var a = new ModuloInteger[1234].Select(_ => (ModuloInteger)random.Next()).ToArray();
+            var b = new ModuloInteger[2345].Select(_ => (ModuloInteger)random.Next()).ToArray();
             Assert.That(Convolution.Execute(a, b), Is.EqualTo(ConvolutionNaive(a, b)));
         }
 
@@ -46,8 +46,8 @@ namespace AlgorithmSharp.Tests
         {
             var random = new Random(19937);
             ModuloInteger.SetModulo(mod);
-            var a = new ModuloInteger[n].Select(_ => (ModuloInteger) random.Next()).ToArray();
-            var b = new ModuloInteger[m].Select(_ => (ModuloInteger) random.Next()).ToArray();
+            var a = new ModuloInteger[n].Select(_ => (ModuloInteger)random.Next()).ToArray();
+            var b = new ModuloInteger[m].Select(_ => (ModuloInteger)random.Next()).ToArray();
             Assert.That(Convolution.Execute(a, b), Is.EqualTo(ConvolutionNaive(a, b)));
         }
 
@@ -55,8 +55,8 @@ namespace AlgorithmSharp.Tests
         public void SimpleLongTest([Range(1, 20)] int n, [Range(1, 20)] int m)
         {
             var random = new Random(19937);
-            var a = new long[n].Select(_ => random.Next() % (long) 1e6 - (long) 5e5).ToArray();
-            var b = new long[m].Select(_ => random.Next() % (long) 1e6 - (long) 5e5).ToArray();
+            var a = new long[n].Select(_ => random.Next() % (long)1e6 - (long)5e5).ToArray();
+            var b = new long[m].Select(_ => random.Next() % (long)1e6 - (long)5e5).ToArray();
             Assert.That(Convolution.Execute(a, b), Is.EqualTo(ConvolutionNaive(a, b)));
         }
 
@@ -94,8 +94,8 @@ namespace AlgorithmSharp.Tests
         {
             const int mod = 641;
             ModuloInteger.SetModulo(mod);
-            var a = new ModuloInteger[64].Select(_ => (ModuloInteger) Utilities.RandomInteger(0, mod - 1)).ToArray();
-            var b = new ModuloInteger[65].Select(_ => (ModuloInteger) Utilities.RandomInteger(0, mod - 1)).ToArray();
+            var a = new ModuloInteger[64].Select(_ => (ModuloInteger)Utilities.RandomInteger(0, mod - 1)).ToArray();
+            var b = new ModuloInteger[65].Select(_ => (ModuloInteger)Utilities.RandomInteger(0, mod - 1)).ToArray();
             Assert.That(Convolution.Execute(a, b), Is.EqualTo(ConvolutionNaive(a, b)));
         }
 
@@ -104,8 +104,8 @@ namespace AlgorithmSharp.Tests
         {
             const int mod = 18433;
             ModuloInteger.SetModulo(mod);
-            var a = new ModuloInteger[1024].Select(_ => (ModuloInteger) Utilities.RandomInteger(0, mod - 1)).ToArray();
-            var b = new ModuloInteger[1025].Select(_ => (ModuloInteger) Utilities.RandomInteger(0, mod - 1)).ToArray();
+            var a = new ModuloInteger[1024].Select(_ => (ModuloInteger)Utilities.RandomInteger(0, mod - 1)).ToArray();
+            var b = new ModuloInteger[1025].Select(_ => (ModuloInteger)Utilities.RandomInteger(0, mod - 1)).ToArray();
             Assert.That(Convolution.Execute(a, b), Is.EqualTo(ConvolutionNaive(a, b)));
         }
 

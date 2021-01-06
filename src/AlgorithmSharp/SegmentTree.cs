@@ -63,10 +63,7 @@ namespace AlgorithmSharp
             return _oracle.Operate(sml, smr);
         }
 
-        public TMonoid QueryToAll()
-        {
-            return _data[1];
-        }
+        public TMonoid QueryToAll() => _data[1];
 
         public int MaxRight(int left, Predicate<TMonoid> predicate)
         {
@@ -132,9 +129,6 @@ namespace AlgorithmSharp
             return 0;
         }
 
-        private void Update(int k)
-        {
-            _data[k] = _oracle.Operate(_data[k << 1], _data[(k << 1) + 1]);
-        }
+        private void Update(int k) => _data[k] = _oracle.Operate(_data[k << 1], _data[(k << 1) + 1]);
     }
 }

@@ -36,20 +36,14 @@ namespace AlgorithmSharp.Examples
         {
             public readonly int Value;
 
-            public S(int value)
-            {
-                Value = value;
-            }
+            public S(int value) => Value = value;
         }
 
         public class Oracle : IOracle<S>
         {
             public S MonoidIdentity { get; } = new S(-1);
 
-            public S Operate(in S a, in S b)
-            {
-                return new S(Math.Max(a.Value, b.Value));
-            }
+            public S Operate(in S a, in S b) => new S(Math.Max(a.Value, b.Value));
         }
     }
 }

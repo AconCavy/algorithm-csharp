@@ -142,10 +142,8 @@ namespace AlgorithmSharp
             return visited;
         }
 
-        public (long, long) MinCostFlow(int s, int t, long flowLimit = long.MaxValue)
-        {
-            return MinCostSlope(s, t, flowLimit).Last();
-        }
+        public (long, long) MinCostFlow(int s, int t, long flowLimit = long.MaxValue) =>
+            MinCostSlope(s, t, flowLimit).Last();
 
         public IEnumerable<(long, long)> MinCostSlope(int s, int t, long flowLimit = long.MaxValue)
         {
@@ -234,10 +232,8 @@ namespace AlgorithmSharp
             public readonly long Flow;
             public readonly long Cost;
 
-            public Edge(int from, int to, long capacity, long flow, long cost = 0)
-            {
+            public Edge(int from, int to, long capacity, long flow, long cost = 0) =>
                 (From, To, Capacity, Flow, Cost) = (from, to, capacity, flow, cost);
-            }
         }
 
         private readonly struct InternalEdge
@@ -247,10 +243,8 @@ namespace AlgorithmSharp
             public readonly long Capacity;
             public readonly long Cost;
 
-            public InternalEdge(int to, int rev, long capacity, long cost)
-            {
+            public InternalEdge(int to, int rev, long capacity, long cost) =>
                 (To, Rev, Capacity, Cost) = (to, rev, capacity, cost);
-            }
         }
     }
 }

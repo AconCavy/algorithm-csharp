@@ -78,10 +78,7 @@ namespace AlgorithmSharp
             return _oracle.Operate(sml, smr);
         }
 
-        public TMonoid QueryToAll()
-        {
-            return _data[1];
-        }
+        public TMonoid QueryToAll() => _data[1];
 
         public void Apply(int index, TMap map)
         {
@@ -188,10 +185,7 @@ namespace AlgorithmSharp
             return 0;
         }
 
-        private void Update(int k)
-        {
-            _data[k] = _oracle.Operate(_data[k << 1], _data[(k << 1) + 1]);
-        }
+        private void Update(int k) => _data[k] = _oracle.Operate(_data[k << 1], _data[(k << 1) + 1]);
 
         private void ApplyToAll(int k, in TMap map)
         {
