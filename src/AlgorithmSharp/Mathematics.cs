@@ -48,7 +48,7 @@ namespace AlgorithmSharp
             {
                 if (a >= m)
                 {
-                    ret += (n - 1) * n * (a / m) / 2;
+                    ret += (n - 1) * n / 2 * (a / m);
                     a %= m;
                 }
 
@@ -58,11 +58,9 @@ namespace AlgorithmSharp
                     b %= m;
                 }
 
-                var yMax = (a * n + b) / m;
-                var xMax = yMax * m - b;
-                if (yMax == 0) return ret;
-                ret += (n - (xMax + a - 1) / a) * yMax;
-                (n, m, a, b) = (yMax, a, m, (a - xMax % a) % a);
+                var yMax = a * n + b;
+                if (yMax < m) return ret;
+                (n, m, a, b) = (yMax / m, a, m, yMax % m);
             }
         }
 
