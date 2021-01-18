@@ -52,7 +52,7 @@ namespace AlgorithmSharp.Tests
         }
 
         [Test]
-        public void SimpleLongTest([Range(1, 20)] int n, [Range(1, 20)] int m)
+        public void SimpleLongTest([Range(1, 80)] int n, [Range(1, 80)] int m)
         {
             var random = new Random(19937);
             var a = new long[n].Select(_ => random.Next() % (long)1e6 - (long)5e5).ToArray();
@@ -107,6 +107,20 @@ namespace AlgorithmSharp.Tests
             var a = new ModuloInteger[1024].Select(_ => (ModuloInteger)Utilities.RandomInteger(0, mod - 1)).ToArray();
             var b = new ModuloInteger[1025].Select(_ => (ModuloInteger)Utilities.RandomInteger(0, mod - 1)).ToArray();
             Assert.That(Convolution.Execute(a, b), Is.EqualTo(ConvolutionNaive(a, b)));
+        }
+
+        [Test]
+        public void NullCheckTest()
+        {
+            ModuloInteger[] a = null;
+            var b = new ModuloInteger[10];
+            Assert.Throws<ArgumentNullException>(() => Convolution.Execute(a, b));
+            Assert.Throws<ArgumentNullException>(() => Convolution.Execute(b, a));
+
+            long[] c = null;
+            var d = new long[10];
+            Assert.Throws<ArgumentNullException>(() => Convolution.Execute(c, d));
+            Assert.Throws<ArgumentNullException>(() => Convolution.Execute(d, c));
         }
 
         private static IEnumerable<ModuloInteger> ConvolutionNaive(ModuloInteger[] a, ModuloInteger[] b)
