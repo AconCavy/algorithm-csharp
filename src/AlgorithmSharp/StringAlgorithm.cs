@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -91,8 +91,8 @@ namespace AlgorithmSharp
             switch (n)
             {
                 case 0: return new int[0];
-                case 1: return new[] {0};
-                case 2: return items[0] < items[1] ? new[] {0, 1} : new[] {1, 0};
+                case 1: return new[] { 0 };
+                case 2: return items[0] < items[1] ? new[] { 0, 1 } : new[] { 1, 0 };
             }
 
             if (n < naive) return CreateSuffixesByNaive(items);

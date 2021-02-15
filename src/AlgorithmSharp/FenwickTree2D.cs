@@ -22,8 +22,8 @@ namespace AlgorithmSharp
             if (h < 0 || _height <= h) throw new ArgumentOutOfRangeException(nameof(h));
             if (w < 0 || _width <= w) throw new ArgumentOutOfRangeException(nameof(w));
             for (var i = h + 1; i <= _height; i += i & -i)
-            for (var j = w + 1; j <= _width; j += j & -j)
-                _data[i - 1, j - 1] += value;
+                for (var j = w + 1; j <= _width; j += j & -j)
+                    _data[i - 1, j - 1] += value;
         }
 
         public long Sum(int h, int w)
@@ -32,8 +32,8 @@ namespace AlgorithmSharp
             if (w < 0 || _width <= w) throw new ArgumentOutOfRangeException(nameof(w));
             var sum = 0L;
             for (var i = h + 1; i > 0; i -= i & -i)
-            for (var j = w + 1; j > 0; j -= j & -j)
-                sum += _data[i - 1, j - 1];
+                for (var j = w + 1; j > 0; j -= j & -j)
+                    sum += _data[i - 1, j - 1];
             return sum;
         }
 

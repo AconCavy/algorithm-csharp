@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 
 namespace AlgorithmSharp.Examples
@@ -24,8 +24,8 @@ namespace AlgorithmSharp.Examples
             }
 
             for (var i = 0; i < N; i++)
-            for (var j = 0; j < N; j++)
-                fg.AddEdge(i, N + j, 1, inf - A[i][j]);
+                for (var j = 0; j < N; j++)
+                    fg.AddEdge(i, N + j, 1, inf - A[i][j]);
 
             var result = fg.MinCostFlow(s, t, N * K);
             Console.WriteLine(inf * N * K - result.Item2);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using NUnit.Framework;
 
@@ -54,23 +54,23 @@ namespace AlgorithmSharp.Tests
         {
             const string str = "aab";
             var sa = StringAlgorithm.CreateSuffixes(str).ToArray();
-            Assert.That(sa, Is.EqualTo(new[] {0, 1, 2}));
+            Assert.That(sa, Is.EqualTo(new[] { 0, 1, 2 }));
             var lcp = StringAlgorithm.CreateLongestCommonPrefixes(str, sa).ToArray();
-            Assert.That(lcp, Is.EqualTo(new[] {1, 0}));
+            Assert.That(lcp, Is.EqualTo(new[] { 1, 0 }));
 
-            Assert.That(StringAlgorithm.CreateLongestCommonPrefixes(new[] {0, 0, 1}, sa), Is.EqualTo(lcp));
-            Assert.That(StringAlgorithm.CreateLongestCommonPrefixes(new[] {-100, -100, 100}, sa), Is.EqualTo(lcp));
-            Assert.That(StringAlgorithm.CreateLongestCommonPrefixes(new[] {int.MinValue, int.MinValue, 100}, sa),
+            Assert.That(StringAlgorithm.CreateLongestCommonPrefixes(new[] { 0, 0, 1 }, sa), Is.EqualTo(lcp));
+            Assert.That(StringAlgorithm.CreateLongestCommonPrefixes(new[] { -100, -100, 100 }, sa), Is.EqualTo(lcp));
+            Assert.That(StringAlgorithm.CreateLongestCommonPrefixes(new[] { int.MinValue, int.MinValue, 100 }, sa),
                 Is.EqualTo(lcp));
         }
 
         [Test]
         public void ZAlgorithmTest()
         {
-            Assert.That(StringAlgorithm.ZAlgorithm("abab"), Is.EqualTo(new[] {4, 0, 2, 0}));
-            Assert.That(StringAlgorithm.ZAlgorithm(new[] {1, 10, 1, 10}), Is.EqualTo(new[] {4, 0, 2, 0}));
-            Assert.That(StringAlgorithm.ZAlgorithm(new[] {0, 0, 0, 0, 0, 0, 0}),
-                Is.EqualTo(ZAlgorithmNaive(new[] {0, 0, 0, 0, 0, 0, 0})));
+            Assert.That(StringAlgorithm.ZAlgorithm("abab"), Is.EqualTo(new[] { 4, 0, 2, 0 }));
+            Assert.That(StringAlgorithm.ZAlgorithm(new[] { 1, 10, 1, 10 }), Is.EqualTo(new[] { 4, 0, 2, 0 }));
+            Assert.That(StringAlgorithm.ZAlgorithm(new[] { 0, 0, 0, 0, 0, 0, 0 }),
+                Is.EqualTo(ZAlgorithmNaive(new[] { 0, 0, 0, 0, 0, 0, 0 })));
         }
 
         [Test]
@@ -145,12 +145,12 @@ namespace AlgorithmSharp.Tests
         [Test]
         public void InvalidArgumentsTest()
         {
-            Assert.Throws<ArgumentException>(() => StringAlgorithm.CreateSuffixes(new[] {0, 1}, -1));
-            Assert.Throws<ArgumentException>(() => StringAlgorithm.CreateSuffixes(new[] {-1, 1}, 10));
-            Assert.Throws<ArgumentException>(() => StringAlgorithm.CreateSuffixes(new[] {2, 2}, 1));
+            Assert.Throws<ArgumentException>(() => StringAlgorithm.CreateSuffixes(new[] { 0, 1 }, -1));
+            Assert.Throws<ArgumentException>(() => StringAlgorithm.CreateSuffixes(new[] { -1, 1 }, 10));
+            Assert.Throws<ArgumentException>(() => StringAlgorithm.CreateSuffixes(new[] { 2, 2 }, 1));
 
             Assert.Throws<ArgumentException>(
-                () => StringAlgorithm.CreateLongestCommonPrefixes(new int[0], new[] {1, 2}));
+                () => StringAlgorithm.CreateLongestCommonPrefixes(new int[0], new[] { 1, 2 }));
         }
 
         private static int[] CreateSuffixesNaive(int[] s)

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NUnit.Framework;
 
 namespace AlgorithmSharp.Tests
@@ -34,12 +34,12 @@ namespace AlgorithmSharp.Tests
             }
 
             for (var l = 0; l <= n; l++)
-            for (var r = l; r <= n; r++)
-            {
-                var expected = 0L;
-                for (var i = l; i < r; i++) expected += i * i;
-                Assert.That(ft.Sum(l, r), Is.EqualTo(expected));
-            }
+                for (var r = l; r <= n; r++)
+                {
+                    var expected = 0L;
+                    for (var i = l; i < r; i++) expected += i * i;
+                    Assert.That(ft.Sum(l, r), Is.EqualTo(expected));
+                }
         }
 
         [Test]

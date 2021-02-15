@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -97,7 +97,7 @@ namespace AlgorithmSharp
             if (value % 2 == 0) return false;
             long d = value - 1;
             while (d % 2 == 0) d /= 2;
-            foreach (var a in new long[] {2, 7, 61})
+            foreach (var a in new long[] { 2, 7, 61 })
             {
                 var t = d;
                 var y = PowerModulo(a, t, value);
@@ -157,7 +157,7 @@ namespace AlgorithmSharp
             }
 
             if (x > 1) divs[count++] = x;
-            for (var g = 2;; g++)
+            for (var g = 2; ; g++)
             {
                 var ok = true;
                 for (var i = 0; i < count && ok; i++)

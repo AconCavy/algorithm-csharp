@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -72,7 +72,7 @@ namespace AlgorithmSharp
                     var tmp = x % mod1;
                     var diff = (long)c1[i] - Mathematics.SafeModulo((long)tmp, mod1);
                     if (diff < 0) diff += mod1;
-                    var offset = new[] {0UL, 0UL, m123, m123 * 2, m123 * 3};
+                    var offset = new[] { 0UL, 0UL, m123, m123 * 2, m123 * 3 };
                     x -= offset[diff % 5];
                     ret[i] = (long)x;
                 }
@@ -167,8 +167,8 @@ namespace AlgorithmSharp
             var length = source1.Length + source2.Length - 1;
             var ret = length < 1024 ? stackalloc ModuloInteger[length] : new ModuloInteger[length];
             for (var i = 0; i < source1.Length; i++)
-            for (var j = 0; j < source2.Length; j++)
-                ret[i + j] += source1[i] * source2[j];
+                for (var j = 0; j < source2.Length; j++)
+                    ret[i + j] += source1[i] * source2[j];
             return ret.ToArray();
         }
 
@@ -177,8 +177,8 @@ namespace AlgorithmSharp
             var length = source1.Length + source2.Length - 1;
             var ret = length < 1024 ? stackalloc long[length] : new long[length];
             for (var i = 0; i < source1.Length; i++)
-            for (var j = 0; j < source2.Length; j++)
-                ret[i + j] += source1[i] * source2[j];
+                for (var j = 0; j < source2.Length; j++)
+                    ret[i + j] += source1[i] * source2[j];
             return ret.ToArray();
         }
 

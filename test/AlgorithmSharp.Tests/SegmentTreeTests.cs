@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NUnit.Framework;
 
 namespace AlgorithmSharp.Tests
@@ -62,24 +62,24 @@ namespace AlgorithmSharp.Tests
                 Assert.That(st.Get(i), Is.EqualTo(stn.Get(i)));
 
             for (var l = 0; l <= n; l++)
-            for (var r = l; r <= n; r++)
-                Assert.That(st.Query(l, r), Is.EqualTo(stn.Query(l, r)));
+                for (var r = l; r <= n; r++)
+                    Assert.That(st.Query(l, r), Is.EqualTo(stn.Query(l, r)));
 
             for (var l = 0; l <= n; l++)
-            for (var r = l; r <= n; r++)
-            {
-                y = st.Query(l, r).Value;
-                Assert.That(st.MaxRight(l, SimpleQuery), Is.EqualTo(stn.MaxRight(l, SimpleQuery)));
-                Assert.That(st.MaxRight(l, SimpleQuery), Is.EqualTo(stn.MaxRight(l, x => x.Value.Length <= y.Length)));
-            }
+                for (var r = l; r <= n; r++)
+                {
+                    y = st.Query(l, r).Value;
+                    Assert.That(st.MaxRight(l, SimpleQuery), Is.EqualTo(stn.MaxRight(l, SimpleQuery)));
+                    Assert.That(st.MaxRight(l, SimpleQuery), Is.EqualTo(stn.MaxRight(l, x => x.Value.Length <= y.Length)));
+                }
 
             for (var r = 0; r <= n; r++)
-            for (var l = 0; l <= r; l++)
-            {
-                y = st.Query(l, r).Value;
-                Assert.That(st.MinLeft(r, SimpleQuery), Is.EqualTo(stn.MinLeft(r, SimpleQuery)));
-                Assert.That(st.MinLeft(r, SimpleQuery), Is.EqualTo(stn.MinLeft(r, x => x.Value.Length <= y.Length)));
-            }
+                for (var l = 0; l <= r; l++)
+                {
+                    y = st.Query(l, r).Value;
+                    Assert.That(st.MinLeft(r, SimpleQuery), Is.EqualTo(stn.MinLeft(r, SimpleQuery)));
+                    Assert.That(st.MinLeft(r, SimpleQuery), Is.EqualTo(stn.MinLeft(r, x => x.Value.Length <= y.Length)));
+                }
         }
 
         [Test]

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 
@@ -53,7 +53,7 @@ namespace AlgorithmSharp.Tests
 
         private static class Enumeration
         {
-            private static readonly Dictionary<long, long> Memo = new Dictionary<long, long> {{0, 1}, {1, 1}};
+            private static readonly Dictionary<long, long> Memo = new Dictionary<long, long> { { 0, 1 }, { 1, 1 } };
             private static long _max = 1;
 
             public static long Factorial(long n, long modulo)

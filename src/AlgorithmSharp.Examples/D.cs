@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 
 namespace AlgorithmSharp.Examples
@@ -15,32 +15,32 @@ namespace AlgorithmSharp.Examples
             var t = N * M + 1;
 
             for (var i = 0; i < N; i++)
-            for (var j = 0; j < M; j++)
-            {
-                if (G[i][j] == '#') continue;
-                var v = i * M + j;
-                if ((i + j) % 2 == 0) fg.AddEdge(s, v, 1);
-                else fg.AddEdge(v, t, 1);
-            }
-
-            var di = new[] {-1, 0, 1, 0};
-            var dj = new[] {0, -1, 0, 1};
-            for (var i = 0; i < N; i++)
-            for (var j = 0; j < M; j++)
-            {
-                if ((i + j) % 2 == 1 || G[i][j] == '#') continue;
-                var v0 = i * M + j;
-                for (var k = 0; k < 4; k++)
+                for (var j = 0; j < M; j++)
                 {
-                    var ci = i + di[k];
-                    var cj = j + dj[k];
-                    if (ci < 0 || N <= ci) continue;
-                    if (cj < 0 || M <= cj) continue;
-                    if (G[ci][cj] != '.') continue;
-                    var v1 = ci * M + cj;
-                    fg.AddEdge(v0, v1, 1);
+                    if (G[i][j] == '#') continue;
+                    var v = i * M + j;
+                    if ((i + j) % 2 == 0) fg.AddEdge(s, v, 1);
+                    else fg.AddEdge(v, t, 1);
                 }
-            }
+
+            var di = new[] { -1, 0, 1, 0 };
+            var dj = new[] { 0, -1, 0, 1 };
+            for (var i = 0; i < N; i++)
+                for (var j = 0; j < M; j++)
+                {
+                    if ((i + j) % 2 == 1 || G[i][j] == '#') continue;
+                    var v0 = i * M + j;
+                    for (var k = 0; k < 4; k++)
+                    {
+                        var ci = i + di[k];
+                        var cj = j + dj[k];
+                        if (ci < 0 || N <= ci) continue;
+                        if (cj < 0 || M <= cj) continue;
+                        if (G[ci][cj] != '.') continue;
+                        var v1 = ci * M + cj;
+                        fg.AddEdge(v0, v1, 1);
+                    }
+                }
 
             Console.WriteLine(fg.MaxFlow(s, t));
 

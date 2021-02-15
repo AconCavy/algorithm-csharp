@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
@@ -13,20 +13,20 @@ namespace AlgorithmSharp.Tests
             ModuloInteger.SetModulo998244353();
             Assert.That(Convolution.Execute(new ModuloInteger[0], new ModuloInteger[0]),
                 Is.EqualTo(new ModuloInteger[0]));
-            Assert.That(Convolution.Execute(new ModuloInteger[0], new ModuloInteger[] {1, 2}),
+            Assert.That(Convolution.Execute(new ModuloInteger[0], new ModuloInteger[] { 1, 2 }),
                 Is.EqualTo(new ModuloInteger[0]));
-            Assert.That(Convolution.Execute(new ModuloInteger[] {1, 2}, new ModuloInteger[0]),
+            Assert.That(Convolution.Execute(new ModuloInteger[] { 1, 2 }, new ModuloInteger[0]),
                 Is.EqualTo(new ModuloInteger[0]));
-            Assert.That(Convolution.Execute(new ModuloInteger[] {1}, new ModuloInteger[0]),
+            Assert.That(Convolution.Execute(new ModuloInteger[] { 1 }, new ModuloInteger[0]),
                 Is.EqualTo(new ModuloInteger[0]));
 
             Assert.That(Convolution.Execute(new long[0], new long[0]),
                 Is.EqualTo(new ModuloInteger[0]));
-            Assert.That(Convolution.Execute(new long[0], new long[] {1, 2}),
+            Assert.That(Convolution.Execute(new long[0], new long[] { 1, 2 }),
                 Is.EqualTo(new ModuloInteger[0]));
-            Assert.That(Convolution.Execute(new long[] {1, 2}, new long[0]),
+            Assert.That(Convolution.Execute(new long[] { 1, 2 }, new long[0]),
                 Is.EqualTo(new ModuloInteger[0]));
-            Assert.That(Convolution.Execute(new long[] {1}, new long[0]),
+            Assert.That(Convolution.Execute(new long[] { 1 }, new long[0]),
                 Is.EqualTo(new long[0]));
         }
 
@@ -70,22 +70,22 @@ namespace AlgorithmSharp.Tests
             const long m13 = mod1 * mod3;
             const long m12 = mod1 * mod2;
 
-            var a = new[] {-m12 - m13 - m23 + n};
-            var b = new[] {1L};
+            var a = new[] { -m12 - m13 - m23 + n };
+            var b = new[] { 1L };
             Assert.That(Convolution.Execute(a, b), Is.EqualTo(ConvolutionNaive(a, b)));
 
-            a = new[] {-m12 - m13 - m23 - n};
+            a = new[] { -m12 - m13 - m23 - n };
             Assert.That(Convolution.Execute(a, b), Is.EqualTo(ConvolutionNaive(a, b)));
         }
 
         [Test]
         public void LongBoundMinMaxValueTest([Range(0, 1000)] int n)
         {
-            var a = new[] {long.MinValue + n};
-            var b = new[] {1L};
+            var a = new[] { long.MinValue + n };
+            var b = new[] { 1L };
             Assert.That(Convolution.Execute(a, b), Is.EqualTo(ConvolutionNaive(a, b)));
 
-            a = new[] {long.MaxValue - n};
+            a = new[] { long.MaxValue - n };
             Assert.That(Convolution.Execute(a, b), Is.EqualTo(ConvolutionNaive(a, b)));
         }
 
@@ -130,8 +130,8 @@ namespace AlgorithmSharp.Tests
             if (n < 1 || m < 1) return new ModuloInteger[0];
             var ret = new ModuloInteger[n + m - 1];
             for (var i = 0; i < n; i++)
-            for (var j = 0; j < m; j++)
-                ret[i + j] += a[i] * b[j];
+                for (var j = 0; j < m; j++)
+                    ret[i + j] += a[i] * b[j];
             return ret;
         }
 
@@ -142,8 +142,8 @@ namespace AlgorithmSharp.Tests
             if (n < 1 || m < 1) return new long[0];
             var ret = new long[n + m - 1];
             for (var i = 0; i < n; i++)
-            for (var j = 0; j < m; j++)
-                ret[i + j] += a[i] * b[j];
+                for (var j = 0; j < m; j++)
+                    ret[i + j] += a[i] * b[j];
             return ret;
         }
     }

@@ -41,16 +41,16 @@ namespace AlgorithmSharp.Tests
             const int width = 3;
             var ft = new FenwickTree2D(height, width);
             for (var i = 0; i < height; i++)
-            for (var j = 0; j < width; j++)
-                ft.Add(i, j, 1);
+                for (var j = 0; j < width; j++)
+                    ft.Add(i, j, 1);
 
             for (var i = 0; i < height; i++)
-            for (var j = 0; j < width; j++)
-            {
-                var expected = (i + 1) * (j + 1);
-                var actual = ft.Sum(i, j);
-                Assert.That(actual, Is.EqualTo(expected));
-            }
+                for (var j = 0; j < width; j++)
+                {
+                    var expected = (i + 1) * (j + 1);
+                    var actual = ft.Sum(i, j);
+                    Assert.That(actual, Is.EqualTo(expected));
+                }
         }
 
         [Test]
@@ -60,18 +60,18 @@ namespace AlgorithmSharp.Tests
             const int width = 3;
             var ft = new FenwickTree2D(height, width);
             for (var i = 0; i < height; i++)
-            for (var j = 0; j < width; j++)
-                ft.Add(i, j, 1);
+                for (var j = 0; j < width; j++)
+                    ft.Add(i, j, 1);
 
             for (var i = 0; i < height; i++)
-            for (var j = 0; j < width; j++)
-            for (var r = 0; r <= i; r++)
-            for (var c = 0; c <= j; c++)
-            {
-                var expected = (i + 1) * (j + 1) + (r + 1) * (c + 1) - (i + 1) * (c + 1) - (r + 1) * (j + 1);
-                var actual = ft.Sum(i, j, r, c);
-                Assert.That(actual, Is.EqualTo(expected));
-            }
+                for (var j = 0; j < width; j++)
+                    for (var r = 0; r <= i; r++)
+                        for (var c = 0; c <= j; c++)
+                        {
+                            var expected = (i + 1) * (j + 1) + (r + 1) * (c + 1) - (i + 1) * (c + 1) - (r + 1) * (j + 1);
+                            var actual = ft.Sum(i, j, r, c);
+                            Assert.That(actual, Is.EqualTo(expected));
+                        }
         }
     }
 }

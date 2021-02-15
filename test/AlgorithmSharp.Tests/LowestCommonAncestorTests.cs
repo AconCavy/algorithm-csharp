@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NUnit.Framework;
 
 namespace AlgorithmSharp.Tests
@@ -8,11 +8,11 @@ namespace AlgorithmSharp.Tests
         [Test]
         public void InitializeTest()
         {
-            var tree = new[] {new[] {1}, new int[0]};
+            var tree = new[] { new[] { 1 }, new int[0] };
             Assert.DoesNotThrow(() => _ = new LowestCommonAncestor(tree));
             Assert.DoesNotThrow(() => _ = new LowestCommonAncestor(tree, 1));
 
-            tree = new[] {new[] {1}, new[] {0}};
+            tree = new[] { new[] { 1 }, new[] { 0 } };
             Assert.DoesNotThrow(() => _ = new LowestCommonAncestor(tree));
 
             Assert.DoesNotThrow(() => _ = new LowestCommonAncestor(1));
@@ -127,7 +127,7 @@ namespace AlgorithmSharp.Tests
         [Test]
         public void OneWayTreeTest()
         {
-            var tree = new[] {new[] {1, 2}, new[] {3, 4}, new[] {5}, new int[0], new int[0], new int[0]};
+            var tree = new[] { new[] { 1, 2 }, new[] { 3, 4 }, new[] { 5 }, new int[0], new int[0], new int[0] };
             var lca = new LowestCommonAncestor(tree);
             Assert.That(lca.Find(0, 1), Is.EqualTo(0));
             Assert.That(lca.Find(1, 2), Is.EqualTo(0));
@@ -154,9 +154,9 @@ namespace AlgorithmSharp.Tests
         [Test]
         public void ArgumentOutOfRangeInInitializeTest([Values(-1, 2)] int root)
         {
-            var tree = new[] {new[] {1}, new int[0]};
+            var tree = new[] { new[] { 1 }, new int[0] };
             Assert.Throws<ArgumentOutOfRangeException>(() => _ = new LowestCommonAncestor(tree, root));
-            tree = new[] {new[] {1}, new[] {0}};
+            tree = new[] { new[] { 1 }, new[] { 0 } };
             Assert.Throws<ArgumentOutOfRangeException>(() => _ = new LowestCommonAncestor(tree, root));
             Assert.Throws<ArgumentOutOfRangeException>(() => _ = new LowestCommonAncestor(1, root));
         }
@@ -180,7 +180,7 @@ namespace AlgorithmSharp.Tests
         private static (LowestCommonAncestor byArray, LowestCommonAncestor byLength) InitializeLca(int root = 0)
         {
             var lca1 = new LowestCommonAncestor(
-                new[] {new[] {1, 2}, new[] {0, 3, 4}, new[] {0, 5}, new[] {1}, new[] {1}, new[] {2}}, root);
+                new[] { new[] { 1, 2 }, new[] { 0, 3, 4 }, new[] { 0, 5 }, new[] { 1 }, new[] { 1 }, new[] { 2 } }, root);
             var lca2 = new LowestCommonAncestor(6, root);
             lca2.AddEdge(0, 1);
             lca2.AddEdge(0, 2);

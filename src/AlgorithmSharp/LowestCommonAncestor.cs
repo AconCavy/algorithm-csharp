@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -110,11 +110,11 @@ namespace AlgorithmSharp
             }
 
             for (var i = 0; i < _log - 1; i++)
-            for (var v = 0; v < _length; v++)
-            {
-                var parent = _parents[v][i];
-                _parents[v][i + 1] = parent == -1 ? -1 : _parents[parent][i];
-            }
+                for (var v = 0; v < _length; v++)
+                {
+                    var parent = _parents[v][i];
+                    _parents[v][i + 1] = parent == -1 ? -1 : _parents[parent][i];
+                }
         }
     }
 }

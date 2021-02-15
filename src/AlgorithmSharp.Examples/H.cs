@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 
 namespace AlgorithmSharp.Examples
@@ -19,13 +19,13 @@ namespace AlgorithmSharp.Examples
 
             var ts = new TwoSatisfiability(N);
             for (var i = 0; i < N; i++)
-            for (var j = i + 1; j < N; j++)
-            {
-                if (Math.Abs(X[i] - X[j]) < D) ts.AddClause(i, false, j, false);
-                if (Math.Abs(X[i] - Y[j]) < D) ts.AddClause(i, false, j, true);
-                if (Math.Abs(Y[i] - X[j]) < D) ts.AddClause(i, true, j, false);
-                if (Math.Abs(Y[i] - Y[j]) < D) ts.AddClause(i, true, j, true);
-            }
+                for (var j = i + 1; j < N; j++)
+                {
+                    if (Math.Abs(X[i] - X[j]) < D) ts.AddClause(i, false, j, false);
+                    if (Math.Abs(X[i] - Y[j]) < D) ts.AddClause(i, false, j, true);
+                    if (Math.Abs(Y[i] - X[j]) < D) ts.AddClause(i, true, j, false);
+                    if (Math.Abs(Y[i] - Y[j]) < D) ts.AddClause(i, true, j, true);
+                }
 
             if (!ts.IsSatisfiable())
             {

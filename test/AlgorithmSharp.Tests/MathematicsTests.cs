@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 
@@ -10,15 +10,15 @@ namespace AlgorithmSharp.Tests
         public void ChineseRemainderTheoremInvalidArgumentsTest()
         {
             Assert.Throws<ArgumentException>(() =>
-                Mathematics.ChineseRemainderTheorem(new long[] {1, 2}, new long[] {3}));
+                Mathematics.ChineseRemainderTheorem(new long[] { 1, 2 }, new long[] { 3 }));
             Assert.Throws<ArgumentException>(() =>
-                Mathematics.ChineseRemainderTheorem(new long[] {1, 2}, new long[] {-1, -2}));
+                Mathematics.ChineseRemainderTheorem(new long[] { 1, 2 }, new long[] { -1, -2 }));
         }
 
         [Test]
         public void ChineseRemainderTheoremHandmadeTest()
         {
-            var (rem, mod) = Mathematics.ChineseRemainderTheorem(new long[] {1, 2, 1}, new long[] {2, 3, 2});
+            var (rem, mod) = Mathematics.ChineseRemainderTheorem(new long[] { 1, 2, 1 }, new long[] { 2, 3, 2 });
             Assert.That(rem, Is.EqualTo(5));
             Assert.That(mod, Is.EqualTo(6));
         }
@@ -27,58 +27,58 @@ namespace AlgorithmSharp.Tests
         public void ChineseRemainderTheorem2ItemsTest()
         {
             for (var a = 1; a <= 20; a++)
-            for (var b = 1; b <= 20; b++)
-            for (var c = -10; c <= 10; c++)
-            for (var d = -10; d <= 10; d++)
-            {
-                var (rem, mod) = Mathematics.ChineseRemainderTheorem(new long[] {c, d}, new long[] {a, b});
-                var lcm = a * b / GreatestCommonDivisor(a, b);
-                if (mod == 0)
-                {
-                    for (var x = 0; x < lcm; x++) Assert.That(x % a != c || x % b != d, Is.True);
-                    continue;
-                }
+                for (var b = 1; b <= 20; b++)
+                    for (var c = -10; c <= 10; c++)
+                        for (var d = -10; d <= 10; d++)
+                        {
+                            var (rem, mod) = Mathematics.ChineseRemainderTheorem(new long[] { c, d }, new long[] { a, b });
+                            var lcm = a * b / GreatestCommonDivisor(a, b);
+                            if (mod == 0)
+                            {
+                                for (var x = 0; x < lcm; x++) Assert.That(x % a != c || x % b != d, Is.True);
+                                continue;
+                            }
 
-                Assert.That(mod, Is.EqualTo(lcm));
-                Assert.That(rem % a, Is.EqualTo(Mathematics.SafeModulo(c, a)));
-                Assert.That(rem % b, Is.EqualTo(Mathematics.SafeModulo(d, b)));
-            }
+                            Assert.That(mod, Is.EqualTo(lcm));
+                            Assert.That(rem % a, Is.EqualTo(Mathematics.SafeModulo(c, a)));
+                            Assert.That(rem % b, Is.EqualTo(Mathematics.SafeModulo(d, b)));
+                        }
         }
 
         [Test]
         public void ChineseRemainderTheorem3ItemsTest()
         {
             for (var a = 1; a <= 5; a++)
-            for (var b = 1; b <= 5; b++)
-            for (var c = 1; c <= 5; c++)
-            for (var d = -5; d <= 5; d++)
-            for (var e = -5; e <= 5; e++)
-            for (var f = -5; f <= 5; f++)
-            {
-                var (rem, mod) = Mathematics.ChineseRemainderTheorem(new long[] {d, e, f}, new long[] {a, b, c});
-                var lcm = a * b / GreatestCommonDivisor(a, b);
-                lcm *= c / GreatestCommonDivisor(lcm, c);
-                if (mod == 0)
-                {
-                    for (var x = 0; x < lcm; x++) Assert.That(x % a != d || x % b != e || x % c != f, Is.True);
-                    continue;
-                }
+                for (var b = 1; b <= 5; b++)
+                    for (var c = 1; c <= 5; c++)
+                        for (var d = -5; d <= 5; d++)
+                            for (var e = -5; e <= 5; e++)
+                                for (var f = -5; f <= 5; f++)
+                                {
+                                    var (rem, mod) = Mathematics.ChineseRemainderTheorem(new long[] { d, e, f }, new long[] { a, b, c });
+                                    var lcm = a * b / GreatestCommonDivisor(a, b);
+                                    lcm *= c / GreatestCommonDivisor(lcm, c);
+                                    if (mod == 0)
+                                    {
+                                        for (var x = 0; x < lcm; x++) Assert.That(x % a != d || x % b != e || x % c != f, Is.True);
+                                        continue;
+                                    }
 
-                Assert.That(mod, Is.EqualTo(lcm));
-                Assert.That(rem % a, Is.EqualTo(Mathematics.SafeModulo(d, a)));
-                Assert.That(rem % b, Is.EqualTo(Mathematics.SafeModulo(e, b)));
-                Assert.That(rem % c, Is.EqualTo(Mathematics.SafeModulo(f, c)));
-            }
+                                    Assert.That(mod, Is.EqualTo(lcm));
+                                    Assert.That(rem % a, Is.EqualTo(Mathematics.SafeModulo(d, a)));
+                                    Assert.That(rem % b, Is.EqualTo(Mathematics.SafeModulo(e, b)));
+                                    Assert.That(rem % c, Is.EqualTo(Mathematics.SafeModulo(f, c)));
+                                }
         }
 
         [Test]
         public void FloorSumTest()
         {
             for (var n = 0; n < 20; n++)
-            for (var m = 1; m < 20; m++)
-            for (var a = 0; a < 20; a++)
-            for (var b = 0; b < 20; b++)
-                Assert.That(Mathematics.FloorSum(n, m, a, b), Is.EqualTo(FloorSumNaive(n, m, a, b)));
+                for (var m = 1; m < 20; m++)
+                    for (var a = 0; a < 20; a++)
+                        for (var b = 0; b < 20; b++)
+                            Assert.That(Mathematics.FloorSum(n, m, a, b), Is.EqualTo(FloorSumNaive(n, m, a, b)));
         }
 
         [Test]
@@ -109,16 +109,16 @@ namespace AlgorithmSharp.Tests
             list.Add(-1000000009);
 
             foreach (var a in list)
-            foreach (var b in list)
-            {
-                if (b <= 0) continue;
-                var a2 = Mathematics.SafeModulo(a, b);
-                var igcd = Mathematics.InverseGreatestCommonDivisor(a, b);
-                var g = GreatestCommonDivisor(a2, b);
-                Assert.That(igcd.g, Is.EqualTo(g));
-                Assert.That(igcd.im, Is.GreaterThanOrEqualTo(0));
-                Assert.That(b / igcd.g, Is.GreaterThanOrEqualTo(igcd.im));
-            }
+                foreach (var b in list)
+                {
+                    if (b <= 0) continue;
+                    var a2 = Mathematics.SafeModulo(a, b);
+                    var igcd = Mathematics.InverseGreatestCommonDivisor(a, b);
+                    var g = GreatestCommonDivisor(a2, b);
+                    Assert.That(igcd.g, Is.EqualTo(g));
+                    Assert.That(igcd.im, Is.GreaterThanOrEqualTo(0));
+                    Assert.That(b / igcd.g, Is.GreaterThanOrEqualTo(igcd.im));
+                }
         }
 
         [Test]
@@ -183,8 +183,8 @@ namespace AlgorithmSharp.Tests
         public void PowerModuloTest([Range(1, 100)] int modulo)
         {
             for (var x = -100; x <= 100; x++)
-            for (var n = 0; n <= 100; n++)
-                Assert.That(Mathematics.PowerModulo(x, n, modulo), Is.EqualTo(PowerModuloNaive(x, n, modulo)));
+                for (var n = 0; n <= 100; n++)
+                    Assert.That(Mathematics.PowerModulo(x, n, modulo), Is.EqualTo(PowerModuloNaive(x, n, modulo)));
         }
 
         [Test]
@@ -262,12 +262,12 @@ namespace AlgorithmSharp.Tests
             }
 
             foreach (var a in list)
-            foreach (var b in list)
-            {
-                if (b <= 0) continue;
-                var value = ((ulong)(a % b) + (ulong)b) % (ulong)b;
-                Assert.That(value, Is.EqualTo(Mathematics.SafeModulo(a, b)));
-            }
+                foreach (var b in list)
+                {
+                    if (b <= 0) continue;
+                    var value = ((ulong)(a % b) + (ulong)b) % (ulong)b;
+                    Assert.That(value, Is.EqualTo(Mathematics.SafeModulo(a, b)));
+                }
         }
 
         private static long GreatestCommonDivisor(long a, long b)

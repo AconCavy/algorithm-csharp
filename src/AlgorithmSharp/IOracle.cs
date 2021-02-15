@@ -1,4 +1,4 @@
-﻿namespace AlgorithmSharp
+namespace AlgorithmSharp
 {
     public interface IOracle<TMonoid> where TMonoid : struct
     {

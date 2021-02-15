@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 
@@ -42,8 +42,8 @@ namespace AlgorithmSharp.Tests
         {
             ModuloInteger.SetModulo(1);
             for (var i = 0; i < 100; i++)
-            for (var j = 0; j < 100; j++)
-                Assert.That((i * (ModuloInteger)j).Value, Is.Zero);
+                for (var j = 0; j < 100; j++)
+                    Assert.That((i * (ModuloInteger)j).Value, Is.Zero);
 
             ModuloInteger l = 1234;
             ModuloInteger r = 5678;

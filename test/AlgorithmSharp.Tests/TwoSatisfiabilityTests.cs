@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using NUnit.Framework;
 
@@ -32,12 +32,12 @@ namespace AlgorithmSharp.Tests
             ts = new TwoSatisfiability(1);
             ts.AddClause(0, true, 0, true);
             Assert.That(ts.IsSatisfiable(), Is.True);
-            Assert.That(new[] {true}, Is.EqualTo(ts.Answer));
+            Assert.That(new[] { true }, Is.EqualTo(ts.Answer));
 
             ts = new TwoSatisfiability(1);
             ts.AddClause(0, false, 0, false);
             Assert.That(ts.IsSatisfiable(), Is.True);
-            Assert.That(new[] {false}, Is.EqualTo(ts.Answer));
+            Assert.That(new[] { false }, Is.EqualTo(ts.Answer));
         }
 
         [Test]

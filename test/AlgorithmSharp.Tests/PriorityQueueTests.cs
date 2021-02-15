@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 
@@ -12,7 +12,7 @@ namespace AlgorithmSharp.Tests
             var queue = new PriorityQueue<int>();
             Assert.That(queue.Count, Is.EqualTo(0));
 
-            queue = new PriorityQueue<int>(new[] {0, 1, 2});
+            queue = new PriorityQueue<int>(new[] { 0, 1, 2 });
             Assert.That(queue.Count, Is.EqualTo(3));
 
             queue = new PriorityQueue<int>(new DescendingComparer<int>());
@@ -24,13 +24,13 @@ namespace AlgorithmSharp.Tests
             queue = new PriorityQueue<int>((y, x) => y.CompareTo(x));
             Assert.That(queue.Count, Is.EqualTo(0));
 
-            queue = new PriorityQueue<int>(new[] {0, 1, 2}, new DescendingComparer<int>());
+            queue = new PriorityQueue<int>(new[] { 0, 1, 2 }, new DescendingComparer<int>());
             Assert.That(queue.Count, Is.EqualTo(3));
 
-            queue = new PriorityQueue<int>(new[] {0, 1, 2}, DescendingComparison);
+            queue = new PriorityQueue<int>(new[] { 0, 1, 2 }, DescendingComparison);
             Assert.That(queue.Count, Is.EqualTo(3));
 
-            queue = new PriorityQueue<int>(new[] {0, 1, 2}, (y, x) => y.CompareTo(x));
+            queue = new PriorityQueue<int>(new[] { 0, 1, 2 }, (y, x) => y.CompareTo(x));
             Assert.That(queue.Count, Is.EqualTo(3));
         }
 
@@ -49,7 +49,7 @@ namespace AlgorithmSharp.Tests
             Assert.That(queue.Dequeue(), Is.EqualTo(3));
             Assert.That(queue.Dequeue(), Is.EqualTo(4));
 
-            queue = new PriorityQueue<int>(new[] {0, 4, 3, 1, 2});
+            queue = new PriorityQueue<int>(new[] { 0, 4, 3, 1, 2 });
             Assert.That(queue.Dequeue(), Is.EqualTo(0));
             Assert.That(queue.Dequeue(), Is.EqualTo(1));
             Assert.That(queue.Dequeue(), Is.EqualTo(2));
@@ -60,7 +60,7 @@ namespace AlgorithmSharp.Tests
         [Test]
         public void DescendingTest()
         {
-            var items = new[] {0, 4, 3, 1, 2};
+            var items = new[] { 0, 4, 3, 1, 2 };
             var queue = new PriorityQueue<int>(items, new DescendingComparer<int>());
             Assert.That(queue.Dequeue(), Is.EqualTo(4));
             Assert.That(queue.Dequeue(), Is.EqualTo(3));
@@ -86,7 +86,7 @@ namespace AlgorithmSharp.Tests
         [Test]
         public void SameValuesTest()
         {
-            var queue = new PriorityQueue<int>(new[] {1, 0, 1, 1});
+            var queue = new PriorityQueue<int>(new[] { 1, 0, 1, 1 });
             Assert.That(queue.Dequeue(), Is.EqualTo(0));
             Assert.That(queue.Dequeue(), Is.EqualTo(1));
             Assert.That(queue.Dequeue(), Is.EqualTo(1));
