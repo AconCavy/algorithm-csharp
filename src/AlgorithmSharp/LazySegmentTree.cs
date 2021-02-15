@@ -63,7 +63,7 @@ namespace AlgorithmSharp
             for (var i = _log; i >= 1; i--)
             {
                 if ((left >> i) << i != left) Push(left >> i);
-                if ((right >> i) << i != right) Push(right >> i);
+                if ((right >> i) << i != right) Push((right - 1) >> i);
             }
 
             var (sml, smr) = (_monoidId, _monoidId);
