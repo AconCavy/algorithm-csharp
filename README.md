@@ -26,17 +26,6 @@ The library is based on [ac-library](https://github.com/atcoder/ac-library).
 - ModuloMathematics
 - PriorityQueue
 
-## AtCoder Library Practice Contest
+## Tool
 
-- [x] A - Disjoint Set Union
-- [x] B - Fenwick Tree
-- [x] C - Floor Sum
-- [x] D - Maxflow
-- [x] E - MinCostFlow
-- [x] F - Convolution
-- [x] G - SCC
-- [x] H - Two SAT
-- [x] I - Number of Substrings
-- [x] J - Segment Tree
-- [x] K - Range Affine Range Sum
-- [x] L - Lazy Segment Tree
+[AconCavy/SnippetBuilder](https://github.com/AconCavy/SnippetBuilder) can generate code snippets from a file for Visual Studio Code.
