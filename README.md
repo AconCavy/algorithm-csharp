@@ -1,6 +1,6 @@
-# AlgorithmSharp
+# Overview
 
-AlgorithmSharp is an algorithm library for competitive programming contests to use C#.
+Algorithm library for competitive programming contests.
 
 The library is based on [ac-library](https://github.com/atcoder/ac-library).
 
