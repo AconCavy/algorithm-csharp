@@ -31,6 +31,9 @@ namespace Algorithm.Tests
             const int expected = 1;
             cum.Add(0, 0, expected);
             var actual = cum.Sum(0, 0);
+            Assert.That(actual, Is.Zero);
+
+            actual = cum.Sum(1, 1);
             Assert.That(actual, Is.EqualTo(expected));
         }
 
@@ -39,39 +42,18 @@ namespace Algorithm.Tests
         {
             const int height = 3;
             const int width = 3;
-            var ft = new FenwickTree2D(height, width);
+            var cum = new FenwickTree2D(height, width);
             for (var i = 0; i < height; i++)
                 for (var j = 0; j < width; j++)
-                    ft.Add(i, j, 1);
+                    cum.Add(i, j, 1);
 
-            for (var i = 0; i < height; i++)
-                for (var j = 0; j < width; j++)
+            for (var i = 0; i <= height; i++)
+                for (var j = 0; j <= width; j++)
                 {
-                    var expected = (i + 1) * (j + 1);
-                    var actual = ft.Sum(i, j);
+                    var expected = i * j;
+                    var actual = cum.Sum(i, j);
                     Assert.That(actual, Is.EqualTo(expected));
                 }
-        }
-
-        [Test]
-        public void Sum2DTest()
-        {
-            const int height = 3;
-            const int width = 3;
-            var ft = new FenwickTree2D(height, width);
-            for (var i = 0; i < height; i++)
-                for (var j = 0; j < width; j++)
-                    ft.Add(i, j, 1);
-
-            for (var i = 0; i < height; i++)
-                for (var j = 0; j < width; j++)
-                    for (var r = 0; r <= i; r++)
-                        for (var c = 0; c <= j; c++)
-                        {
-                            var expected = (i + 1) * (j + 1) + (r + 1) * (c + 1) - (i + 1) * (c + 1) - (r + 1) * (j + 1);
-                            var actual = ft.Sum(i, j, r, c);
-                            Assert.That(actual, Is.EqualTo(expected));
-                        }
         }
     }
 }
