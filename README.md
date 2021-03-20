@@ -23,7 +23,6 @@ The library is based on [ac-library](https://github.com/atcoder/ac-library).
 
 - FenwickTree2D
 - LowestCommonAncestor
-- ModuloMathematics
 - PriorityQueue
 
 ## Tool
