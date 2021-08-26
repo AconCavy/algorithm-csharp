@@ -7,19 +7,14 @@ namespace Algorithm
     public class LowestCommonAncestor
     {
         private readonly long[] _costs;
-        private readonly long[][] _costTree;
-        private readonly int[] _depths;
+        private readonly int[] _distances;
         private readonly int _length;
         private readonly int _log;
         private readonly int[][] _parents;
         private readonly int _root;
-        private readonly List<int>[] _tree;
+        private readonly List<(int, long)>[] _tree;
 
         private bool _isUpdated;
-
-        public LowestCommonAncestor(IReadOnlyCollection<IReadOnlyCollection<int>> tree, int root = 0)
-            : this(tree.Count, root) =>
-            _tree = tree.Select(x => x.ToList()).ToArray();
 
         public LowestCommonAncestor(int length, int root = 0)
         {
@@ -27,20 +22,18 @@ namespace Algorithm
             _length = length;
             _root = root;
             while (_length >> _log > 0) _log++;
-            _depths = new int[length];
+            _distances = new int[length];
             _costs = new long[length];
             _parents = new int[length][].Select(x => new int[_log]).ToArray();
-            _tree = new List<int>[length].Select(_ => new List<int>()).ToArray();
-            _costTree = new long[length].Select(_ => new long[length]).ToArray();
+            _tree = new List<(int, long)>[length].Select(_ => new List<(int, long)>()).ToArray();
         }
 
-        public void AddEdge(int u, int v, long cost = 0)
+        public void AddEdge(int u, int v, long cost = 1)
         {
             if (u < 0 || _length <= u) throw new ArgumentOutOfRangeException(nameof(u));
             if (v < 0 || _length <= v) throw new ArgumentOutOfRangeException(nameof(v));
-            _tree[u].Add(v);
-            _tree[v].Add(u);
-            _costTree[u][v] = _costTree[v][u] = cost;
+            _tree[u].Add((v, cost));
+            _tree[v].Add((u, cost));
             _isUpdated = false;
         }
 
@@ -50,12 +43,13 @@ namespace Algorithm
             if (v < 0 || _length <= v) throw new ArgumentOutOfRangeException(nameof(v));
             if (!_isUpdated) Build();
 
-            if (_depths[u] > _depths[v]) (u, v) = (v, u);
-            v = GetAncestor(v, _depths[v] - _depths[u]);
+            if (_distances[u] > _distances[v]) (u, v) = (v, u);
+            v = GetAncestor(v, _distances[v] - _distances[u]);
             if (u == v) return u;
             for (var i = _log - 1; i >= 0; i--)
-                if (_parents[u][i] != _parents[v][i])
-                    (u, v) = (_parents[u][i], _parents[v][i]);
+            {
+                if (_parents[u][i] != _parents[v][i]) (u, v) = (_parents[u][i], _parents[v][i]);
+            }
 
             return _parents[u][0];
         }
@@ -67,8 +61,9 @@ namespace Algorithm
 
             var parent = v;
             for (var i = 0; i < _log && parent != -1; i++)
-                if (((height >> i) & 1) == 1)
-                    parent = _parents[parent][i];
+            {
+                if ((height >> i & 1) == 1) parent = _parents[parent][i];
+            }
 
             return parent;
         }
@@ -78,7 +73,7 @@ namespace Algorithm
             if (u < 0 || _length <= u) throw new ArgumentOutOfRangeException(nameof(u));
             if (v < 0 || _length <= v) throw new ArgumentOutOfRangeException(nameof(v));
             var p = Find(u, v);
-            return _depths[u] + _depths[v] - _depths[p] * 2;
+            return _distances[u] + _distances[v] - _distances[p] * 2;
         }
 
         public long GetCost(int u, int v)
@@ -89,6 +84,16 @@ namespace Algorithm
             return _costs[u] + _costs[v] - _costs[p] * 2;
         }
 
+        public long GetCost(int u, int v, int mod)
+        {
+            if (u < 0 || _length <= u) throw new ArgumentOutOfRangeException(nameof(u));
+            if (v < 0 || _length <= v) throw new ArgumentOutOfRangeException(nameof(v));
+            var p = Find(u, v);
+            var cost = (_costs[u] + _costs[v]) % mod;
+            cost = (cost - _costs[p] * 2 % mod) % mod;
+            return (cost + mod) % mod;
+        }
+
         private void Build()
         {
             _isUpdated = true;
@@ -96,25 +101,28 @@ namespace Algorithm
             queue.Enqueue((_root, -1, 0, 0));
             var used = new bool[_length];
             used[_root] = true;
-            while (queue.Any())
+            while (queue.Count > 0)
             {
-                var (current, from, depth, cost) = queue.Dequeue();
-                _parents[current][0] = from;
-                _depths[current] = depth;
-                _costs[current] = cost;
-                foreach (var next in _tree[current].Where(next => !used[next]))
+                var (u, p, depth, cost) = queue.Dequeue();
+                _parents[u][0] = p;
+                _distances[u] = depth;
+                _costs[u] = cost;
+                foreach (var (v, c) in _tree[u])
                 {
-                    used[next] = true;
-                    queue.Enqueue((next, current, depth + 1, cost + _costTree[current][next]));
+                    if (used[v]) continue;
+                    used[v] = true;
+                    queue.Enqueue((v, u, depth + 1, cost + c));
                 }
             }
 
-            for (var i = 0; i < _log - 1; i++)
+            for (var i = 0; i + 1 < _log; i++)
+            {
                 for (var v = 0; v < _length; v++)
                 {
                     var parent = _parents[v][i];
                     _parents[v][i + 1] = parent == -1 ? -1 : _parents[parent][i];
                 }
+            }
         }
     }
 }
