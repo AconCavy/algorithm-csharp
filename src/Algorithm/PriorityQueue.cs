@@ -9,26 +9,12 @@ namespace Algorithm
         private readonly Comparison<T> _comparison;
         private readonly List<T> _heap;
 
-        public PriorityQueue() : this(items: null)
-        {
-        }
+        public PriorityQueue(IComparer<T> comparer) : this(null, comparer) { }
 
-        public PriorityQueue(IEnumerable<T> items) : this(items, Comparer<T>.Default)
-        {
-        }
+        public PriorityQueue(Comparison<T> comparison) : this(null, comparison) { }
 
-        public PriorityQueue(IComparer<T> comparer) : this(null, comparer)
-        {
-        }
-
-        public PriorityQueue(Comparison<T> comparison) : this(null, comparison)
-        {
-        }
-
-        public PriorityQueue(IEnumerable<T> items, IComparer<T> comparer)
-            : this(items, (comparer ?? Comparer<T>.Default).Compare)
-        {
-        }
+        public PriorityQueue(IEnumerable<T> items = null, IComparer<T> comparer = null)
+            : this(items, (comparer ?? Comparer<T>.Default).Compare) { }
 
         public PriorityQueue(IEnumerable<T> items, Comparison<T> comparison)
         {
