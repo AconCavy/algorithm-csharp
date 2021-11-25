@@ -5,11 +5,7 @@ namespace Algorithm
     public readonly struct ModuloInteger : IEquatable<ModuloInteger>
     {
         public long Value { get; }
-        public static long Modulo { get; private set; } = 998244353;
-        public static void SetModulo(long m) => Modulo = m;
-        public static void SetModulo998244353() => SetModulo(998244353);
-        public static void SetModulo1000000007() => SetModulo(1000000007);
-
+        public static long Modulo { get; set; } = 998244353;
         // The modulo will be used as an editable property.
         // The constant modulo will be recommended to use for performances in use cases.
         // public const long Modulo = 1000000007;

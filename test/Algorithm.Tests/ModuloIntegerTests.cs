@@ -12,7 +12,7 @@ namespace Algorithm.Tests
             const int moduloUpper = int.MaxValue;
             for (var modulo = moduloUpper; modulo >= moduloUpper - 20; modulo--)
             {
-                ModuloInteger.SetModulo(modulo);
+                ModuloInteger.Modulo = modulo;
                 var values = new List<long>();
                 for (var i = 0; i < 10; i++)
                 {
@@ -40,7 +40,7 @@ namespace Algorithm.Tests
         [Test]
         public void Modulo1Test()
         {
-            ModuloInteger.SetModulo(1);
+            ModuloInteger.Modulo = 1;
             for (var i = 0; i < 100; i++)
                 for (var j = 0; j < 100; j++)
                     Assert.That((i * (ModuloInteger)j).Value, Is.Zero);
@@ -55,10 +55,9 @@ namespace Algorithm.Tests
         }
 
         [Test]
-        public void InverseTest([Values(11, 12, 1000000007, 1000000008)]
-            int n)
+        public void InverseTest([Values(11, 12, 1000000007, 1000000008)] int n)
         {
-            ModuloInteger.SetModulo(n);
+            ModuloInteger.Modulo = n;
             for (var i = 1; i < Math.Min(n, 100000); i++)
             {
                 if (GreatestCommonDivisor(i, n) != 1) continue;
@@ -72,7 +71,7 @@ namespace Algorithm.Tests
         [Test]
         public void Inverse998244353Test()
         {
-            ModuloInteger.SetModulo998244353();
+            ModuloInteger.Modulo = 998244353;
             for (var i = 1; i < 100000; i++)
             {
                 var x = ModuloInteger.Inverse(i);
@@ -85,10 +84,9 @@ namespace Algorithm.Tests
         }
 
         [Test]
-        public void PowerTest([Values(11, 12, 998244353, 1000000007, 1000000008)]
-            int modulo)
+        public void PowerTest([Values(11, 12, 998244353, 1000000007, 1000000008)] int modulo)
         {
-            ModuloInteger.SetModulo(modulo);
+            ModuloInteger.Modulo = modulo;
             for (var i = 1; i < Math.Min(modulo, 1000); i++)
             {
                 var expected = 1L;
@@ -111,7 +109,7 @@ namespace Algorithm.Tests
         [Test]
         public void IncrementTest()
         {
-            ModuloInteger.SetModulo(11);
+            ModuloInteger.Modulo = 11;
             ModuloInteger a = 8;
             Assert.That((++a).Value, Is.EqualTo(9));
             Assert.That((++a).Value, Is.EqualTo(10));
@@ -139,23 +137,23 @@ namespace Algorithm.Tests
         [Test]
         public void UsageTest()
         {
-            ModuloInteger.SetModulo998244353();
+            ModuloInteger.Modulo = 998244353;
             Assert.That(ModuloInteger.Modulo, Is.EqualTo(998244353));
             Assert.That((new ModuloInteger(1) + new ModuloInteger(2)).Value, Is.EqualTo(3));
             Assert.That((1L + new ModuloInteger(2)).Value, Is.EqualTo(3));
             Assert.That((new ModuloInteger(1) + 2L).Value, Is.EqualTo(3));
 
-            ModuloInteger.SetModulo1000000007();
+            ModuloInteger.Modulo = 1000000007;
             Assert.That(ModuloInteger.Modulo, Is.EqualTo(1000000007));
 
-            ModuloInteger.SetModulo(3);
+            ModuloInteger.Modulo = 3;
             Assert.That(ModuloInteger.Modulo, Is.EqualTo(3));
             Assert.That((new ModuloInteger(2) - new ModuloInteger(1)).Value, Is.EqualTo(1));
             Assert.That((2L - new ModuloInteger(1)).Value, Is.EqualTo(1));
             Assert.That((new ModuloInteger(2) - 1L).Value, Is.EqualTo(1));
             Assert.That((new ModuloInteger(1) + new ModuloInteger(2)).Value, Is.EqualTo(0));
 
-            ModuloInteger.SetModulo(11);
+            ModuloInteger.Modulo = 11;
             Assert.That(ModuloInteger.Modulo, Is.EqualTo(11));
             Assert.That(new ModuloInteger(4).Value, Is.EqualTo(4));
             Assert.That(new ModuloInteger(-4).Value, Is.EqualTo(7));
@@ -177,10 +175,9 @@ namespace Algorithm.Tests
         }
 
         [Test]
-        public void GetHashCodeTest([Values(11, 12, 998244353, 1000000007, 1000000008)]
-            int modulo)
+        public void GetHashCodeTest([Values(11, 12, 998244353, 1000000007, 1000000008)] int modulo)
         {
-            ModuloInteger.SetModulo(modulo);
+            ModuloInteger.Modulo = modulo;
             for (var i = 1; i < Math.Min(modulo - 1, 1000); i++)
             {
                 var x = new ModuloInteger(i);
@@ -193,7 +190,7 @@ namespace Algorithm.Tests
         [Test]
         public void OperatorsTest()
         {
-            ModuloInteger.SetModulo(11);
+            ModuloInteger.Modulo = 11;
             Assert.That(new ModuloInteger(1) + new ModuloInteger(1), Is.EqualTo(new ModuloInteger(2)));
             Assert.That(new ModuloInteger(11) - new ModuloInteger(1), Is.EqualTo(new ModuloInteger(10)));
             Assert.That(new ModuloInteger(2) * new ModuloInteger(5), Is.EqualTo(new ModuloInteger(10)));
@@ -204,7 +201,7 @@ namespace Algorithm.Tests
         [Test]
         public void CastIntTest()
         {
-            ModuloInteger.SetModulo(11);
+            ModuloInteger.Modulo = 11;
             Assert.That((int)new ModuloInteger(1), Is.EqualTo(1));
             Assert.That((int)new ModuloInteger(12), Is.EqualTo(1));
             Assert.That((ModuloInteger)1, Is.EqualTo(new ModuloInteger(1)));
@@ -214,7 +211,7 @@ namespace Algorithm.Tests
         [Test]
         public void IntOperatorsTest()
         {
-            ModuloInteger.SetModulo(11);
+            ModuloInteger.Modulo = 11;
             Assert.That(new ModuloInteger(1) + 1, Is.EqualTo(new ModuloInteger(2)));
             Assert.That(new ModuloInteger(11) - 1, Is.EqualTo(new ModuloInteger(10)));
             Assert.That(new ModuloInteger(2) * 5, Is.EqualTo(new ModuloInteger(10)));
@@ -230,7 +227,7 @@ namespace Algorithm.Tests
         [Test]
         public void CastLongTest()
         {
-            ModuloInteger.SetModulo(11);
+            ModuloInteger.Modulo = 11;
             Assert.That((long)new ModuloInteger(1L), Is.EqualTo(1));
             Assert.That((long)new ModuloInteger(12L), Is.EqualTo(1));
             Assert.That((ModuloInteger)1L, Is.EqualTo(new ModuloInteger(1)));
@@ -240,7 +237,7 @@ namespace Algorithm.Tests
         [Test]
         public void LongOperatorsTest()
         {
-            ModuloInteger.SetModulo(11);
+            ModuloInteger.Modulo = 11;
             Assert.That(new ModuloInteger(1) + 1L, Is.EqualTo(new ModuloInteger(2)));
             Assert.That(new ModuloInteger(11) - 1L, Is.EqualTo(new ModuloInteger(10)));
             Assert.That(new ModuloInteger(2) * 5L, Is.EqualTo(new ModuloInteger(10)));
@@ -252,7 +249,7 @@ namespace Algorithm.Tests
             Assert.That(10L / new ModuloInteger(5), Is.EqualTo(new ModuloInteger(2)));
             Assert.That(2L / new ModuloInteger(5), Is.EqualTo(new ModuloInteger(7)));
         }
-        
+
         [TestCase(-7, 0)]
         [TestCase(-6, 1)]
         [TestCase(-5, 2)]
@@ -263,7 +260,7 @@ namespace Algorithm.Tests
         [TestCase(0, 0)]
         public void InitializeWhenMinusTest(int x, int n)
         {
-            ModuloInteger.SetModulo(7);
+            ModuloInteger.Modulo = 7;
             Assert.That(new ModuloInteger(x).Value, Is.EqualTo(n));
         }
 
