@@ -252,6 +252,20 @@ namespace Algorithm.Tests
             Assert.That(10L / new ModuloInteger(5), Is.EqualTo(new ModuloInteger(2)));
             Assert.That(2L / new ModuloInteger(5), Is.EqualTo(new ModuloInteger(7)));
         }
+        
+        [TestCase(-7, 0)]
+        [TestCase(-6, 1)]
+        [TestCase(-5, 2)]
+        [TestCase(-4, 3)]
+        [TestCase(-3, 4)]
+        [TestCase(-2, 5)]
+        [TestCase(-1, 6)]
+        [TestCase(0, 0)]
+        public void InitializeWhenMinusTest(int x, int n)
+        {
+            ModuloInteger.SetModulo(7);
+            Assert.That(new ModuloInteger(x).Value, Is.EqualTo(n));
+        }
 
         private static long GreatestCommonDivisor(long a, long b)
         {
