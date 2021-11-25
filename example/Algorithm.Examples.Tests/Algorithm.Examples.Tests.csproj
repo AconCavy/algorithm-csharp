@@ -13,7 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\Algorithm.Examples\Algorithm.Examples.csproj" />
+      <ProjectReference Include="..\Algorithm.Examples\Algorithm.Examples.csproj" />
     </ItemGroup>
 
 </Project>
