@@ -57,11 +57,11 @@ namespace Algorithm
                 var i2 = (ulong)Mathematics.InverseGreatestCommonDivisor(m13, mod2).im;
                 var i3 = (ulong)Mathematics.InverseGreatestCommonDivisor(m12, mod3).im;
 
-                ModuloInteger.SetModulo(mod1);
+                ModuloInteger.Modulo = mod1;
                 var c1 = Execute(a.Select(x => (ModuloInteger)x), b.Select(x => (ModuloInteger)x)).ToArray();
-                ModuloInteger.SetModulo(mod2);
+                ModuloInteger.Modulo = mod2;
                 var c2 = Execute(a.Select(x => (ModuloInteger)x), b.Select(x => (ModuloInteger)x)).ToArray();
-                ModuloInteger.SetModulo(mod3);
+                ModuloInteger.Modulo = mod3;
                 var c3 = Execute(a.Select(x => (ModuloInteger)x), b.Select(x => (ModuloInteger)x)).ToArray();
                 for (var i = 0; i < ret.Length; i++)
                 {
