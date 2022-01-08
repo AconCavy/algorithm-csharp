@@ -11,8 +11,8 @@ namespace Algorithm.Tests
         {
             Assert.DoesNotThrow(() => StringAlgorithm.SuffixArray(""));
             Assert.DoesNotThrow(() => StringAlgorithm.SuffixArray(Array.Empty<int>()));
-            Assert.DoesNotThrow(() => StringAlgorithm.ZAlgorithm(""));
-            Assert.DoesNotThrow(() => StringAlgorithm.ZAlgorithm(Array.Empty<int>()));
+            Assert.DoesNotThrow(() => StringAlgorithm.ZAlgorithm<char>(""));
+            Assert.DoesNotThrow(() => StringAlgorithm.ZAlgorithm<int>(Array.Empty<int>()));
         }
 
         [Test]
@@ -21,8 +21,8 @@ namespace Algorithm.Tests
             Assert.That(StringAlgorithm.SuffixArray("").Length, Is.Zero);
             Assert.That(StringAlgorithm.SuffixArray(Array.Empty<int>()).Length, Is.Zero);
 
-            Assert.That(StringAlgorithm.ZAlgorithm("").Length, Is.Zero);
-            Assert.That(StringAlgorithm.ZAlgorithm(Array.Empty<int>()).Length, Is.Zero);
+            Assert.That(StringAlgorithm.ZAlgorithm<char>("").Length, Is.Zero);
+            Assert.That(StringAlgorithm.ZAlgorithm<int>(Array.Empty<int>()).Length, Is.Zero);
         }
 
         [Test]
@@ -67,9 +67,9 @@ namespace Algorithm.Tests
         [Test]
         public void ZAlgorithmTest()
         {
-            Assert.That(StringAlgorithm.ZAlgorithm("abab"), Is.EqualTo(new[] { 4, 0, 2, 0 }));
-            Assert.That(StringAlgorithm.ZAlgorithm(new[] { 1, 10, 1, 10 }), Is.EqualTo(new[] { 4, 0, 2, 0 }));
-            Assert.That(StringAlgorithm.ZAlgorithm(new[] { 0, 0, 0, 0, 0, 0, 0 }),
+            Assert.That(StringAlgorithm.ZAlgorithm<char>("abab"), Is.EqualTo(new[] { 4, 0, 2, 0 }));
+            Assert.That(StringAlgorithm.ZAlgorithm<int>(new[] { 1, 10, 1, 10 }), Is.EqualTo(new[] { 4, 0, 2, 0 }));
+            Assert.That(StringAlgorithm.ZAlgorithm<int>(new[] { 0, 0, 0, 0, 0, 0, 0 }),
                 Is.EqualTo(ZAlgorithmNaive(new[] { 0, 0, 0, 0, 0, 0, 0 })));
         }
 
@@ -137,7 +137,7 @@ namespace Algorithm.Tests
                         g /= x;
                     }
 
-                    Assert.That(StringAlgorithm.ZAlgorithm(s), Is.EqualTo(ZAlgorithmNaive(s)));
+                    Assert.That(StringAlgorithm.ZAlgorithm<int>(s), Is.EqualTo(ZAlgorithmNaive(s)));
                 }
             }
         }

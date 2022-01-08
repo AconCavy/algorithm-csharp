@@ -66,19 +66,15 @@ namespace Algorithm
             return lcp;
         }
 
-        public static int[] ZAlgorithm(string str) => ZAlgorithm(str.Select(x => (int)x));
-
-        public static int[] ZAlgorithm<T>(IEnumerable<T> source) where T : IEquatable<T>
+        public static int[] ZAlgorithm<T>(ReadOnlySpan<T> source) where T : IEquatable<T>
         {
-            if (source is null) throw new ArgumentNullException(nameof(source));
-            var s = source.ToArray();
-            var n = s.Length;
+            var n = source.Length;
             if (n == 0) return Array.Empty<int>();
             var z = new int[n];
             for (int i = 1, j = 0; i < n; i++)
             {
                 z[i] = j + z[j] <= i ? 0 : Math.Min(j + z[j] - i, z[i - j]);
-                while (i + z[i] < n && s[z[i]].Equals(s[i + z[i]])) z[i]++;
+                while (i + z[i] < n && source[z[i]].Equals(source[i + z[i]])) z[i]++;
                 if (j + z[j] < i + z[i]) j = i;
             }
 
