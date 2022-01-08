@@ -35,15 +35,10 @@ namespace Algorithm
             return SuffixArrayByInducedSorting(s, upper);
         }
 
-        public static int[] LongestCommonPrefixArray(string str, int[] suffixArray) =>
-            LongestCommonPrefixArray(str.Select(x => (int)x), suffixArray);
-
-        public static int[] LongestCommonPrefixArray<T>(IEnumerable<T> source, int[] suffixArray)
+        public static int[] LongestCommonPrefixArray<T>(ReadOnlySpan<T> source, int[] suffixArray)
             where T : IEquatable<T>
         {
-            if (source is null) throw new ArgumentNullException(nameof(source));
-            var s = source.ToArray();
-            var n = s.Length;
+            var n = source.Length;
             if (n < 1) throw new ArgumentException(nameof(source));
             var rnk = new int[n];
             for (var i = 0; i < rnk.Length; i++) rnk[suffixArray[i]] = i;
@@ -56,7 +51,7 @@ namespace Algorithm
                 var j = suffixArray[rnk[i] - 1];
                 while (j + h < n && i + h < n)
                 {
-                    if (!s[j + h].Equals(s[i + h])) break;
+                    if (!source[j + h].Equals(source[i + h])) break;
                     h++;
                 }
 

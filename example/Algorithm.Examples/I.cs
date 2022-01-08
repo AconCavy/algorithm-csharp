@@ -10,7 +10,7 @@ namespace Algorithm.Examples
             var S = Console.ReadLine();
             var sa = StringAlgorithm.SuffixArray(S);
             var answer = (long)S.Length * (S.Length + 1) / 2;
-            answer = StringAlgorithm.LongestCommonPrefixArray(S, sa)
+            answer = StringAlgorithm.LongestCommonPrefixArray<char>(S, sa)
                 .Aggregate(answer, (sum, x) => sum - x);
 
             Console.WriteLine(answer);

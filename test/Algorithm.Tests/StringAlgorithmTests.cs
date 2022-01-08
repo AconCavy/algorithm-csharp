@@ -55,12 +55,12 @@ namespace Algorithm.Tests
             const string str = "aab";
             var sa = StringAlgorithm.SuffixArray(str);
             Assert.That(sa, Is.EqualTo(new[] { 0, 1, 2 }));
-            var lcp = StringAlgorithm.LongestCommonPrefixArray(str, sa);
+            var lcp = StringAlgorithm.LongestCommonPrefixArray<char>(str, sa);
             Assert.That(lcp, Is.EqualTo(new[] { 1, 0 }));
 
-            Assert.That(StringAlgorithm.LongestCommonPrefixArray(new[] { 0, 0, 1 }, sa), Is.EqualTo(lcp));
-            Assert.That(StringAlgorithm.LongestCommonPrefixArray(new[] { -100, -100, 100 }, sa), Is.EqualTo(lcp));
-            Assert.That(StringAlgorithm.LongestCommonPrefixArray(new[] { int.MinValue, int.MinValue, 100 }, sa),
+            Assert.That(StringAlgorithm.LongestCommonPrefixArray<int>(new[] { 0, 0, 1 }, sa), Is.EqualTo(lcp));
+            Assert.That(StringAlgorithm.LongestCommonPrefixArray<int>(new[] { -100, -100, 100 }, sa), Is.EqualTo(lcp));
+            Assert.That(StringAlgorithm.LongestCommonPrefixArray<int>(new[] { int.MinValue, int.MinValue, 100 }, sa),
                 Is.EqualTo(lcp));
         }
 
@@ -114,7 +114,7 @@ namespace Algorithm.Tests
                     var sa = SuffixArrayNaive(s);
                     Assert.That(StringAlgorithm.SuffixArray(s), Is.EqualTo(sa));
                     Assert.That(StringAlgorithm.SuffixArray(s, maxC), Is.EqualTo(sa));
-                    Assert.That(StringAlgorithm.LongestCommonPrefixArray(s, sa),
+                    Assert.That(StringAlgorithm.LongestCommonPrefixArray<int>(s, sa),
                         Is.EqualTo(LongestCommonPrefixArrayNaive(s, sa)));
                 }
             }
@@ -150,7 +150,7 @@ namespace Algorithm.Tests
             Assert.Throws<ArgumentException>(() => StringAlgorithm.SuffixArray(new[] { 2, 2 }, 1));
 
             Assert.Throws<ArgumentException>(
-                () => StringAlgorithm.LongestCommonPrefixArray(Array.Empty<int>(), new[] { 1, 2 }));
+                () => StringAlgorithm.LongestCommonPrefixArray<int>(Array.Empty<int>(), new[] { 1, 2 }));
         }
 
         private static int[] SuffixArrayNaive(int[] s)
