@@ -191,7 +191,7 @@ namespace Algorithm
                 recS[lmsMap[sortedLms[i]]] = recUpper;
             }
 
-            var recSa = SuffixArrayByInducedSorting(recS, recUpper, naive, doubling).ToArray();
+            var recSa = SuffixArrayByInducedSorting(recS, recUpper, naive, doubling);
             for (var i = 0; i < m; i++)
             {
                 sortedLms[i] = lms[recSa[i]];

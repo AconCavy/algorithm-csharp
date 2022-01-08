@@ -29,7 +29,7 @@ namespace Algorithm.Tests
         public void SuffixArrayTest()
         {
             const string str = "missisippi";
-            var sa = StringAlgorithm.SuffixArray(str).ToArray();
+            var sa = StringAlgorithm.SuffixArray(str);
             var answer = new[]
             {
                 "i", // 9
@@ -53,9 +53,9 @@ namespace Algorithm.Tests
         public void LongestCommonPrefixArrayTest()
         {
             const string str = "aab";
-            var sa = StringAlgorithm.SuffixArray(str).ToArray();
+            var sa = StringAlgorithm.SuffixArray(str);
             Assert.That(sa, Is.EqualTo(new[] { 0, 1, 2 }));
-            var lcp = StringAlgorithm.LongestCommonPrefixArray(str, sa).ToArray();
+            var lcp = StringAlgorithm.LongestCommonPrefixArray(str, sa);
             Assert.That(lcp, Is.EqualTo(new[] { 1, 0 }));
 
             Assert.That(StringAlgorithm.LongestCommonPrefixArray(new[] { 0, 0, 1 }, sa), Is.EqualTo(lcp));
