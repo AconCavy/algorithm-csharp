@@ -6,33 +6,43 @@ namespace Algorithm
 {
     public static class StringAlgorithm
     {
-        public static int[] SuffixArray(string str) => SuffixArray(str.Select(x => (int)x), char.MaxValue);
-
-        public static int[] SuffixArray<T>(IEnumerable<T> source) where T : IEquatable<T>
+        public static int[] SuffixArray(ReadOnlySpan<char> str)
         {
-            if (source is null) throw new ArgumentNullException(nameof(source));
-            var s = source.ToArray();
-            var n = s.Length;
+            var source = new int[str.Length];
+            for (var i = 0; i < str.Length; i++)
+            {
+                source[i] = str[i];
+            }
+
+            return SuffixArray(source.AsMemory(), char.MaxValue);
+        }
+
+        public static int[] SuffixArray<T>(ReadOnlyMemory<T> source) where T : IEquatable<T>
+        {
+            var n = source.Length;
             var idx = Enumerable.Range(0, n).ToArray();
-            Array.Sort(idx, (x, y) => Comparer<T>.Default.Compare(s[x], s[y]));
+            Array.Sort(idx, (x, y) => Comparer<T>.Default.Compare(source.Span[x], source.Span[y]));
+            var span = source.Span;
             var s2 = new int[n];
             var now = 0;
             for (var i = 0; i < n; i++)
             {
-                if (i > 0 && !s[idx[i - 1]].Equals(s[idx[i]])) now++;
+                if (i > 0 && !span[idx[i - 1]].Equals(span[idx[i]])) now++;
                 s2[idx[i]] = now;
             }
 
             return SuffixArrayByInducedSorting(s2, now);
         }
 
-        public static int[] SuffixArray(IEnumerable<int> source, int upper)
+        public static int[] SuffixArray(ReadOnlyMemory<int> source, int upper)
         {
-            if (source is null) throw new ArgumentNullException(nameof(source));
             if (upper < 0) throw new ArgumentException(nameof(upper));
-            var s = source.ToArray();
-            if (s.Any(x => x < 0 || upper < x)) throw new ArgumentException(nameof(source));
-            return SuffixArrayByInducedSorting(s, upper);
+            foreach (var x in source.Span)
+            {
+                if (x < 0 || upper < x) throw new ArgumentException(nameof(source));
+            }
+
+            return SuffixArrayByInducedSorting(source, upper);
         }
 
         public static int[] LongestCommonPrefixArray<T>(ReadOnlySpan<T> source, int[] suffixArray)
@@ -77,14 +87,16 @@ namespace Algorithm
             return z;
         }
 
-        private static int[] SuffixArrayByInducedSorting(int[] source, int upper, int naive = 10, int doubling = 40)
+        private static int[] SuffixArrayByInducedSorting(ReadOnlyMemory<int> source, int upper, int naive = 10,
+            int doubling = 40)
         {
             var n = source.Length;
+            var span = source.Span;
             switch (n)
             {
                 case 0: return Array.Empty<int>();
                 case 1: return new[] { 0 };
-                case 2: return source[0] < source[1] ? new[] { 0, 1 } : new[] { 1, 0 };
+                case 2: return span[0] < span[1] ? new[] { 0, 1 } : new[] { 1, 0 };
             }
 
             if (n < naive) return SuffixArrayByNaive(source);
@@ -94,15 +106,15 @@ namespace Algorithm
             var ls = new bool[n];
             for (var i = n - 2; i >= 0; i--)
             {
-                ls[i] = source[i] == source[i + 1] ? ls[i + 1] : source[i] < source[i + 1];
+                ls[i] = span[i] == span[i + 1] ? ls[i + 1] : span[i] < span[i + 1];
             }
 
             var sumL = new int[upper + 1];
             var sumS = new int[upper + 1];
             for (var i = 0; i < n; i++)
             {
-                if (!ls[i]) sumS[source[i]]++;
-                else sumL[source[i] + 1]++;
+                if (!ls[i]) sumS[span[i]]++;
+                else sumL[span[i] + 1]++;
             }
 
             for (var i = 0; i <= upper; i++)
@@ -113,28 +125,29 @@ namespace Algorithm
 
             void Induce(IEnumerable<int> ilms)
             {
+                var induceSpan = source.Span;
                 Array.Fill(sa, -1);
                 var buffer = new int[upper + 1];
-                sumS.CopyTo(buffer, 0);
+                sumS.AsSpan().CopyTo(buffer.AsSpan());
                 foreach (var d in ilms)
                 {
                     if (d == n) continue;
-                    sa[buffer[source[d]]++] = d;
+                    sa[buffer[induceSpan[d]]++] = d;
                 }
 
-                sumL.CopyTo(buffer, 0);
-                sa[buffer[source[n - 1]]++] = n - 1;
+                sumL.AsSpan().CopyTo(buffer.AsSpan());
+                sa[buffer[induceSpan[n - 1]]++] = n - 1;
                 for (var i = 0; i < n; i++)
                 {
                     var v = sa[i];
-                    if (v >= 1 && !ls[v - 1]) sa[buffer[source[v - 1]]++] = v - 1;
+                    if (v >= 1 && !ls[v - 1]) sa[buffer[induceSpan[v - 1]]++] = v - 1;
                 }
 
-                sumL.CopyTo(buffer, 0);
+                sumL.AsSpan().CopyTo(buffer.AsSpan());
                 for (var i = n - 1; i >= 0; i--)
                 {
                     var v = sa[i];
-                    if (v >= 1 && ls[v - 1]) sa[--buffer[source[v - 1] + 1]] = v - 1;
+                    if (v >= 1 && ls[v - 1]) sa[--buffer[induceSpan[v - 1] + 1]] = v - 1;
                 }
             }
 
@@ -173,13 +186,13 @@ namespace Algorithm
                 }
                 else
                 {
-                    while (l < el && source[l] == source[r])
+                    while (l < el && span[l] == span[r])
                     {
                         l++;
                         r++;
                     }
 
-                    if (l == n || source[l] != source[r]) isSame = false;
+                    if (l == n || span[l] != span[r]) isSame = false;
                 }
 
                 if (!isSame) recUpper++;
@@ -196,7 +209,7 @@ namespace Algorithm
             return sa;
         }
 
-        private static int[] SuffixArrayByNaive(int[] source)
+        private static int[] SuffixArrayByNaive(ReadOnlyMemory<int> source)
         {
             var n = source.Length;
             var sa = Enumerable.Range(0, n).ToArray();
@@ -206,7 +219,7 @@ namespace Algorithm
                 if (x == y) return 0;
                 while (x < n && y < n)
                 {
-                    if (source[x] != source[y]) return source[x].CompareTo(source[y]);
+                    if (source.Span[x] != source.Span[y]) return source.Span[x].CompareTo(source.Span[y]);
                     x++;
                     y++;
                 }
@@ -218,30 +231,32 @@ namespace Algorithm
             return sa;
         }
 
-        private static int[] SuffixArrayByDoubling(int[] source)
+        private static int[] SuffixArrayByDoubling(ReadOnlyMemory<int> source)
         {
             var n = source.Length;
             var sa = Enumerable.Range(0, n).ToArray();
+            var s1 = new int[n];
+            var s2 = new int[n];
+            source.CopyTo(s1.AsMemory());
 
-            var tmp = new int[n];
             for (var k = 1; k < n; k *= 2)
             {
                 int Compare(int x, int y)
                 {
-                    if (source[x] != source[y]) return source[x].CompareTo(source[y]);
-                    var rx = x + k < n ? source[x + k] : -1;
-                    var ry = y + k < n ? source[y + k] : -1;
+                    if (s1[x] != s1[y]) return s1[x].CompareTo(s1[y]);
+                    var rx = x + k < n ? s1[x + k] : -1;
+                    var ry = y + k < n ? s1[y + k] : -1;
                     return rx.CompareTo(ry);
                 }
 
                 Array.Sort(sa, Compare);
-                tmp[sa[0]] = 0;
+                s2[sa[0]] = 0;
                 for (var i = 1; i < n; i++)
                 {
-                    tmp[sa[i]] = tmp[sa[i - 1]] + (Compare(sa[i - 1], sa[i]) < 0 ? 1 : 0);
+                    s2[sa[i]] = s2[sa[i - 1]] + (Compare(sa[i - 1], sa[i]) < 0 ? 1 : 0);
                 }
 
-                (tmp, source) = (source, tmp);
+                (s2, s1) = (s1, s2);
             }
 
             return sa;

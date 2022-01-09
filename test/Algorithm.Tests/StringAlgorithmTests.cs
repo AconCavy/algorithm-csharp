@@ -9,19 +9,19 @@ namespace Algorithm.Tests
         [Test]
         public void InitializeTest()
         {
-            Assert.DoesNotThrow(() => StringAlgorithm.SuffixArray(""));
-            Assert.DoesNotThrow(() => StringAlgorithm.SuffixArray(Array.Empty<int>()));
-            Assert.DoesNotThrow(() => StringAlgorithm.ZAlgorithm<char>(""));
+            Assert.DoesNotThrow(() => StringAlgorithm.SuffixArray("".AsSpan()));
+            Assert.DoesNotThrow(() => StringAlgorithm.SuffixArray<int>(Array.Empty<int>()));
+            Assert.DoesNotThrow(() => StringAlgorithm.ZAlgorithm("".AsSpan()));
             Assert.DoesNotThrow(() => StringAlgorithm.ZAlgorithm<int>(Array.Empty<int>()));
         }
 
         [Test]
         public void EmptyTest()
         {
-            Assert.That(StringAlgorithm.SuffixArray("").Length, Is.Zero);
-            Assert.That(StringAlgorithm.SuffixArray(Array.Empty<int>()).Length, Is.Zero);
+            Assert.That(StringAlgorithm.SuffixArray("".AsSpan()).Length, Is.Zero);
+            Assert.That(StringAlgorithm.SuffixArray<int>(Array.Empty<int>()).Length, Is.Zero);
 
-            Assert.That(StringAlgorithm.ZAlgorithm<char>("").Length, Is.Zero);
+            Assert.That(StringAlgorithm.ZAlgorithm("".AsSpan()).Length, Is.Zero);
             Assert.That(StringAlgorithm.ZAlgorithm<int>(Array.Empty<int>()).Length, Is.Zero);
         }
 
@@ -46,7 +46,7 @@ namespace Algorithm.Tests
 
             Assert.That(sa.Length, Is.EqualTo(answer.Length));
             for (var i = 0; i < sa.Length; i++)
-                Assert.That(str.Substring(sa[i]), Is.EqualTo(answer[i]));
+                Assert.That(str[sa[i]..], Is.EqualTo(answer[i]));
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace Algorithm.Tests
             const string str = "aab";
             var sa = StringAlgorithm.SuffixArray(str);
             Assert.That(sa, Is.EqualTo(new[] { 0, 1, 2 }));
-            var lcp = StringAlgorithm.LongestCommonPrefixArray<char>(str, sa);
+            var lcp = StringAlgorithm.LongestCommonPrefixArray(str.AsSpan(), sa);
             Assert.That(lcp, Is.EqualTo(new[] { 1, 0 }));
 
             Assert.That(StringAlgorithm.LongestCommonPrefixArray<int>(new[] { 0, 0, 1 }, sa), Is.EqualTo(lcp));
@@ -67,7 +67,7 @@ namespace Algorithm.Tests
         [Test]
         public void ZAlgorithmTest()
         {
-            Assert.That(StringAlgorithm.ZAlgorithm<char>("abab"), Is.EqualTo(new[] { 4, 0, 2, 0 }));
+            Assert.That(StringAlgorithm.ZAlgorithm("abab".AsSpan()), Is.EqualTo(new[] { 4, 0, 2, 0 }));
             Assert.That(StringAlgorithm.ZAlgorithm<int>(new[] { 1, 10, 1, 10 }), Is.EqualTo(new[] { 4, 0, 2, 0 }));
             Assert.That(StringAlgorithm.ZAlgorithm<int>(new[] { 0, 0, 0, 0, 0, 0, 0 }),
                 Is.EqualTo(ZAlgorithmNaive(new[] { 0, 0, 0, 0, 0, 0, 0 })));
@@ -77,18 +77,18 @@ namespace Algorithm.Tests
         public void SuffixArrayAllTest([Range(1, 100)] int n)
         {
             var s = Enumerable.Repeat(10, n).ToArray();
-            Assert.That(StringAlgorithm.SuffixArray(s), Is.EqualTo(SuffixArrayNaive(s)));
+            Assert.That(StringAlgorithm.SuffixArray<int>(s), Is.EqualTo(SuffixArrayNaive(s)));
             Assert.That(StringAlgorithm.SuffixArray(s, 10), Is.EqualTo(SuffixArrayNaive(s)));
             Assert.That(StringAlgorithm.SuffixArray(s, 12), Is.EqualTo(SuffixArrayNaive(s)));
 
             s = new int[n];
             for (var i = 0; i < n; i++) s[i] = i % 2;
-            Assert.That(StringAlgorithm.SuffixArray(s), Is.EqualTo(SuffixArrayNaive(s)));
+            Assert.That(StringAlgorithm.SuffixArray<int>(s), Is.EqualTo(SuffixArrayNaive(s)));
             Assert.That(StringAlgorithm.SuffixArray(s, 3), Is.EqualTo(SuffixArrayNaive(s)));
 
             s = new int[n];
             for (var i = 0; i < n; i++) s[i] = 1 - i % 2;
-            Assert.That(StringAlgorithm.SuffixArray(s), Is.EqualTo(SuffixArrayNaive(s)));
+            Assert.That(StringAlgorithm.SuffixArray<int>(s), Is.EqualTo(SuffixArrayNaive(s)));
             Assert.That(StringAlgorithm.SuffixArray(s, 3), Is.EqualTo(SuffixArrayNaive(s)));
         }
 
@@ -112,7 +112,7 @@ namespace Algorithm.Tests
                     }
 
                     var sa = SuffixArrayNaive(s);
-                    Assert.That(StringAlgorithm.SuffixArray(s), Is.EqualTo(sa));
+                    Assert.That(StringAlgorithm.SuffixArray<int>(s), Is.EqualTo(sa));
                     Assert.That(StringAlgorithm.SuffixArray(s, maxC), Is.EqualTo(sa));
                     Assert.That(StringAlgorithm.LongestCommonPrefixArray<int>(s, sa),
                         Is.EqualTo(LongestCommonPrefixArrayNaive(s, sa)));
