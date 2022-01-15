@@ -76,16 +76,16 @@ namespace Algorithm
 
         public static ModuloInteger Power(long value, long n)
         {
-            if (n < 0) throw new ArgumentException();
-            var ret = 1L;
+            if (n < 0) throw new ArgumentException(nameof(n));
+            var result = 1L;
             while (n > 0)
             {
-                if ((n & 1) > 0) ret = ret * value % Modulo;
+                if ((n & 1) > 0) result = result * value % Modulo;
                 value = value * value % Modulo;
                 n >>= 1;
             }
 
-            return ret;
+            return result;
         }
     }
 }
