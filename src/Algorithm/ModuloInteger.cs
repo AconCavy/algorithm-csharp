@@ -10,8 +10,18 @@ namespace Algorithm
         // The constant modulo will be recommended to use for performances in use cases.
         // public const long Modulo = 1000000007;
 
-        public ModuloInteger(int value) => Value = value % Modulo >= 0 ? value % Modulo : value % Modulo + Modulo;
-        public ModuloInteger(long value) => Value = value % Modulo >= 0 ? value % Modulo : value % Modulo + Modulo;
+        public ModuloInteger(int value)
+        {
+            Value = value % Modulo;
+            if (Value < 0) Value += Modulo;
+        }
+
+        public ModuloInteger(long value)
+        {
+            Value = value % Modulo;
+            if (Value < 0) Value += Modulo;
+        }
+
         public static implicit operator int(ModuloInteger mint) => (int)mint.Value;
         public static implicit operator long(ModuloInteger mint) => mint.Value;
         public static implicit operator ModuloInteger(int value) => new ModuloInteger(value);
