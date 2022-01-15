@@ -46,8 +46,8 @@ namespace Algorithm
         public static ModuloInteger operator *(long a, in ModuloInteger b) => a * b.Value;
         public static ModuloInteger operator /(in ModuloInteger a, long b) => a * Inverse(b);
         public static ModuloInteger operator /(long a, in ModuloInteger b) => a * b.Inverse();
-        public static bool operator ==(in ModuloInteger a, in ModuloInteger b) => a.Value == b.Value;
-        public static bool operator !=(in ModuloInteger a, in ModuloInteger b) => a.Value != b.Value;
+        public static bool operator ==(in ModuloInteger a, in ModuloInteger b) => a.Equals(b);
+        public static bool operator !=(in ModuloInteger a, in ModuloInteger b) => !a.Equals(b);
         public bool Equals(ModuloInteger other) => Value == other.Value;
         public override bool Equals(object obj) => obj is ModuloInteger other && Equals(other);
         public override int GetHashCode() => Value.GetHashCode();
