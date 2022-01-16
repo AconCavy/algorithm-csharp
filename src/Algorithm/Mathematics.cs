@@ -168,7 +168,10 @@ namespace Algorithm
             }
         }
 
-        public static long SafeModulo(long value, long modulo) =>
-            value % modulo < 0 ? value % modulo + modulo : value % modulo;
+        public static long SafeModulo(long value, long modulo)
+        {
+            var result = value % modulo;
+            return result < 0 ? result + modulo : result;
+        }
     }
 }
