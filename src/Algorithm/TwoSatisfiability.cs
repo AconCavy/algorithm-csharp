@@ -28,7 +28,7 @@ namespace Algorithm
 
         public bool IsSatisfiable()
         {
-            var (_, identities) = _scc.GetIds();
+            var (_, identities) = _scc.GetIDs();
             var ids = identities.ToArray();
             for (var i = 0; i < _length; i++)
             {
