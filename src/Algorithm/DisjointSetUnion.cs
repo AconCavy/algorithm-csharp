@@ -9,7 +9,7 @@ namespace Algorithm
         private readonly int _length;
         private readonly int[] _parentOrSize;
 
-        public DisjointSetUnion(int length = 0)
+        public DisjointSetUnion(int length)
         {
             if (length < 0) throw new ArgumentOutOfRangeException(nameof(length));
             _length = length;
@@ -49,11 +49,11 @@ namespace Algorithm
             return -_parentOrSize[LeaderOf(v)];
         }
 
-        public IEnumerable<IEnumerable<int>> GetGroups()
+        public IEnumerable<IReadOnlyCollection<int>> GetGroups()
         {
-            var ret = new List<int>[_length].Select(x => new List<int>()).ToArray();
-            for (var i = 0; i < _length; i++) ret[LeaderOf(i)].Add(i);
-            return ret.Where(x => x.Any());
+            var result = new List<int>[_length].Select(x => new List<int>()).ToArray();
+            for (var i = 0; i < _length; i++) result[LeaderOf(i)].Add(i);
+            return result.Where(x => x.Count > 0);
         }
     }
 }
