@@ -7,7 +7,7 @@ namespace Algorithm
         private readonly long[] _data;
         private readonly int _length;
 
-        public FenwickTree(int length = 0)
+        public FenwickTree(int length)
         {
             if (length < 0) throw new ArgumentOutOfRangeException(nameof(length));
             _length = length;
