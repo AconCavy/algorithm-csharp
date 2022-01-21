@@ -12,7 +12,7 @@ namespace Algorithm
         private readonly int _log;
         private readonly int[][] _parents;
         private readonly int _root;
-        private readonly List<(int, long)>[] _tree;
+        private readonly List<Edge>[] _tree;
 
         private bool _isUpdated;
 
@@ -25,15 +25,15 @@ namespace Algorithm
             _distances = new int[length];
             _costs = new long[length];
             _parents = new int[length][].Select(x => new int[_log]).ToArray();
-            _tree = new List<(int, long)>[length].Select(_ => new List<(int, long)>()).ToArray();
+            _tree = new List<Edge>[length].Select(_ => new List<Edge>()).ToArray();
         }
 
         public void AddEdge(int u, int v, long cost = 1)
         {
             if (u < 0 || _length <= u) throw new ArgumentOutOfRangeException(nameof(u));
             if (v < 0 || _length <= v) throw new ArgumentOutOfRangeException(nameof(v));
-            _tree[u].Add((v, cost));
-            _tree[v].Add((u, cost));
+            _tree[u].Add(new Edge(v, cost));
+            _tree[v].Add(new Edge(u, cost));
             _isUpdated = false;
         }
 
@@ -123,6 +123,14 @@ namespace Algorithm
                     _parents[v][i + 1] = parent == -1 ? -1 : _parents[parent][i];
                 }
             }
+        }
+
+        private readonly struct Edge
+        {
+            int To { get; }
+            long Cost { get; }
+            internal Edge(int to, long cost) => (To, Cost) = (to, cost);
+            internal void Deconstruct(out int to, out long cost) => (to, cost) = (To, Cost);
         }
     }
 }
