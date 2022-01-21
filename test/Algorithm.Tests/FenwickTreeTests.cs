@@ -8,14 +8,13 @@ namespace Algorithm.Tests
         [Test]
         public void InitializeTest()
         {
-            Assert.DoesNotThrow(() => _ = new FenwickTree());
             Assert.Throws<ArgumentOutOfRangeException>(() => _ = new FenwickTree(-1));
         }
 
         [Test]
         public void EmptyTest()
         {
-            var ft = new FenwickTree();
+            var ft = new FenwickTree(0);
             Assert.That(ft.Sum(0), Is.Zero);
             Assert.That(ft.Sum(0, 0), Is.Zero);
         }

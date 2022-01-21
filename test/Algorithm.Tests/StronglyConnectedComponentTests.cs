@@ -17,10 +17,10 @@ namespace Algorithm.Tests
         public void EmptyTest()
         {
             var scc0 = new StronglyConnectedComponent();
-            Assert.That(scc0.GetGraph().Count(), Is.Zero);
+            Assert.That(scc0.GetGraph().Count, Is.Zero);
 
             var scc1 = new StronglyConnectedComponent();
-            Assert.That(scc1.GetGraph().Count(), Is.Zero);
+            Assert.That(scc1.GetGraph().Count, Is.Zero);
         }
 
         [Test]
@@ -29,8 +29,8 @@ namespace Algorithm.Tests
             var scc = new StronglyConnectedComponent(2);
             scc.AddEdge(0, 1);
             scc.AddEdge(1, 0);
-            var graph = scc.GetGraph().ToArray();
-            Assert.That(graph.Length, Is.EqualTo(1));
+            var graph = scc.GetGraph();
+            Assert.That(graph.Count, Is.EqualTo(1));
         }
 
         [Test]
@@ -40,8 +40,8 @@ namespace Algorithm.Tests
             scc.AddEdge(0, 0);
             scc.AddEdge(0, 0);
             scc.AddEdge(1, 1);
-            var graph = scc.GetGraph().ToArray();
-            Assert.That(graph.Length, Is.EqualTo(2));
+            var graph = scc.GetGraph();
+            Assert.That(graph.Count, Is.EqualTo(2));
         }
 
         [TestCase(0, 10)]

@@ -5,8 +5,8 @@ namespace Algorithm
     public readonly struct ModuloInteger : IEquatable<ModuloInteger>
     {
         public long Value { get; }
-        public static long Modulo { get; set; } = 998244353;
         // The modulo will be used as an editable property.
+        public static long Modulo { get; set; } = 998244353;
         // The constant modulo will be recommended to use for performances in use cases.
         // public const long Modulo = 1000000007;
 
@@ -30,22 +30,6 @@ namespace Algorithm
         public static ModuloInteger operator -(ModuloInteger a, ModuloInteger b) => a.Value - b.Value;
         public static ModuloInteger operator *(ModuloInteger a, ModuloInteger b) => a.Value * b.Value;
         public static ModuloInteger operator /(ModuloInteger a, ModuloInteger b) => a * b.Inverse();
-        public static ModuloInteger operator +(ModuloInteger a, int b) => a.Value + b;
-        public static ModuloInteger operator +(int a, ModuloInteger b) => a + b.Value;
-        public static ModuloInteger operator -(ModuloInteger a, int b) => a.Value - b;
-        public static ModuloInteger operator -(int a, ModuloInteger b) => a - b.Value;
-        public static ModuloInteger operator *(ModuloInteger a, int b) => a.Value * b;
-        public static ModuloInteger operator *(int a, ModuloInteger b) => a * b.Value;
-        public static ModuloInteger operator /(ModuloInteger a, int b) => a * Inverse(b);
-        public static ModuloInteger operator /(int a, ModuloInteger b) => a * b.Inverse();
-        public static ModuloInteger operator +(ModuloInteger a, long b) => a.Value + b;
-        public static ModuloInteger operator +(long a, ModuloInteger b) => a + b.Value;
-        public static ModuloInteger operator -(ModuloInteger a, long b) => a.Value - b;
-        public static ModuloInteger operator -(long a, ModuloInteger b) => a - b.Value;
-        public static ModuloInteger operator *(ModuloInteger a, long b) => a.Value * b;
-        public static ModuloInteger operator *(long a, ModuloInteger b) => a * b.Value;
-        public static ModuloInteger operator /(ModuloInteger a, long b) => a * Inverse(b);
-        public static ModuloInteger operator /(long a, ModuloInteger b) => a * b.Inverse();
         public static bool operator ==(ModuloInteger a, ModuloInteger b) => a.Equals(b);
         public static bool operator !=(ModuloInteger a, ModuloInteger b) => !a.Equals(b);
         public bool Equals(ModuloInteger other) => Value == other.Value;

@@ -24,10 +24,10 @@ namespace Algorithm
             _edges.Add((from, new Edge(to)));
         }
 
-        public (int, IEnumerable<int>) GetIds()
+        public (int GroupCount, int[] IDs) GetIDs()
         {
             var g = new CompressedSparseRow<Edge>(_length, _edges);
-            var (nowOrd, groupNum) = (0, 0);
+            var (nowOrd, groupCount) = (0, 0);
             var visited = new Stack<int>(_length);
             var low = new int[_length];
             var ord = new int[_length];
@@ -57,28 +57,41 @@ namespace Algorithm
                 {
                     var u = visited.Pop();
                     ord[u] = _length;
-                    ids[u] = groupNum;
+                    ids[u] = groupCount;
                     if (u == v) break;
                 }
 
-                groupNum++;
+                groupCount++;
             }
 
             for (var i = 0; i < _length; i++)
+            {
                 if (ord[i] == -1)
                     Dfs(i);
+            }
 
-            for (var i = 0; i < _length; i++) ids[i] = groupNum - 1 - ids[i];
+            for (var i = 0; i < _length; i++)
+            {
+                ids[i] = groupCount - 1 - ids[i];
+            }
 
-            return (groupNum, ids);
+            return (groupCount, ids);
         }
 
-        public IEnumerable<IEnumerable<int>> GetGraph()
+        public IReadOnlyList<IReadOnlyList<int>> GetGraph()
         {
-            var (groupNum, identities) = GetIds();
-            var ids = identities.ToArray();
-            var groups = new List<int>[groupNum].Select(_ => new List<int>()).ToArray();
-            foreach (var (id, index) in ids.Select((x, i) => (x, i))) groups[id].Add(index);
+            var (groupCount, ids) = GetIDs();
+            var groups = new List<int>[groupCount];
+            for (var i = 0; i < groups.Length; i++)
+            {
+                groups[i] = new List<int>();
+            }
+
+            foreach (var (id, index) in ids.Select((x, i) => (x, i)))
+            {
+                groups[id].Add(index);
+            }
+
             return groups;
         }
 

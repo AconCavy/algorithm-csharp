@@ -8,7 +8,7 @@ namespace Algorithm
         private readonly int _length;
         private readonly StronglyConnectedComponent _scc;
 
-        public TwoSatisfiability(int length = 0)
+        public TwoSatisfiability(int length)
         {
             if (length < 0) throw new ArgumentOutOfRangeException(nameof(length));
             _length = length;
@@ -28,8 +28,7 @@ namespace Algorithm
 
         public bool IsSatisfiable()
         {
-            var (_, identities) = _scc.GetIds();
-            var ids = identities.ToArray();
+            var ids = _scc.GetIDs().IDs;
             for (var i = 0; i < _length; i++)
             {
                 if (ids[i * 2] == ids[i * 2 + 1]) return false;

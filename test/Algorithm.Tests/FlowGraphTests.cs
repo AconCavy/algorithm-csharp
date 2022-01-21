@@ -43,7 +43,7 @@ namespace Algorithm.Tests
             Assert.That(fg.GetEdge(0), Is.EqualTo(new FlowGraph.Edge(0, 1, 2, 1)));
             Assert.That(fg.GetEdge(1), Is.EqualTo(new FlowGraph.Edge(1, 2, 1, 1)));
 
-            var minCut = fg.MinCut(0).ToArray();
+            var minCut = fg.MinCut(0);
             Assert.That(minCut[0], Is.True);
             Assert.That(minCut[1], Is.True);
             Assert.That(minCut[2], Is.False);
@@ -68,7 +68,7 @@ namespace Algorithm.Tests
             Assert.That(fg.GetEdge(3), Is.EqualTo(new FlowGraph.Edge(0, 1, 4, 4)));
             Assert.That(fg.GetEdge(4), Is.EqualTo(new FlowGraph.Edge(0, 1, 5, 5)));
 
-            var minCut = fg.MinCut(0).ToArray();
+            var minCut = fg.MinCut(0);
             Assert.That(minCut[0], Is.True);
             Assert.That(minCut[1], Is.False);
         }
@@ -133,7 +133,7 @@ namespace Algorithm.Tests
 
                 var flow = fg.MaxFlow(s, t);
                 var dual = 0L;
-                var minCut = fg.MinCut(s).ToArray();
+                var minCut = fg.MinCut(s);
                 var flows = new long[n];
                 foreach (var edge in fg.GetEdges())
                 {

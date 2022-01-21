@@ -9,40 +9,51 @@ namespace Algorithm
     {
         private static ModuloInteger[] _sumE;
         private static ModuloInteger[] _sumIe;
-        private static long _modulo;
+        private static long _previousModulo;
 
-        public static IEnumerable<ModuloInteger> Execute(IEnumerable<ModuloInteger> source1,
-            IEnumerable<ModuloInteger> source2)
+        public static ModuloInteger[] Execute(IEnumerable<ModuloInteger> source1, IEnumerable<ModuloInteger> source2)
         {
             if (source1 is null) throw new ArgumentNullException(nameof(source1));
             if (source2 is null) throw new ArgumentNullException(nameof(source2));
-            if (!source1.Any() || !source2.Any()) return Array.Empty<ModuloInteger>();
+
             var (a, b) = (source1.ToArray(), source2.ToArray());
+            if (a.Length == 0 || b.Length == 0) return Array.Empty<ModuloInteger>();
             if (Math.Min(a.Length, b.Length) <= 60) return Naive(a, b);
 
             var length = a.Length + b.Length - 1;
             var z = 1 << CeilLog2(length);
+            if (ModuloInteger.Modulo != _previousModulo) Initialize();
             Array.Resize(ref a, z);
             Butterfly(a);
             Array.Resize(ref b, z);
             Butterfly(b);
-            var ret = new ModuloInteger[z];
-            for (var i = 0; i < z; i++) ret[i] = a[i] * b[i];
-            ButterflyInverse(ret);
-            Array.Resize(ref ret, length);
+            var result = new ModuloInteger[z];
+            for (var i = 0; i < z; i++)
+            {
+                result[i] = a[i] * b[i];
+            }
+
+            ButterflyInverse(result);
+            Array.Resize(ref result, length);
             var iz = ModuloInteger.Inverse(z);
-            return ret.Select(x => x * iz);
+            for (var i = 0; i < result.Length; i++)
+            {
+                result[i] *= iz;
+            }
+
+            return result;
         }
 
-        public static IEnumerable<long> Execute(IEnumerable<long> source1, IEnumerable<long> source2)
+        public static long[] Execute(IEnumerable<long> source1, IEnumerable<long> source2)
         {
             if (source1 is null) throw new ArgumentNullException(nameof(source1));
             if (source2 is null) throw new ArgumentNullException(nameof(source2));
-            if (!source1.Any() || !source2.Any()) return Array.Empty<long>();
+
             var (a, b) = (source1.ToArray(), source2.ToArray());
+            if (a.Length == 0 || b.Length == 0) return Array.Empty<long>();
             if (Math.Min(a.Length, b.Length) <= 60) return Naive(a, b);
 
-            var ret = new long[a.Length + b.Length - 1];
+            var result = new long[a.Length + b.Length - 1];
             unchecked
             {
                 const long mod1 = 754974721;
@@ -58,12 +69,12 @@ namespace Algorithm
                 var i3 = (ulong)Mathematics.InverseGreatestCommonDivisor(m12, mod3).im;
 
                 ModuloInteger.Modulo = mod1;
-                var c1 = Execute(a.Select(x => (ModuloInteger)x), b.Select(x => (ModuloInteger)x)).ToArray();
+                var c1 = Execute(a.Select(x => (ModuloInteger)x), b.Select(x => (ModuloInteger)x));
                 ModuloInteger.Modulo = mod2;
-                var c2 = Execute(a.Select(x => (ModuloInteger)x), b.Select(x => (ModuloInteger)x)).ToArray();
+                var c2 = Execute(a.Select(x => (ModuloInteger)x), b.Select(x => (ModuloInteger)x));
                 ModuloInteger.Modulo = mod3;
-                var c3 = Execute(a.Select(x => (ModuloInteger)x), b.Select(x => (ModuloInteger)x)).ToArray();
-                for (var i = 0; i < ret.Length; i++)
+                var c3 = Execute(a.Select(x => (ModuloInteger)x), b.Select(x => (ModuloInteger)x));
+                for (var i = 0; i < result.Length; i++)
                 {
                     var x = 0UL;
                     x += (ulong)c1[i].Value * i1 % mod1 * m23;
@@ -74,22 +85,22 @@ namespace Algorithm
                     if (diff < 0) diff += mod1;
                     var offset = new[] { 0UL, 0UL, m123, m123 * 2, m123 * 3 };
                     x -= offset[diff % 5];
-                    ret[i] = (long)x;
+                    result[i] = (long)x;
                 }
             }
 
-            return ret;
+            return result;
         }
 
         private static void Initialize()
         {
-            _modulo = ModuloInteger.Modulo;
+            _previousModulo = ModuloInteger.Modulo;
             _sumE = new ModuloInteger[30];
             _sumIe = new ModuloInteger[30];
             var es = new ModuloInteger[30];
             var ies = new ModuloInteger[30];
-            var bit = BitScanForward(_modulo - 1);
-            var e = ModuloInteger.Power(Mathematics.PrimitiveRoot(_modulo), (_modulo - 1) >> bit);
+            var bit = BitScanForward(_previousModulo - 1);
+            var e = ModuloInteger.Power(Mathematics.PrimitiveRoot(_previousModulo), (_previousModulo - 1) >> bit);
             var ie = e.Inverse();
             for (var i = bit; i >= 2; i--)
             {
@@ -110,11 +121,9 @@ namespace Algorithm
             }
         }
 
-        private static void Butterfly(ModuloInteger[] items)
+        private static void Butterfly(Span<ModuloInteger> items)
         {
             var h = CeilLog2(items.Length);
-            if (ModuloInteger.Modulo != _modulo) Initialize();
-
             for (var ph = 1; ph <= h; ph++)
             {
                 var w = 1 << (ph - 1);
@@ -136,11 +145,9 @@ namespace Algorithm
             }
         }
 
-        private static void ButterflyInverse(ModuloInteger[] items)
+        private static void ButterflyInverse(Span<ModuloInteger> items)
         {
             var h = CeilLog2(items.Length);
-            if (ModuloInteger.Modulo != _modulo) Initialize();
-
             for (var ph = h; ph >= 1; ph--)
             {
                 var w = 1 << (ph - 1);
@@ -162,24 +169,34 @@ namespace Algorithm
             }
         }
 
-        private static IEnumerable<ModuloInteger> Naive(ModuloInteger[] source1, ModuloInteger[] source2)
+        private static ModuloInteger[] Naive(ReadOnlySpan<ModuloInteger> source1, ReadOnlySpan<ModuloInteger> source2)
         {
             var length = source1.Length + source2.Length - 1;
-            var ret = length < 1024 ? stackalloc ModuloInteger[length] : new ModuloInteger[length];
+            var result = new ModuloInteger[length];
             for (var i = 0; i < source1.Length; i++)
+            {
                 for (var j = 0; j < source2.Length; j++)
-                    ret[i + j] += source1[i] * source2[j];
-            return ret.ToArray();
+                {
+                    result[i + j] += source1[i] * source2[j];
+                }
+            }
+
+            return result;
         }
 
-        private static IEnumerable<long> Naive(long[] source1, long[] source2)
+        private static long[] Naive(ReadOnlySpan<long> source1, ReadOnlySpan<long> source2)
         {
             var length = source1.Length + source2.Length - 1;
-            var ret = length < 1024 ? stackalloc long[length] : new long[length];
+            var result = new long[length];
             for (var i = 0; i < source1.Length; i++)
+            {
                 for (var j = 0; j < source2.Length; j++)
-                    ret[i + j] += source1[i] * source2[j];
-            return ret.ToArray();
+                {
+                    result[i + j] += source1[i] * source2[j];
+                }
+            }
+
+            return result;
         }
 
         private static int BitScanForward(long n) => n == 0 ? 0 : BitOperations.TrailingZeroCount(n);

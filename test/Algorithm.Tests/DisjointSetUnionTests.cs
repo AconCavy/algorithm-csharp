@@ -9,7 +9,6 @@ namespace Algorithm.Tests
         [Test]
         public void InitializeTest()
         {
-            Assert.DoesNotThrow(() => _ = new DisjointSetUnion());
             Assert.DoesNotThrow(() => _ = new DisjointSetUnion(2));
             Assert.Throws<ArgumentOutOfRangeException>(() => _ = new DisjointSetUnion(-1));
         }
@@ -33,7 +32,7 @@ namespace Algorithm.Tests
             for (var i = 0; i < n - 1; i++)
                 dsu.Merge(i, i + 1);
             Assert.That(dsu.SizeOf(0), Is.EqualTo(n));
-            Assert.That(dsu.GetGroups().Count(), Is.EqualTo(1));
+            Assert.That(dsu.GetGroups().Count, Is.EqualTo(1));
         }
 
         [Test]
@@ -44,7 +43,7 @@ namespace Algorithm.Tests
             for (var i = n - 2; i >= 0; i--)
                 dsu.Merge(i, i + 1);
             Assert.That(dsu.SizeOf(0), Is.EqualTo(n));
-            Assert.That(dsu.GetGroups().Count(), Is.EqualTo(1));
+            Assert.That(dsu.GetGroups().Count, Is.EqualTo(1));
         }
 
         [TestCase(-1, 1)]
