@@ -9,7 +9,6 @@ namespace Algorithm.Tests
         [Test]
         public void InitializeTest()
         {
-            Assert.DoesNotThrow(() => _ = new TwoSatisfiability());
             Assert.DoesNotThrow(() => _ = new TwoSatisfiability(2));
             Assert.Throws<ArgumentOutOfRangeException>(() => _ = new TwoSatisfiability(-1));
         }
@@ -17,7 +16,7 @@ namespace Algorithm.Tests
         [Test]
         public void EmptyTest()
         {
-            var ts = new TwoSatisfiability();
+            var ts = new TwoSatisfiability(0);
             Assert.That(new bool[] { }, Is.EqualTo(ts.Answer));
         }
 
