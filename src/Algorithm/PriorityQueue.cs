@@ -9,19 +9,22 @@ namespace Algorithm
         private readonly Comparison<T> _comparison;
         private readonly List<T> _heap;
 
-        public PriorityQueue(IComparer<T> comparer) : this(null, comparer) { }
+        public PriorityQueue(IEnumerable<T> items, IComparer<T> comparer = null) : this(comparer)
+        {
+            foreach (var item in items) Enqueue(item);
+        }
 
-        public PriorityQueue(Comparison<T> comparison) : this(null, comparison) { }
+        public PriorityQueue(IEnumerable<T> items, Comparison<T> comparison) : this(comparison)
+        {
+            foreach (var item in items) Enqueue(item);
+        }
 
-        public PriorityQueue(IEnumerable<T> items = null, IComparer<T> comparer = null)
-            : this(items, (comparer ?? Comparer<T>.Default).Compare) { }
+        public PriorityQueue(IComparer<T> comparer = null) : this((comparer ?? Comparer<T>.Default).Compare) { }
 
-        public PriorityQueue(IEnumerable<T> items, Comparison<T> comparison)
+        public PriorityQueue(Comparison<T> comparison)
         {
             _heap = new List<T>();
             _comparison = comparison;
-            if (items == null) return;
-            foreach (var item in items) Enqueue(item);
         }
 
         public int Count => _heap.Count;
@@ -46,7 +49,7 @@ namespace Algorithm
         public T Dequeue()
         {
             if (Count == 0) throw new InvalidOperationException();
-            var ret = _heap[0];
+            var result = _heap[0];
             _heap[0] = _heap[Count - 1];
             _heap.RemoveAt(Count - 1);
             var parent = 0;
@@ -61,7 +64,7 @@ namespace Algorithm
                 parent = left;
             }
 
-            return ret;
+            return result;
         }
 
         public T Peek()
