@@ -74,7 +74,7 @@ namespace Algorithm
                 depth[s] = 0;
                 queue.Clear();
                 queue.Enqueue(s);
-                while (queue.Any())
+                while (queue.Count > 0)
                 {
                     var v = queue.Dequeue();
                     foreach (var edge in _edges[v].Where(edge => edge.Capacity != 0 && depth[edge.To] < 0))
@@ -89,24 +89,24 @@ namespace Algorithm
             long Dfs(int v, long up)
             {
                 if (v == s) return up;
-                var ret = 0L;
+                var result = 0L;
                 var dv = depth[v];
                 for (var i = iter[v]; i < _edges[v].Count; i++)
                 {
                     var e = _edges[v][i];
                     if (dv <= depth[e.To] || _edges[e.To][e.Rev].Capacity == 0) continue;
-                    var d = Dfs(e.To, Math.Min(up - ret, _edges[e.To][e.Rev].Capacity));
+                    var d = Dfs(e.To, Math.Min(up - result, _edges[e.To][e.Rev].Capacity));
                     if (d <= 0) continue;
                     e = _edges[v][i];
                     _edges[v][i] = new InternalEdge(e.To, e.Rev, e.Capacity + d, e.Cost);
                     var re = _edges[e.To][e.Rev];
                     _edges[e.To][e.Rev] = new InternalEdge(re.To, re.Rev, re.Capacity - d, re.Cost);
-                    ret += d;
-                    if (ret == up) return ret;
+                    result += d;
+                    if (result == up) return result;
                 }
 
                 depth[v] = _length;
-                return ret;
+                return result;
             }
 
             var flow = 0L;
@@ -123,7 +123,7 @@ namespace Algorithm
             return flow;
         }
 
-        public IEnumerable<bool> MinCut(int s)
+        public bool[] MinCut(int s)
         {
             var visited = new bool[_length];
             var queue = new Queue<int>();
@@ -198,8 +198,8 @@ namespace Algorithm
             }
 
             var (flow, cost, prev) = (0L, 0L, -1L);
-            var ret = new Stack<(long, long)>();
-            ret.Push((flow, cost));
+            var result = new Stack<(long, long)>();
+            result.Push((flow, cost));
             while (flow < flowLimit && Bfs())
             {
                 var c = flowLimit - flow;
@@ -216,12 +216,12 @@ namespace Algorithm
                 var d = -dual[s];
                 flow += c;
                 cost += c * d;
-                if (prev == d) ret.Pop();
-                ret.Push((flow, cost));
+                if (prev == d) result.Pop();
+                result.Push((flow, cost));
                 prev = d;
             }
 
-            return ret.Reverse();
+            return result.Reverse();
         }
 
         public readonly struct Edge
