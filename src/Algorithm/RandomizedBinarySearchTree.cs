@@ -7,8 +7,6 @@ namespace Algorithm
     public class RandomizedBinarySearchTree<T> : IReadOnlyCollection<T>
     {
         private readonly Comparison<T> _comparison;
-        private readonly Func<T, T, bool> _lowerBound;
-        private readonly Func<T, T, bool> _upperBound;
         private readonly Random _random;
 
         private Node _root;
@@ -23,8 +21,6 @@ namespace Algorithm
         public RandomizedBinarySearchTree(Comparison<T> comparison, int seed = 0)
         {
             _comparison = comparison;
-            _lowerBound = (x, y) => _comparison(x, y) >= 0;
-            _upperBound = (x, y) => _comparison(x, y) > 0;
             _random = new Random(seed);
         }
 
@@ -76,10 +72,10 @@ namespace Algorithm
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public int UpperBound(T value) => CommonBound(value, _upperBound);
-        public int LowerBound(T value) => CommonBound(value, _lowerBound);
+        public int UpperBound(T value) => Bound(value, (x, y) => _comparison(x, y) > 0);
+        public int LowerBound(T value) => Bound(value, (x, y) => _comparison(x, y) >= 0);
 
-        public int CommonBound(T value, Func<T, T, bool> compare)
+        public int Bound(T value, Func<T, T, bool> compare)
         {
             var node = _root;
             if (node is null) return -1;
