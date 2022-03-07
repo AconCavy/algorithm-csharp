@@ -14,13 +14,13 @@ namespace Algorithm
             _data = new long[length];
         }
 
-        public void Add(int index, long item)
+        public void Add(int index, long value)
         {
             if (index < 0 || _length <= index) throw new ArgumentOutOfRangeException(nameof(index));
             index++;
             while (index <= _length)
             {
-                _data[index - 1] += item;
+                _data[index - 1] += value;
                 index += index & -index;
             }
         }
@@ -44,27 +44,24 @@ namespace Algorithm
             return Sum(right) - Sum(left);
         }
 
-        public int LowerBound(long item) => CommonBound(item, LessThanOrEqual);
+        public int LowerBound(long value) => Bound(value, (x, y) => x <= y);
 
-        public int UpperBound(long item) => CommonBound(item, LessThan);
+        public int UpperBound(long value) => Bound(value, (x, y) => x < y);
 
-        private int CommonBound(long item, Func<long, long, bool> compare)
+        private int Bound(long value, Func<long, long, bool> compare)
         {
-            if (compare(item, _data[0])) return 0;
+            if (compare(value, _data[0])) return 0;
             var x = 0;
             var r = 1;
             while (r < _length) r <<= 1;
             for (var k = r; k > 0; k >>= 1)
             {
-                if (x + k - 1 >= _length || compare(item, _data[x + k - 1])) continue;
-                item -= _data[x + k - 1];
+                if (x + k - 1 >= _length || compare(value, _data[x + k - 1])) continue;
+                value -= _data[x + k - 1];
                 x += k;
             }
 
             return x;
         }
-
-        private static bool LessThanOrEqual(long x, long y) => x <= y;
-        private static bool LessThan(long x, long y) => x < y;
     }
 }
