@@ -34,27 +34,17 @@ namespace Algorithm
             else InsertAt(LowerBound(value), value);
         }
 
-        public void InsertAt(int index, T value)
+        public bool Remove(T value)
         {
-            var (l, r) = Split(_root, index);
-            _root = Merge(Merge(l, new Node(value)), r);
-        }
-
-        public void Erase(T value)
-        {
-            EraseAt(LowerBound(value));
-        }
-
-        public void EraseAt(int index)
-        {
-            var (l, r1) = Split(_root, index);
-            var (_, r2) = Split(r1, 1);
-            _root = Merge(l, r2);
+            var index = LowerBound(value);
+            if (index < 0) return false;
+            RemoveAt(index);
+            return true;
         }
 
         public T ElementAt(int index)
         {
-            if (index < 0 || Count <= index) throw new ArgumentNullException(nameof(index));
+            if (index < 0 || Count <= index) throw new ArgumentOutOfRangeException(nameof(index));
             var node = _root;
             var idx = CountOf(node) - CountOf(node.R) - 1;
             while (node is { })
@@ -114,6 +104,19 @@ namespace Algorithm
         }
 
         private double GetProbability() => _random.NextDouble();
+
+        private void InsertAt(int index, T value)
+        {
+            var (l, r) = Split(_root, index);
+            _root = Merge(Merge(l, new Node(value)), r);
+        }
+
+        private void RemoveAt(int index)
+        {
+            var (l, r1) = Split(_root, index);
+            var (_, r2) = Split(r1, 1);
+            _root = Merge(l, r2);
+        }
 
         private Node Merge(Node l, Node r)
         {
