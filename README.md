@@ -24,6 +24,7 @@ The library is based on [ac-library](https://github.com/atcoder/ac-library).
 - FenwickTree2D
 - LowestCommonAncestor
 - PriorityQueue
+- RandomizedBinarySearchTree
 
 ## Tool
 
