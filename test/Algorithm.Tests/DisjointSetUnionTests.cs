@@ -11,6 +11,8 @@ namespace Algorithm.Tests
         {
             Assert.DoesNotThrow(() => _ = new DisjointSetUnion(2));
             Assert.Throws<ArgumentOutOfRangeException>(() => _ = new DisjointSetUnion(-1));
+            Assert.That(new DisjointSetUnion(0).Length, Is.Zero);
+            Assert.That(new DisjointSetUnion(10).Length, Is.EqualTo(10));
         }
 
         [Test]
