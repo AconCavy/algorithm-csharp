@@ -9,8 +9,11 @@ namespace Algorithm.Tests
         [Test]
         public void InitializeTest()
         {
+            Assert.DoesNotThrow(() => _ = new TwoSatisfiability(0));
             Assert.DoesNotThrow(() => _ = new TwoSatisfiability(2));
             Assert.Throws<ArgumentOutOfRangeException>(() => _ = new TwoSatisfiability(-1));
+            Assert.That(new StronglyConnectedComponent(0).Length, Is.Zero);
+            Assert.That(new StronglyConnectedComponent(2).Length, Is.EqualTo(2));
         }
 
         [Test]
