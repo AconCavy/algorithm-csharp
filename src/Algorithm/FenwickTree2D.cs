@@ -4,46 +4,56 @@ namespace Algorithm
 {
     public class FenwickTree2D
     {
-        private readonly long[,] _data;
-        private readonly int _height;
-        private readonly int _width;
+        public int Height { get; }
+        public int Width { get; }
 
-        public FenwickTree2D(int h, int w)
+        private readonly long[] _data;
+
+        public FenwickTree2D(int height, int width)
         {
-            if (h <= 0) throw new ArgumentOutOfRangeException(nameof(h));
-            if (w <= 0) throw new ArgumentOutOfRangeException(nameof(w));
-            _height = h;
-            _width = w;
-            _data = new long[_height, _width];
+            if (height < 0) throw new ArgumentOutOfRangeException(nameof(height));
+            if (width < 0) throw new ArgumentOutOfRangeException(nameof(width));
+            Height = height;
+            Width = width;
+            _data = new long[Height * Width];
         }
 
-        public void Add(int h, int w, long value)
+        public void Add(int height, int width, long value)
         {
-            if (h < 0 || _height <= h) throw new ArgumentOutOfRangeException(nameof(h));
-            if (w < 0 || _width <= w) throw new ArgumentOutOfRangeException(nameof(w));
-            for (var i = h + 1; i <= _height; i += i & -i)
-                for (var j = w + 1; j <= _width; j += j & -j)
-                    _data[i - 1, j - 1] += value;
+            if (height < 0 || Height <= height) throw new ArgumentOutOfRangeException(nameof(height));
+            if (width < 0 || Width <= width) throw new ArgumentOutOfRangeException(nameof(width));
+            for (var i = height + 1; i <= Height; i += i & -i)
+            {
+                for (var j = width + 1; j <= Width; j += j & -j)
+                {
+                    _data[(i - 1) * Width + (j - 1)] += value;
+                }
+            }
         }
 
-        public long Sum(int h, int w)
+        public long Sum(int height, int width)
         {
-            if (h < 0 || _height < h) throw new ArgumentOutOfRangeException(nameof(h));
-            if (w < 0 || _width < w) throw new ArgumentOutOfRangeException(nameof(w));
+            if (height < 0 || Height < height) throw new ArgumentOutOfRangeException(nameof(height));
+            if (width < 0 || Width < width) throw new ArgumentOutOfRangeException(nameof(width));
             var sum = 0L;
-            for (var i = h; i > 0; i -= i & -i)
-                for (var j = w; j > 0; j -= j & -j)
-                    sum += _data[i - 1, j - 1];
+            for (var i = height; i > 0; i -= i & -i)
+            {
+                for (var j = width; j > 0; j -= j & -j)
+                {
+                    sum += _data[(i - 1) * Width + (j - 1)];
+                }
+            }
+
             return sum;
         }
 
-        public long Sum(int h1, int w1, int h2, int w2)
+        public long Sum(int height1, int width1, int height2, int width2)
         {
-            if (h1 < 0 || _height < h1) throw new ArgumentOutOfRangeException(nameof(h1));
-            if (w1 < 0 || _width < w1) throw new ArgumentOutOfRangeException(nameof(w1));
-            if (h2 < 0 || _height < h2) throw new ArgumentOutOfRangeException(nameof(h2));
-            if (w2 < 0 || _width < w2) throw new ArgumentOutOfRangeException(nameof(w2));
-            return Sum(h1, w1) + Sum(h2, w2) - Sum(h2, w1) - Sum(h1, w2);
+            if (height1 < 0 || Height < height1) throw new ArgumentOutOfRangeException(nameof(height1));
+            if (width1 < 0 || Width < width1) throw new ArgumentOutOfRangeException(nameof(width1));
+            if (height2 < 0 || Height < height2) throw new ArgumentOutOfRangeException(nameof(height2));
+            if (width2 < 0 || Width < width2) throw new ArgumentOutOfRangeException(nameof(width2));
+            return Sum(height1, width1) + Sum(height2, width2) - Sum(height2, width1) - Sum(height1, width2);
         }
     }
 }

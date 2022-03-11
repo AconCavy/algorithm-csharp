@@ -9,9 +9,11 @@ namespace Algorithm.Tests
         [Test]
         public void InitializeTest()
         {
-            Assert.DoesNotThrow(() => _ = new FlowGraph());
+            Assert.DoesNotThrow(() => _ = new FlowGraph(0));
             Assert.DoesNotThrow(() => _ = new FlowGraph(10));
             Assert.Throws<ArgumentOutOfRangeException>(() => _ = new FlowGraph(-1));
+            Assert.That(new FlowGraph(0).Length, Is.Zero);
+            Assert.That(new FlowGraph(10).Length, Is.EqualTo(10));
         }
 
         [Test]

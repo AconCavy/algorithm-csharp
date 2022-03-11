@@ -6,22 +6,23 @@ namespace Algorithm
 {
     public class FlowGraph
     {
+        public int Length { get; }
+
         private readonly List<InternalEdge>[] _edges;
-        private readonly int _length;
         private readonly List<(int X, int Y)> _positions;
 
-        public FlowGraph(int length = 0)
+        public FlowGraph(int length)
         {
             if (length < 0) throw new ArgumentOutOfRangeException(nameof(length));
-            _length = length;
+            Length = length;
             _edges = new List<InternalEdge>[length].Select(x => new List<InternalEdge>()).ToArray();
             _positions = new List<(int X, int Y)>();
         }
 
         public int AddEdge(int from, int to, long capacity, long cost = 0)
         {
-            if (from < 0 || _length <= from) throw new ArgumentOutOfRangeException(nameof(from));
-            if (to < 0 || _length <= to) throw new ArgumentOutOfRangeException(nameof(to));
+            if (from < 0 || Length <= from) throw new ArgumentOutOfRangeException(nameof(from));
+            if (to < 0 || Length <= to) throw new ArgumentOutOfRangeException(nameof(to));
             if (capacity < 0) throw new ArgumentException(nameof(capacity));
             if (cost < 0) throw new ArgumentException(nameof(cost));
             var count = _positions.Count;
@@ -61,12 +62,12 @@ namespace Algorithm
 
         public long MaxFlow(int s, int t, long flowLimit = long.MaxValue)
         {
-            if (s < 0 || _length <= s) throw new ArgumentOutOfRangeException(nameof(s));
-            if (t < 0 || _length <= t) throw new ArgumentOutOfRangeException(nameof(t));
+            if (s < 0 || Length <= s) throw new ArgumentOutOfRangeException(nameof(s));
+            if (t < 0 || Length <= t) throw new ArgumentOutOfRangeException(nameof(t));
             if (s == t) throw new ArgumentException();
             var queue = new Queue<int>();
-            var depth = new int[_length];
-            var iter = new int[_length];
+            var depth = new int[Length];
+            var iter = new int[Length];
 
             void Bfs()
             {
@@ -105,7 +106,7 @@ namespace Algorithm
                     if (result == up) return result;
                 }
 
-                depth[v] = _length;
+                depth[v] = Length;
                 return result;
             }
 
@@ -125,7 +126,7 @@ namespace Algorithm
 
         public bool[] MinCut(int s)
         {
-            var visited = new bool[_length];
+            var visited = new bool[Length];
             var queue = new Queue<int>();
             queue.Enqueue(s);
             while (queue.Any())
@@ -147,14 +148,14 @@ namespace Algorithm
 
         public IEnumerable<(long, long)> MinCostSlope(int s, int t, long flowLimit = long.MaxValue)
         {
-            if (s < 0 || _length <= s) throw new ArgumentOutOfRangeException(nameof(s));
-            if (t < 0 || _length <= t) throw new ArgumentOutOfRangeException(nameof(t));
+            if (s < 0 || Length <= s) throw new ArgumentOutOfRangeException(nameof(s));
+            if (t < 0 || Length <= t) throw new ArgumentOutOfRangeException(nameof(t));
             if (s == t) throw new ArgumentException();
-            var dist = new long[_length];
-            var dual = new long[_length];
-            var pv = new int[_length];
-            var pe = new int[_length];
-            var visited = new bool[_length];
+            var dist = new long[Length];
+            var dual = new long[Length];
+            var pv = new int[Length];
+            var pe = new int[Length];
+            var visited = new bool[Length];
 
             bool Bfs()
             {
@@ -188,7 +189,7 @@ namespace Algorithm
                 }
 
                 if (!visited[t]) return false;
-                for (var v = 0; v < _length; v++)
+                for (var v = 0; v < Length; v++)
                 {
                     if (!visited[v]) continue;
                     dual[v] -= dist[t] - dist[v];

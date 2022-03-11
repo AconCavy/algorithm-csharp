@@ -9,6 +9,8 @@ namespace Algorithm.Tests
         public void InitializeTest()
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => _ = new FenwickTree(-1));
+            Assert.That(new FenwickTree(0).Length, Is.Zero);
+            Assert.That(new FenwickTree(10).Length, Is.EqualTo(10));
         }
 
         [Test]
@@ -33,12 +35,14 @@ namespace Algorithm.Tests
             }
 
             for (var l = 0; l <= n; l++)
+            {
                 for (var r = l; r <= n; r++)
                 {
                     var expected = 0L;
                     for (var i = l; i < r; i++) expected += i * i;
                     Assert.That(ft.Sum(l, r), Is.EqualTo(expected));
                 }
+            }
         }
 
         [Test]
