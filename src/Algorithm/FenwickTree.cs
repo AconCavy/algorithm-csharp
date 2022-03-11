@@ -4,21 +4,22 @@ namespace Algorithm
 {
     public class FenwickTree
     {
+        public int Length { get; }
+
         private readonly long[] _data;
-        private readonly int _length;
 
         public FenwickTree(int length)
         {
             if (length < 0) throw new ArgumentOutOfRangeException(nameof(length));
-            _length = length;
+            Length = length;
             _data = new long[length];
         }
 
         public void Add(int index, long value)
         {
-            if (index < 0 || _length <= index) throw new ArgumentOutOfRangeException(nameof(index));
+            if (index < 0 || Length <= index) throw new ArgumentOutOfRangeException(nameof(index));
             index++;
-            while (index <= _length)
+            while (index <= Length)
             {
                 _data[index - 1] += value;
                 index += index & -index;
@@ -27,7 +28,7 @@ namespace Algorithm
 
         public long Sum(int length)
         {
-            if (length < 0 || _length < length) throw new ArgumentOutOfRangeException(nameof(length));
+            if (length < 0 || Length < length) throw new ArgumentOutOfRangeException(nameof(length));
             var s = 0L;
             while (length > 0)
             {
@@ -40,7 +41,7 @@ namespace Algorithm
 
         public long Sum(int left, int right)
         {
-            if (left < 0 || right < left || _length < right) throw new ArgumentOutOfRangeException();
+            if (left < 0 || right < left || Length < right) throw new ArgumentOutOfRangeException();
             return Sum(right) - Sum(left);
         }
 
@@ -53,10 +54,10 @@ namespace Algorithm
             if (compare(value, _data[0])) return 0;
             var x = 0;
             var r = 1;
-            while (r < _length) r <<= 1;
+            while (r < Length) r <<= 1;
             for (var k = r; k > 0; k >>= 1)
             {
-                if (x + k - 1 >= _length || compare(value, _data[x + k - 1])) continue;
+                if (x + k - 1 >= Length || compare(value, _data[x + k - 1])) continue;
                 value -= _data[x + k - 1];
                 x += k;
             }
