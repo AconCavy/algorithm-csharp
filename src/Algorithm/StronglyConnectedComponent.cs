@@ -6,33 +6,33 @@ namespace Algorithm
 {
     public class StronglyConnectedComponent
     {
+        public int Length { get; }
+
         private readonly List<(int, Edge)> _edges;
 
-        private readonly int _length;
-
-        public StronglyConnectedComponent(int length = 0)
+        public StronglyConnectedComponent(int length)
         {
             if (length < 0) throw new ArgumentOutOfRangeException(nameof(length));
-            _length = length;
+            Length = length;
             _edges = new List<(int, Edge)>();
         }
 
         public void AddEdge(int from, int to)
         {
-            if (from < 0 || _length <= from) throw new ArgumentOutOfRangeException(nameof(from));
-            if (to < 0 || _length <= to) throw new ArgumentOutOfRangeException(nameof(to));
+            if (from < 0 || Length <= from) throw new ArgumentOutOfRangeException(nameof(from));
+            if (to < 0 || Length <= to) throw new ArgumentOutOfRangeException(nameof(to));
             _edges.Add((from, new Edge(to)));
         }
 
         public (int GroupCount, int[] IDs) GetIDs()
         {
-            var g = new CompressedSparseRow<Edge>(_length, _edges);
+            var g = new CompressedSparseRow<Edge>(Length, _edges);
             var (nowOrd, groupCount) = (0, 0);
-            var visited = new Stack<int>(_length);
-            var low = new int[_length];
-            var ord = new int[_length];
+            var visited = new Stack<int>(Length);
+            var low = new int[Length];
+            var ord = new int[Length];
             Array.Fill(ord, -1);
-            var ids = new int[_length];
+            var ids = new int[Length];
 
             void Dfs(int v)
             {
@@ -56,7 +56,7 @@ namespace Algorithm
                 while (true)
                 {
                     var u = visited.Pop();
-                    ord[u] = _length;
+                    ord[u] = Length;
                     ids[u] = groupCount;
                     if (u == v) break;
                 }
@@ -64,13 +64,13 @@ namespace Algorithm
                 groupCount++;
             }
 
-            for (var i = 0; i < _length; i++)
+            for (var i = 0; i < Length; i++)
             {
                 if (ord[i] == -1)
                     Dfs(i);
             }
 
-            for (var i = 0; i < _length; i++)
+            for (var i = 0; i < Length; i++)
             {
                 ids[i] = groupCount - 1 - ids[i];
             }

@@ -9,17 +9,20 @@ namespace Algorithm.Tests
         [Test]
         public void InitializeTest()
         {
+            Assert.DoesNotThrow(() => _ = new StronglyConnectedComponent(0));
             Assert.DoesNotThrow(() => _ = new StronglyConnectedComponent(10));
             Assert.Throws<ArgumentOutOfRangeException>(() => _ = new StronglyConnectedComponent(-1));
+            Assert.That(new StronglyConnectedComponent(0).Length, Is.Zero);
+            Assert.That(new StronglyConnectedComponent(10).Length, Is.EqualTo(10));
         }
 
         [Test]
         public void EmptyTest()
         {
-            var scc0 = new StronglyConnectedComponent();
+            var scc0 = new StronglyConnectedComponent(0);
             Assert.That(scc0.GetGraph().Count, Is.Zero);
 
-            var scc1 = new StronglyConnectedComponent();
+            var scc1 = new StronglyConnectedComponent(0);
             Assert.That(scc1.GetGraph().Count, Is.Zero);
         }
 
