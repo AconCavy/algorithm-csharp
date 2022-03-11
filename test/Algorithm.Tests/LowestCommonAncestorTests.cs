@@ -8,8 +8,12 @@ namespace Algorithm.Tests
         [Test]
         public void InitializeTest()
         {
+            Assert.Throws<ArgumentOutOfRangeException>(() => _ = new LowestCommonAncestor(0));
+            Assert.Throws<ArgumentOutOfRangeException>(() => _ = new LowestCommonAncestor(1, -1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => _ = new LowestCommonAncestor(1, 1));
             Assert.DoesNotThrow(() => _ = new LowestCommonAncestor(1));
             Assert.DoesNotThrow(() => _ = new LowestCommonAncestor(2, 1));
+            Assert.That(new LowestCommonAncestor(1).Length, Is.EqualTo(1));
         }
 
         [TestCase(0, 1, 0)]
@@ -111,6 +115,7 @@ namespace Algorithm.Tests
         public void GetCostTest(int u, int v, int c)
         {
             const int n = 6;
+            const int m = 7;
             for (var i = 0; i < n; i++)
             {
                 var sut = new LowestCommonAncestor(n, i);
@@ -121,6 +126,7 @@ namespace Algorithm.Tests
                 sut.AddEdge(3, 5, 7);
 
                 Assert.That(sut.GetCost(u, v), Is.EqualTo(c));
+                Assert.That(sut.GetCost(u, v, m), Is.EqualTo(c % m));
                 Assert.That(sut.GetCost(v, u), Is.EqualTo(c));
             }
         }
@@ -164,6 +170,7 @@ namespace Algorithm.Tests
             Assert.Throws<ArgumentOutOfRangeException>(() => _ = sut.Find(u, v));
             Assert.Throws<ArgumentOutOfRangeException>(() => _ = sut.GetDistance(u, v));
             Assert.Throws<ArgumentOutOfRangeException>(() => _ = sut.GetCost(u, v));
+            Assert.Throws<ArgumentOutOfRangeException>(() => _ = sut.GetCost(u, v, 7));
             if (v < 0 || length <= v) return;
             Assert.Throws<ArgumentOutOfRangeException>(() => _ = sut.GetAncestor(u, 0));
         }
