@@ -192,7 +192,7 @@ namespace Algorithm.Tests
         {
             public Monoid MonoidIdentity { get; } = new Monoid("$");
 
-            public Monoid Operate(in Monoid a, in Monoid b)
+            public Monoid Operate(Monoid a, Monoid b)
             {
                 if (a.Value == "$") return b;
                 if (b.Value == "$") return a;

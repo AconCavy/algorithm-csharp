@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Algorithm
 {
-    public class SegmentTree<TMonoid> where TMonoid : struct
+    public class SegmentTree<TMonoid>
     {
         private readonly TMonoid[] _data;
         private readonly int _length;

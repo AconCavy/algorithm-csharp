@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Algorithm
 {
-    public class LazySegmentTree<TMonoid, TMap> where TMonoid : struct where TMap : struct
+    public class LazySegmentTree<TMonoid, TMap>
     {
         private readonly TMonoid[] _data;
         private readonly TMap[] _lazy;

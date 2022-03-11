@@ -233,13 +233,13 @@ namespace Algorithm.Tests
         {
             public int MonoidIdentity { get; } = -(int)1e9;
 
-            public int Operate(in int a, in int b) => Math.Max(a, b);
+            public int Operate(int a, int b) => Math.Max(a, b);
 
             public int MapIdentity { get; } = 0;
 
-            public int Map(in int f, in int x) => f + x;
+            public int Map(int f, int x) => f + x;
 
-            public int Compose(in int f, in int g) => f + g;
+            public int Compose(int f, int g) => f + g;
         }
 
         private class TimeManager
@@ -293,7 +293,7 @@ namespace Algorithm.Tests
         {
             public Monoid MonoidIdentity { get; } = new Monoid(-1, -1, -1);
 
-            public Monoid Operate(in Monoid a, in Monoid b)
+            public Monoid Operate(Monoid a, Monoid b)
             {
                 if (a.L == -1) return b;
                 if (b.L == -1) return a;
@@ -303,14 +303,14 @@ namespace Algorithm.Tests
 
             public Map MapIdentity { get; } = new Map(-1);
 
-            public Monoid Map(in Map f, in Monoid x)
+            public Monoid Map(Map f, Monoid x)
             {
                 if (f.NewTime == -1) return x;
                 if (x.Time >= f.NewTime) throw new ArgumentException();
                 return new Monoid(x.L, x.R, f.NewTime);
             }
 
-            public Map Compose(in Map f, in Map g)
+            public Map Compose(Map f, Map g)
             {
                 if (f.NewTime == -1) return g;
                 if (g.NewTime == -1) return f;

@@ -43,14 +43,14 @@ namespace Algorithm.Examples
         {
             public S MonoidIdentity { get; } = new S(0, 0, 0);
 
-            public S Operate(in S a, in S b) =>
+            public S Operate(S a, S b) =>
                 new S(a.Zero + b.Zero, a.One + b.One, a.Inversion + b.Inversion + a.One * b.Zero);
 
             public F MapIdentity { get; } = new F(false);
 
-            public S Map(in F f, in S x) => f.Flag ? new S(x.One, x.Zero, x.Zero * x.One - x.Inversion) : x;
+            public S Map(F f, S x) => f.Flag ? new S(x.One, x.Zero, x.Zero * x.One - x.Inversion) : x;
 
-            public F Compose(in F f, in F g) => new F(f.Flag && !g.Flag || !f.Flag && g.Flag);
+            public F Compose(F f, F g) => new F(f.Flag && !g.Flag || !f.Flag && g.Flag);
         }
     }
 }
