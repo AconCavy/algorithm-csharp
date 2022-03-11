@@ -1,57 +1,55 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Algorithm
 {
     public class SegmentTree<TMonoid>
     {
-        private readonly TMonoid[] _data;
-        private readonly int _length;
-        private readonly int _log;
-        private readonly TMonoid _monoidId;
+        public int Length { get; }
+
         private readonly IOracle<TMonoid> _oracle;
-        private readonly int _size;
+        private readonly TMonoid[] _data;
+        private readonly int _log;
+        private readonly int _dataSize;
+
+        public SegmentTree(IReadOnlyCollection<TMonoid> source, IOracle<TMonoid> oracle) : this(source.Count, oracle)
+        {
+            var idx = _dataSize;
+            foreach (var value in source) _data[idx++] = value;
+            for (var i = _dataSize - 1; i >= 1; i--) Update(i);
+        }
 
         public SegmentTree(int length, IOracle<TMonoid> oracle)
-            : this(Enumerable.Repeat(oracle.MonoidIdentity, length), oracle)
         {
-        }
-
-        public SegmentTree(IEnumerable<TMonoid> data, IOracle<TMonoid> oracle)
-        {
-            var d = data.ToArray();
-            _length = d.Length;
+            if (length < 0) throw new ArgumentOutOfRangeException(nameof(length));
+            Length = length;
             _oracle = oracle;
-            _monoidId = oracle.MonoidIdentity;
-            while (1 << _log < _length) _log++;
-            _size = 1 << _log;
-            _data = new TMonoid[_size << 1];
-            Array.Fill(_data, _monoidId);
-            d.CopyTo(_data, _size);
-            for (var i = _size - 1; i >= 1; i--) Update(i);
+            while (1 << _log < Length) _log++;
+            _dataSize = 1 << _log;
+            _data = new TMonoid[_dataSize << 1];
+            Array.Fill(_data, oracle.MonoidIdentity);
         }
 
-        public void Set(int index, TMonoid monoid)
+        public void Set(int index, TMonoid value)
         {
-            if (index < 0 || _length <= index) throw new ArgumentOutOfRangeException(nameof(index));
-            index += _size;
-            _data[index] = monoid;
+            if (index < 0 || Length <= index) throw new ArgumentOutOfRangeException(nameof(index));
+            index += _dataSize;
+            _data[index] = value;
             for (var i = 1; i <= _log; i++) Update(index >> i);
         }
 
         public TMonoid Get(int index)
         {
-            if (index < 0 || _length <= index) throw new ArgumentOutOfRangeException(nameof(index));
-            return _data[index + _size];
+            if (index < 0 || Length <= index) throw new ArgumentOutOfRangeException(nameof(index));
+            return _data[index + _dataSize];
         }
 
         public TMonoid Query(int left, int right)
         {
-            if (left < 0 || right < left || _length < right) throw new ArgumentOutOfRangeException();
-            var (sml, smr) = (_monoidId, _monoidId);
-            left += _size;
-            right += _size;
+            if (left < 0 || right < left || Length < right) throw new ArgumentOutOfRangeException();
+            var (sml, smr) = (_oracle.MonoidIdentity, _oracle.MonoidIdentity);
+            left += _dataSize;
+            right += _dataSize;
             while (left < right)
             {
                 if ((left & 1) == 1) sml = _oracle.Operate(sml, _data[left++]);
@@ -65,20 +63,20 @@ namespace Algorithm
 
         public TMonoid QueryToAll() => _data[1];
 
-        public int MaxRight(int left, Predicate<TMonoid> predicate)
+        public int MaxRight(int left, Func<TMonoid, bool> predicate)
         {
-            if (left < 0 || _length < left) throw new ArgumentOutOfRangeException(nameof(left));
-            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
-            if (!predicate(_monoidId)) throw new ArgumentException(nameof(predicate));
-            if (left == _length) return _length;
-            left += _size;
-            var sm = _monoidId;
+            if (left < 0 || Length < left) throw new ArgumentOutOfRangeException(nameof(left));
+            if (predicate is null) throw new ArgumentNullException(nameof(predicate));
+            if (!predicate(_oracle.MonoidIdentity)) throw new ArgumentException(nameof(predicate));
+            if (left == Length) return Length;
+            left += _dataSize;
+            var sm = _oracle.MonoidIdentity;
             do
             {
                 while ((left & 1) == 0) left >>= 1;
                 if (!predicate(_oracle.Operate(sm, _data[left])))
                 {
-                    while (left < _size)
+                    while (left < _dataSize)
                     {
                         left <<= 1;
                         var tmp = _oracle.Operate(sm, _data[left]);
@@ -87,31 +85,31 @@ namespace Algorithm
                         left++;
                     }
 
-                    return left - _size;
+                    return left - _dataSize;
                 }
 
                 sm = _oracle.Operate(sm, _data[left]);
                 left++;
             } while ((left & -left) != left);
 
-            return _length;
+            return Length;
         }
 
-        public int MinLeft(int right, Predicate<TMonoid> predicate)
+        public int MinLeft(int right, Func<TMonoid, bool> predicate)
         {
-            if (right < 0 || _length < right) throw new ArgumentOutOfRangeException(nameof(right));
-            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
-            if (!predicate(_monoidId)) throw new ArgumentException(nameof(predicate));
+            if (right < 0 || Length < right) throw new ArgumentOutOfRangeException(nameof(right));
+            if (predicate is null) throw new ArgumentNullException(nameof(predicate));
+            if (!predicate(_oracle.MonoidIdentity)) throw new ArgumentException(nameof(predicate));
             if (right == 0) return 0;
-            right += _size;
-            var sm = _monoidId;
+            right += _dataSize;
+            var sm = _oracle.MonoidIdentity;
             do
             {
                 right--;
                 while (right > 1 && (right & 1) == 1) right >>= 1;
                 if (!predicate(_oracle.Operate(_data[right], sm)))
                 {
-                    while (right < _size)
+                    while (right < _dataSize)
                     {
                         right = (right << 1) + 1;
                         var tmp = _oracle.Operate(_data[right], sm);
@@ -120,7 +118,7 @@ namespace Algorithm
                         right--;
                     }
 
-                    return right + 1 - _size;
+                    return right + 1 - _dataSize;
                 }
 
                 sm = _oracle.Operate(_data[right], sm);

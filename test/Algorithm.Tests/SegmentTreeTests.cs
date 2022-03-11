@@ -6,9 +6,13 @@ namespace Algorithm.Tests
     public class SegmentTreeTests
     {
         [Test]
-        public void InitializeTest([Values(0, 10)] int n)
+        public void InitializeTest()
         {
-            Assert.DoesNotThrow(() => _ = new SegmentTree<Monoid>(n, new Oracle()));
+            Assert.DoesNotThrow(() => _ = new SegmentTree<Monoid>(0, new Oracle()));
+            Assert.DoesNotThrow(() => _ = new SegmentTree<Monoid>(10, new Oracle()));
+            Assert.DoesNotThrow(() => _ = new SegmentTree<Monoid>(Array.Empty<Monoid>(), new Oracle()));
+            Assert.DoesNotThrow(() =>
+                _ = new SegmentTree<Monoid>(new[] { new Monoid("a"), new Monoid("b"), new Monoid("c") }, new Oracle()));
             Assert.Throws<ArgumentOutOfRangeException>(() => _ = new SegmentTree<Monoid>(-1, new Oracle()));
         }
 
@@ -17,9 +21,11 @@ namespace Algorithm.Tests
         {
             var oracle = new Oracle();
             var st = new SegmentTree<Monoid>(0, new Oracle());
+            Assert.That(st.Length, Is.Zero);
             Assert.That(st.QueryToAll(), Is.EqualTo(oracle.MonoidIdentity));
 
             st = new SegmentTree<Monoid>(new Monoid[] { }, new Oracle());
+            Assert.That(st.Length, Is.Zero);
             Assert.That(st.QueryToAll(), Is.EqualTo(oracle.MonoidIdentity));
         }
 
@@ -29,6 +35,7 @@ namespace Algorithm.Tests
             var oracle = new Oracle();
             var identity = oracle.MonoidIdentity;
             var st = new SegmentTree<Monoid>(1, oracle);
+            Assert.That(st.Length, Is.EqualTo(1));
             Assert.That(st.QueryToAll(), Is.EqualTo(identity));
             Assert.That(st.Get(0), Is.EqualTo(identity));
             Assert.That(st.Query(0, 1), Is.EqualTo(identity));
@@ -50,6 +57,7 @@ namespace Algorithm.Tests
 
             var oracle = new Oracle();
             var st = new SegmentTree<Monoid>(n, oracle);
+            Assert.That(st.Length, Is.EqualTo(n));
             var stn = new SegmentTreeNaive<Monoid>(n, oracle);
             for (var i = 0; i < n; i++)
             {
@@ -62,24 +70,24 @@ namespace Algorithm.Tests
                 Assert.That(st.Get(i), Is.EqualTo(stn.Get(i)));
 
             for (var l = 0; l <= n; l++)
-                for (var r = l; r <= n; r++)
-                    Assert.That(st.Query(l, r), Is.EqualTo(stn.Query(l, r)));
+            for (var r = l; r <= n; r++)
+                Assert.That(st.Query(l, r), Is.EqualTo(stn.Query(l, r)));
 
             for (var l = 0; l <= n; l++)
-                for (var r = l; r <= n; r++)
-                {
-                    y = st.Query(l, r).Value;
-                    Assert.That(st.MaxRight(l, SimpleQuery), Is.EqualTo(stn.MaxRight(l, SimpleQuery)));
-                    Assert.That(st.MaxRight(l, SimpleQuery), Is.EqualTo(stn.MaxRight(l, x => x.Value.Length <= y.Length)));
-                }
+            for (var r = l; r <= n; r++)
+            {
+                y = st.Query(l, r).Value;
+                Assert.That(st.MaxRight(l, SimpleQuery), Is.EqualTo(stn.MaxRight(l, SimpleQuery)));
+                Assert.That(st.MaxRight(l, SimpleQuery), Is.EqualTo(stn.MaxRight(l, x => x.Value.Length <= y.Length)));
+            }
 
             for (var r = 0; r <= n; r++)
-                for (var l = 0; l <= r; l++)
-                {
-                    y = st.Query(l, r).Value;
-                    Assert.That(st.MinLeft(r, SimpleQuery), Is.EqualTo(stn.MinLeft(r, SimpleQuery)));
-                    Assert.That(st.MinLeft(r, SimpleQuery), Is.EqualTo(stn.MinLeft(r, x => x.Value.Length <= y.Length)));
-                }
+            for (var l = 0; l <= r; l++)
+            {
+                y = st.Query(l, r).Value;
+                Assert.That(st.MinLeft(r, SimpleQuery), Is.EqualTo(stn.MinLeft(r, SimpleQuery)));
+                Assert.That(st.MinLeft(r, SimpleQuery), Is.EqualTo(stn.MinLeft(r, x => x.Value.Length <= y.Length)));
+            }
         }
 
         [Test]
