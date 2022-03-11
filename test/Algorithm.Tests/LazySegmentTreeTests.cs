@@ -7,24 +7,29 @@ namespace Algorithm.Tests
     public class LazySegmentTreeTests
     {
         [Test]
-        public void InitializeTest([Values(0, 10)] int n)
+        public void InitializeTest()
         {
-            Assert.DoesNotThrow(() => _ = new LazySegmentTree<int, int>(n, new SimpleOracle()));
-            Assert.DoesNotThrow(() => _ = new LazySegmentTree<int, int>(Enumerable.Range(1, n), new SimpleOracle()));
+            Assert.DoesNotThrow(() => _ = new LazySegmentTree<int, int>(0, new SimpleOracle()));
+            Assert.DoesNotThrow(() => _ = new LazySegmentTree<int, int>(10, new SimpleOracle()));
+            Assert.DoesNotThrow(() => _ = new LazySegmentTree<int, int>(Array.Empty<int>(), new SimpleOracle()));
+            Assert.DoesNotThrow(() => _ = new LazySegmentTree<int, int>(new int[10], new SimpleOracle()));
             Assert.Throws<ArgumentOutOfRangeException>(() => _ = new LazySegmentTree<int, int>(-1, new SimpleOracle()));
         }
 
         [Test]
-        public void ZeroTest([Values(0, 10)] int n)
+        public void NoEditTest([Values(0, 10)] int n)
         {
             var lst = new LazySegmentTree<int, int>(n, new SimpleOracle());
+            Assert.That(lst.Length, Is.EqualTo(n));
             Assert.That(lst.QueryToAll(), Is.EqualTo(-(int)1e9));
         }
 
         [Test]
         public void SimpleUsageTest()
         {
-            var lst = new LazySegmentTree<int, int>(new int[10], new SimpleOracle());
+            var n = 10;
+            var lst = new LazySegmentTree<int, int>(new int[n], new SimpleOracle());
+            Assert.That(lst.Length, Is.EqualTo(n));
             Assert.That(lst.QueryToAll(), Is.Zero);
             lst.Apply(0, 3, 5);
             Assert.That(lst.QueryToAll(), Is.EqualTo(5));
@@ -45,12 +50,14 @@ namespace Algorithm.Tests
             }
 
             for (var l = 0; l <= n; l++)
+            {
                 for (var r = l; r <= n; r++)
                 {
                     var e = -(int)1e9;
                     for (var i = l; i < r; i++) e = Math.Max(e, p[i]);
                     Assert.That(lst.Query(l, r), Is.EqualTo(e));
                 }
+            }
         }
 
         [Test]
@@ -233,13 +240,13 @@ namespace Algorithm.Tests
         {
             public int MonoidIdentity { get; } = -(int)1e9;
 
-            public int Operate(in int a, in int b) => Math.Max(a, b);
+            public int Operate(int a, int b) => Math.Max(a, b);
 
             public int MapIdentity { get; } = 0;
 
-            public int Map(in int f, in int x) => f + x;
+            public int Map(int f, int x) => f + x;
 
-            public int Compose(in int f, in int g) => f + g;
+            public int Compose(int f, int g) => f + g;
         }
 
         private class TimeManager
@@ -293,7 +300,7 @@ namespace Algorithm.Tests
         {
             public Monoid MonoidIdentity { get; } = new Monoid(-1, -1, -1);
 
-            public Monoid Operate(in Monoid a, in Monoid b)
+            public Monoid Operate(Monoid a, Monoid b)
             {
                 if (a.L == -1) return b;
                 if (b.L == -1) return a;
@@ -303,14 +310,14 @@ namespace Algorithm.Tests
 
             public Map MapIdentity { get; } = new Map(-1);
 
-            public Monoid Map(in Map f, in Monoid x)
+            public Monoid Map(Map f, Monoid x)
             {
                 if (f.NewTime == -1) return x;
                 if (x.Time >= f.NewTime) throw new ArgumentException();
                 return new Monoid(x.L, x.R, f.NewTime);
             }
 
-            public Map Compose(in Map f, in Map g)
+            public Map Compose(Map f, Map g)
             {
                 if (f.NewTime == -1) return g;
                 if (g.NewTime == -1) return f;

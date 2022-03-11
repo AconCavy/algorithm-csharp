@@ -1,15 +1,15 @@
 namespace Algorithm
 {
-    public interface IOracle<TMonoid> where TMonoid : struct
+    public interface IOracle<TMonoid>
     {
         TMonoid MonoidIdentity { get; }
-        TMonoid Operate(in TMonoid a, in TMonoid b);
+        TMonoid Operate(TMonoid a, TMonoid b);
     }
 
-    public interface IOracle<TMonoid, TMap> : IOracle<TMonoid> where TMap : struct where TMonoid : struct
+    public interface IOracle<TMonoid, TMap> : IOracle<TMonoid>
     {
         TMap MapIdentity { get; }
-        TMonoid Map(in TMap f, in TMonoid x);
-        TMap Compose(in TMap f, in TMap g);
+        TMonoid Map(TMap f, TMonoid x);
+        TMap Compose(TMap f, TMap g);
     }
 }

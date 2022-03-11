@@ -41,13 +41,13 @@ namespace Algorithm.Examples
         {
             public S MonoidIdentity { get; } = new S(0, 0);
 
-            public S Operate(in S a, in S b) => new S(a.A + b.A, a.Size + b.Size);
+            public S Operate(S a, S b) => new S(a.A + b.A, a.Size + b.Size);
 
             public F MapIdentity { get; } = new F(1, 0);
 
-            public S Map(in F f, in S x) => new S(f.A * x.A + f.B * x.Size, x.Size);
+            public S Map(F f, S x) => new S(f.A * x.A + f.B * x.Size, x.Size);
 
-            public F Compose(in F f, in F g) => new F(f.A * g.A, f.A * g.B + f.B);
+            public F Compose(F f, F g) => new F(f.A * g.A, f.A * g.B + f.B);
         }
     }
 }

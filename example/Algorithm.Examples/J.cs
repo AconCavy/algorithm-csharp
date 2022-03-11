@@ -43,7 +43,7 @@ namespace Algorithm.Examples
         {
             public S MonoidIdentity { get; } = new S(-1);
 
-            public S Operate(in S a, in S b) => new S(Math.Max(a.Value, b.Value));
+            public S Operate(S a, S b) => new S(Math.Max(a.Value, b.Value));
         }
     }
 }
