@@ -50,11 +50,13 @@ namespace Algorithm.Tests
             }
 
             for (var l = 0; l <= n; l++)
-            for (var r = l; r <= n; r++)
             {
-                var e = -(int)1e9;
-                for (var i = l; i < r; i++) e = Math.Max(e, p[i]);
-                Assert.That(lst.Query(l, r), Is.EqualTo(e));
+                for (var r = l; r <= n; r++)
+                {
+                    var e = -(int)1e9;
+                    for (var i = l; i < r; i++) e = Math.Max(e, p[i]);
+                    Assert.That(lst.Query(l, r), Is.EqualTo(e));
+                }
             }
         }
 
@@ -74,21 +76,21 @@ namespace Algorithm.Tests
                     switch (ty)
                     {
                         case 0:
-                        {
-                            var result = lst.Query(l, r);
-                            Assert.That(result.L, Is.EqualTo(l));
-                            Assert.That(result.R, Is.EqualTo(r));
-                            Assert.That(result.Time, Is.EqualTo(timeManager.Query(l, r)));
-                            break;
-                        }
+                            {
+                                var result = lst.Query(l, r);
+                                Assert.That(result.L, Is.EqualTo(l));
+                                Assert.That(result.R, Is.EqualTo(r));
+                                Assert.That(result.Time, Is.EqualTo(timeManager.Query(l, r)));
+                                break;
+                            }
                         case 1:
-                        {
-                            var result = lst.Get(l);
-                            Assert.That(result.L, Is.EqualTo(l));
-                            Assert.That(result.L + 1, Is.EqualTo(l + 1));
-                            Assert.That(result.Time, Is.EqualTo(timeManager.Query(l, l + 1)));
-                            break;
-                        }
+                            {
+                                var result = lst.Get(l);
+                                Assert.That(result.L, Is.EqualTo(l));
+                                Assert.That(result.L + 1, Is.EqualTo(l + 1));
+                                Assert.That(result.Time, Is.EqualTo(timeManager.Query(l, l + 1)));
+                                break;
+                            }
                         case 2:
                             now++;
                             lst.Apply(l, r, new Map(now));
