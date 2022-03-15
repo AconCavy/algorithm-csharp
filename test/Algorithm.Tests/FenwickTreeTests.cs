@@ -50,13 +50,12 @@ namespace Algorithm.Tests
         {
             var ft = new FenwickTree(n);
             for (var i = 0; i < n; i++) ft.Add(i, i * i);
-            var sum = new int[n];
-            for (var i = 1; i < n; i++) sum[i] = sum[i - 1] + i * i;
+            var sum = new int[n + 1];
+            for (var i = 0; i < n; i++) sum[i + 1] = sum[i] + i * i;
             for (var i = 0; i < n; i++)
             {
-                Assert.That(ft.LowerBound(sum[i]), Is.EqualTo(i));
-                Assert.That(ft.LowerBound(sum[i] + 1), Is.EqualTo(i + 1));
-                if (i >= 2) Assert.That(ft.LowerBound(sum[i] - 1), Is.EqualTo(i));
+                Assert.That(ft.LowerBound(sum[i + 1]), Is.EqualTo(i));
+                Assert.That(ft.LowerBound(sum[i + 1] + 1), Is.EqualTo(Math.Min(n, i + 1)));
             }
         }
 
@@ -65,13 +64,12 @@ namespace Algorithm.Tests
         {
             var ft = new FenwickTree(n);
             for (var i = 0; i < n; i++) ft.Add(i, i * i);
-            var sum = new int[n];
-            for (var i = 1; i < n; i++) sum[i] = sum[i - 1] + i * i;
+            var sum = new int[n + 1];
+            for (var i = 0; i < n; i++) sum[i + 1] = sum[i] + i * i;
             for (var i = 0; i < n; i++)
             {
-                Assert.That(ft.UpperBound(sum[i]), Is.EqualTo(i + 1));
-                if (i >= 2) Assert.That(ft.UpperBound(sum[i] + 1), Is.EqualTo(i + 1));
-                Assert.That(ft.UpperBound(sum[i] - 1), Is.EqualTo(i));
+                Assert.That(ft.UpperBound(sum[i + 1]), Is.EqualTo(Math.Min(n, i + 1)));
+                Assert.That(ft.UpperBound(sum[i + 1] - 1), Is.EqualTo(i));
             }
         }
 

@@ -51,7 +51,7 @@ namespace Algorithm
 
         private int Bound(long value, Func<long, long, bool> compare)
         {
-            if (compare(value, _data[0])) return 0;
+            if (Length == 0 || compare(value, _data[0])) return 0;
             var x = 0;
             var r = 1;
             while (r < Length) r <<= 1;
