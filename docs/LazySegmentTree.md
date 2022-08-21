@@ -1,13 +1,13 @@
 ﻿# LazySegmentTree
 
-The `LazySegmentTree` will be operated via an `IOracle<TMonoid, TMap>` interface.  
-The `IOracle<TMonoid, TMap>` interface should be implemented that meets the following requirements.
+The `LazySegmentTree` will be operated via an `IOracle<TMonoid, TMapping>` interface.  
+The `IOracle<TMonoid, TMapping>` interface should be implemented that meets the following requirements.
 
-- The monoid identity property `TMonoid MonoidIdentity`
+- The identity element property `TMonoid IdentityElement`
 - The binary operation `TMonoid Operate(TMonoid a, TMonoid b)`
-- The map identity property `TMonoid MonoidIdentity`
-- The function `TMonoid Map(TMap f, TMonoid x)` that returns `f(x)`
-- The function `TMap Compose(TMap f, TMap g)` that returns `f o g`
+- The identity mapping property `TMapping IdentityMapping`
+- The function `TMonoid Map(TMapping f, TMonoid x)` that returns `f(x)`
+- The function `TMapping Compose(TMapping f, TMapping g)` that returns `f o g`
 
 For example, [AtCoderLibrary Practice Contest Tasks-L](https://atcoder.jp/contests/practice2/tasks/practice2_l), the usage is:
 
@@ -28,11 +28,11 @@ public readonly struct F
 
 public class Oracle : IOracle<S, F>
 {
-    public S MonoidIdentity { get; } = new S(0, 0, 0);
+    public S IdentityElement { get; } = new S(0, 0, 0);
     public S Operate(S a, S b)
         => new S(a.Zero + b.Zero, a.One + b.One, a.Inversion + b.Inversion + a.One * b.Zero);
 
-    public F MapIdentity { get; } = new F(false);
+    public F IdentityMapping { get; } = new F(false);
     public S Map(F f, S x) => f.Flag ? new S(x.One, x.Zero, x.Zero * x.One - x.Inversion) : x;
     public F Compose(F f, F g) => new F(f.Flag && !g.Flag || !f.Flag && g.Flag);
 }
