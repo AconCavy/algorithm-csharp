@@ -6,10 +6,10 @@ namespace Algorithm
         TMonoid Operate(TMonoid a, TMonoid b);
     }
 
-    public interface IOracle<TMonoid, TMap> : IOracle<TMonoid>
+    public interface IOracle<TMonoid, TMapping> : IOracle<TMonoid>
     {
-        TMap IdentityMapping { get; }
-        TMonoid Map(TMap f, TMonoid x);
-        TMap Compose(TMap f, TMap g);
+        TMapping IdentityMapping { get; }
+        TMonoid Map(TMapping f, TMonoid x);
+        TMapping Compose(TMapping f, TMapping g);
     }
 }

@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace Algorithm
 {
-    public class LazySegmentTree<TMonoid, TMap>
+    public class LazySegmentTree<TMonoid, TMapping>
     {
         public int Length { get; }
 
-        private readonly IOracle<TMonoid, TMap> _oracle;
+        private readonly IOracle<TMonoid, TMapping> _oracle;
         private readonly TMonoid[] _data;
-        private readonly TMap[] _lazy;
+        private readonly TMapping[] _lazy;
         private readonly int _log;
         private readonly int _dataSize;
 
-        public LazySegmentTree(IReadOnlyCollection<TMonoid> source, IOracle<TMonoid, TMap> oracle)
+        public LazySegmentTree(IReadOnlyCollection<TMonoid> source, IOracle<TMonoid, TMapping> oracle)
             : this(source.Count, oracle)
         {
             var idx = _dataSize;
@@ -21,7 +21,7 @@ namespace Algorithm
             for (var i = _dataSize - 1; i >= 1; i--) Update(i);
         }
 
-        public LazySegmentTree(int length, IOracle<TMonoid, TMap> oracle)
+        public LazySegmentTree(int length, IOracle<TMonoid, TMapping> oracle)
         {
             if (length < 0) throw new ArgumentOutOfRangeException(nameof(length));
             Length = length;
@@ -30,7 +30,7 @@ namespace Algorithm
             _dataSize = 1 << _log;
             _data = new TMonoid[_dataSize << 1];
             Array.Fill(_data, _oracle.IdentityElement);
-            _lazy = new TMap[_dataSize];
+            _lazy = new TMapping[_dataSize];
             Array.Fill(_lazy, _oracle.IdentityMapping);
         }
 
@@ -77,16 +77,16 @@ namespace Algorithm
 
         public TMonoid QueryToAll() => _data[1];
 
-        public void Apply(int index, TMap map)
+        public void Apply(int index, TMapping mapping)
         {
             if (index < 0 || Length <= index) throw new ArgumentOutOfRangeException(nameof(index));
             index += _dataSize;
             for (var i = _log; i >= 1; i--) Push(index >> i);
-            _data[index] = _oracle.Map(map, _data[index]);
+            _data[index] = _oracle.Map(mapping, _data[index]);
             for (var i = 1; i <= _log; i++) Update(index >> i);
         }
 
-        public void Apply(int left, int right, in TMap map)
+        public void Apply(int left, int right, in TMapping mapping)
         {
             if (left < 0 || right < left || Length < right) throw new ArgumentOutOfRangeException();
             if (left == right) return;
@@ -101,8 +101,8 @@ namespace Algorithm
             var (l, r) = (left, right);
             while (l < r)
             {
-                if ((l & 1) == 1) ApplyToAll(l++, map);
-                if ((r & 1) == 1) ApplyToAll(--r, map);
+                if ((l & 1) == 1) ApplyToAll(l++, mapping);
+                if ((r & 1) == 1) ApplyToAll(--r, mapping);
                 l >>= 1;
                 r >>= 1;
             }
@@ -184,10 +184,10 @@ namespace Algorithm
 
         private void Update(int k) => _data[k] = _oracle.Operate(_data[k << 1], _data[(k << 1) + 1]);
 
-        private void ApplyToAll(int k, in TMap map)
+        private void ApplyToAll(int k, in TMapping mapping)
         {
-            _data[k] = _oracle.Map(map, _data[k]);
-            if (k < _dataSize) _lazy[k] = _oracle.Compose(map, _lazy[k]);
+            _data[k] = _oracle.Map(mapping, _data[k]);
+            if (k < _dataSize) _lazy[k] = _oracle.Compose(mapping, _lazy[k]);
         }
 
         private void Push(int k)
