@@ -41,7 +41,7 @@ namespace Algorithm.Examples
 
         public class Oracle : IOracle<S>
         {
-            public S MonoidIdentity { get; } = new S(-1);
+            public S IdentityElement { get; } = new S(-1);
 
             public S Operate(S a, S b) => new S(Math.Max(a.Value, b.Value));
         }

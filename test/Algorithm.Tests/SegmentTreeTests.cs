@@ -22,18 +22,18 @@ namespace Algorithm.Tests
             var oracle = new Oracle();
             var st = new SegmentTree<Monoid>(0, new Oracle());
             Assert.That(st.Length, Is.Zero);
-            Assert.That(st.QueryToAll(), Is.EqualTo(oracle.MonoidIdentity));
+            Assert.That(st.QueryToAll(), Is.EqualTo(oracle.IdentityElement));
 
             st = new SegmentTree<Monoid>(new Monoid[] { }, new Oracle());
             Assert.That(st.Length, Is.Zero);
-            Assert.That(st.QueryToAll(), Is.EqualTo(oracle.MonoidIdentity));
+            Assert.That(st.QueryToAll(), Is.EqualTo(oracle.IdentityElement));
         }
 
         [Test]
         public void OneTest()
         {
             var oracle = new Oracle();
-            var identity = oracle.MonoidIdentity;
+            var identity = oracle.IdentityElement;
             var st = new SegmentTree<Monoid>(1, oracle);
             Assert.That(st.Length, Is.EqualTo(1));
             Assert.That(st.QueryToAll(), Is.EqualTo(identity));
@@ -156,7 +156,7 @@ namespace Algorithm.Tests
                 _n = n;
                 _data = new TMonoid[n];
                 _oracle = oracle;
-                _id = _oracle.MonoidIdentity;
+                _id = _oracle.IdentityElement;
             }
 
             public void Set(int p, TMonoid x) => _data[p] = x;
@@ -210,7 +210,7 @@ namespace Algorithm.Tests
 
         private class Oracle : IOracle<Monoid>
         {
-            public Monoid MonoidIdentity { get; } = new Monoid("$");
+            public Monoid IdentityElement { get; } = new Monoid("$");
 
             public Monoid Operate(Monoid a, Monoid b)
             {

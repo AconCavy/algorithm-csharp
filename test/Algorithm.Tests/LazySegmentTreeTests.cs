@@ -238,11 +238,11 @@ namespace Algorithm.Tests
 
         private class SimpleOracle : IOracle<int, int>
         {
-            public int MonoidIdentity { get; } = -(int)1e9;
+            public int IdentityElement { get; } = -(int)1e9;
 
             public int Operate(int a, int b) => Math.Max(a, b);
 
-            public int MapIdentity { get; } = 0;
+            public int IdentityMapping { get; } = 0;
 
             public int Map(int f, int x) => f + x;
 
@@ -298,7 +298,7 @@ namespace Algorithm.Tests
 
         private class Oracle : IOracle<Monoid, Map>
         {
-            public Monoid MonoidIdentity { get; } = new Monoid(-1, -1, -1);
+            public Monoid IdentityElement { get; } = new Monoid(-1, -1, -1);
 
             public Monoid Operate(Monoid a, Monoid b)
             {
@@ -308,7 +308,7 @@ namespace Algorithm.Tests
                 return new Monoid(a.L, b.R, Math.Max(a.Time, b.Time));
             }
 
-            public Map MapIdentity { get; } = new Map(-1);
+            public Map IdentityMapping { get; } = new Map(-1);
 
             public Monoid Map(Map f, Monoid x)
             {

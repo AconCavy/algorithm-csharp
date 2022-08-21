@@ -2,13 +2,13 @@ namespace Algorithm
 {
     public interface IOracle<TMonoid>
     {
-        TMonoid MonoidIdentity { get; }
+        TMonoid IdentityElement { get; }
         TMonoid Operate(TMonoid a, TMonoid b);
     }
 
     public interface IOracle<TMonoid, TMap> : IOracle<TMonoid>
     {
-        TMap MapIdentity { get; }
+        TMap IdentityMapping { get; }
         TMonoid Map(TMap f, TMonoid x);
         TMap Compose(TMap f, TMap g);
     }

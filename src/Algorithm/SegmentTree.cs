@@ -27,7 +27,7 @@ namespace Algorithm
             while (1 << _log < Length) _log++;
             _dataSize = 1 << _log;
             _data = new TMonoid[_dataSize << 1];
-            Array.Fill(_data, oracle.MonoidIdentity);
+            Array.Fill(_data, oracle.IdentityElement);
         }
 
         public void Set(int index, TMonoid value)
@@ -47,7 +47,7 @@ namespace Algorithm
         public TMonoid Query(int left, int right)
         {
             if (left < 0 || right < left || Length < right) throw new ArgumentOutOfRangeException();
-            var (sml, smr) = (_oracle.MonoidIdentity, _oracle.MonoidIdentity);
+            var (sml, smr) = (_oracle.IdentityElement, _oracle.IdentityElement);
             left += _dataSize;
             right += _dataSize;
             while (left < right)
@@ -67,10 +67,10 @@ namespace Algorithm
         {
             if (left < 0 || Length < left) throw new ArgumentOutOfRangeException(nameof(left));
             if (predicate is null) throw new ArgumentNullException(nameof(predicate));
-            if (!predicate(_oracle.MonoidIdentity)) throw new ArgumentException(nameof(predicate));
+            if (!predicate(_oracle.IdentityElement)) throw new ArgumentException(nameof(predicate));
             if (left == Length) return Length;
             left += _dataSize;
-            var sm = _oracle.MonoidIdentity;
+            var sm = _oracle.IdentityElement;
             do
             {
                 while ((left & 1) == 0) left >>= 1;
@@ -99,10 +99,10 @@ namespace Algorithm
         {
             if (right < 0 || Length < right) throw new ArgumentOutOfRangeException(nameof(right));
             if (predicate is null) throw new ArgumentNullException(nameof(predicate));
-            if (!predicate(_oracle.MonoidIdentity)) throw new ArgumentException(nameof(predicate));
+            if (!predicate(_oracle.IdentityElement)) throw new ArgumentException(nameof(predicate));
             if (right == 0) return 0;
             right += _dataSize;
-            var sm = _oracle.MonoidIdentity;
+            var sm = _oracle.IdentityElement;
             do
             {
                 right--;

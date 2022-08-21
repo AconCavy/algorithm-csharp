@@ -29,9 +29,9 @@ namespace Algorithm
             while (1 << _log < Length) _log++;
             _dataSize = 1 << _log;
             _data = new TMonoid[_dataSize << 1];
-            Array.Fill(_data, _oracle.MonoidIdentity);
+            Array.Fill(_data, _oracle.IdentityElement);
             _lazy = new TMap[_dataSize];
-            Array.Fill(_lazy, _oracle.MapIdentity);
+            Array.Fill(_lazy, _oracle.IdentityMapping);
         }
 
         public void Set(int index, in TMonoid value)
@@ -54,7 +54,7 @@ namespace Algorithm
         public TMonoid Query(int left, int right)
         {
             if (left < 0 || right < left || Length < right) throw new ArgumentOutOfRangeException();
-            if (left == right) return _oracle.MonoidIdentity;
+            if (left == right) return _oracle.IdentityElement;
             left += _dataSize;
             right += _dataSize;
             for (var i = _log; i >= 1; i--)
@@ -63,7 +63,7 @@ namespace Algorithm
                 if ((right >> i) << i != right) Push((right - 1) >> i);
             }
 
-            var (sml, smr) = (_oracle.MonoidIdentity, _oracle.MonoidIdentity);
+            var (sml, smr) = (_oracle.IdentityElement, _oracle.IdentityElement);
             while (left < right)
             {
                 if ((left & 1) == 1) sml = _oracle.Operate(sml, _data[left++]);
@@ -118,11 +118,11 @@ namespace Algorithm
         {
             if (left < 0 || Length < left) throw new ArgumentOutOfRangeException(nameof(left));
             if (predicate is null) throw new ArgumentNullException(nameof(predicate));
-            if (!predicate(_oracle.MonoidIdentity)) throw new ArgumentException(nameof(predicate));
+            if (!predicate(_oracle.IdentityElement)) throw new ArgumentException(nameof(predicate));
             if (left == Length) return Length;
             left += _dataSize;
             for (var i = _log; i >= 1; i--) Push(left >> i);
-            var sm = _oracle.MonoidIdentity;
+            var sm = _oracle.IdentityElement;
             do
             {
                 while ((left & 1) == 0) left >>= 1;
@@ -152,11 +152,11 @@ namespace Algorithm
         {
             if (right < 0 || Length < right) throw new ArgumentOutOfRangeException(nameof(right));
             if (predicate is null) throw new ArgumentNullException(nameof(predicate));
-            if (!predicate(_oracle.MonoidIdentity)) throw new ArgumentException(nameof(predicate));
+            if (!predicate(_oracle.IdentityElement)) throw new ArgumentException(nameof(predicate));
             if (right == 0) return 0;
             right += _dataSize;
             for (var i = _log; i >= 1; i--) Push((right - 1) >> i);
-            var sm = _oracle.MonoidIdentity;
+            var sm = _oracle.IdentityElement;
             do
             {
                 right--;
@@ -194,7 +194,7 @@ namespace Algorithm
         {
             ApplyToAll(k << 1, _lazy[k]);
             ApplyToAll((k << 1) + 1, _lazy[k]);
-            _lazy[k] = _oracle.MapIdentity;
+            _lazy[k] = _oracle.IdentityMapping;
         }
     }
 }

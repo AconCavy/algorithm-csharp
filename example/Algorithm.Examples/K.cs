@@ -39,11 +39,11 @@ namespace Algorithm.Examples
 
         public class Oracle : IOracle<S, F>
         {
-            public S MonoidIdentity { get; } = new S(0, 0);
+            public S IdentityElement { get; } = new S(0, 0);
 
             public S Operate(S a, S b) => new S(a.A + b.A, a.Size + b.Size);
 
-            public F MapIdentity { get; } = new F(1, 0);
+            public F IdentityMapping { get; } = new F(1, 0);
 
             public S Map(F f, S x) => new S(f.A * x.A + f.B * x.Size, x.Size);
 
