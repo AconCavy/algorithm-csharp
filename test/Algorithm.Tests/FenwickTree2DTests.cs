@@ -8,16 +8,16 @@ namespace Algorithm.Tests
         [Test]
         public void InitializeTest()
         {
-            Assert.DoesNotThrow(() => _ = new FenwickTree2D(0, 0));
-            Assert.DoesNotThrow(() => _ = new FenwickTree2D(1, 1));
-            Assert.Throws<ArgumentOutOfRangeException>(() => _ = new FenwickTree2D(-1, 0));
-            Assert.Throws<ArgumentOutOfRangeException>(() => _ = new FenwickTree2D(0, -1));
+            Assert.DoesNotThrow(() => _ = new FenwickTree2D<long>(0, 0));
+            Assert.DoesNotThrow(() => _ = new FenwickTree2D<long>(1, 1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => _ = new FenwickTree2D<long>(-1, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(() => _ = new FenwickTree2D<long>(0, -1));
 
-            var cum = new FenwickTree2D(0, 0);
+            var cum = new FenwickTree2D<long>(0, 0);
             Assert.That(cum.Height, Is.Zero);
             Assert.That(cum.Width, Is.Zero);
 
-            cum = new FenwickTree2D(1, 1);
+            cum = new FenwickTree2D<long>(1, 1);
             Assert.That(cum.Height, Is.EqualTo(1));
             Assert.That(cum.Width, Is.EqualTo(1));
         }
@@ -26,7 +26,7 @@ namespace Algorithm.Tests
         [TestCase(0, -1)]
         public void ArgumentOutOfRangeTest(int h, int w)
         {
-            var cum = new FenwickTree2D(1, 1);
+            var cum = new FenwickTree2D<long>(1, 1);
             Assert.Throws<ArgumentOutOfRangeException>(() => cum.Add(h, w, 1));
             Assert.Throws<ArgumentOutOfRangeException>(() => cum.Sum(h, w));
             Assert.Throws<ArgumentOutOfRangeException>(() => cum.Sum(h, w, 0, 0));
@@ -36,7 +36,7 @@ namespace Algorithm.Tests
         [Test]
         public void AddTest()
         {
-            var cum = new FenwickTree2D(1, 1);
+            var cum = new FenwickTree2D<long>(1, 1);
             const int expected = 1;
             cum.Add(0, 0, expected);
             var actual = cum.Sum(0, 0);
@@ -51,7 +51,7 @@ namespace Algorithm.Tests
         {
             const int height = 3;
             const int width = 3;
-            var cum = new FenwickTree2D(height, width);
+            var cum = new FenwickTree2D<long>(height, width);
             for (var i = 0; i < height; i++)
             {
                 for (var j = 0; j < width; j++)
@@ -77,7 +77,7 @@ namespace Algorithm.Tests
             var random = new Random(0);
             const int height = 50;
             const int width = 50;
-            var ft = new FenwickTree2D(height, width);
+            var ft = new FenwickTree2D<long>(height, width);
             var data = new long[height, width];
             for (var i = 0; i < height; i++)
             {
