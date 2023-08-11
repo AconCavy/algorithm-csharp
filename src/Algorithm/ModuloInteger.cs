@@ -1,8 +1,14 @@
 using System;
+using System.Numerics;
 
 namespace Algorithm
 {
-    public readonly struct ModuloInteger : IEquatable<ModuloInteger>
+    public readonly struct ModuloInteger : IEquatable<ModuloInteger>,
+        IAdditionOperators<ModuloInteger, ModuloInteger, ModuloInteger>,
+        IDivisionOperators<ModuloInteger, ModuloInteger, ModuloInteger>,
+        IMultiplyOperators<ModuloInteger, ModuloInteger, ModuloInteger>,
+        ISubtractionOperators<ModuloInteger, ModuloInteger, ModuloInteger>,
+        IEqualityOperators<ModuloInteger, ModuloInteger, bool>
     {
         public long Value { get; }
         // The modulo will be used as an editable property.
@@ -24,14 +30,14 @@ namespace Algorithm
 
         public static implicit operator int(ModuloInteger mint) => (int)mint.Value;
         public static implicit operator long(ModuloInteger mint) => mint.Value;
-        public static implicit operator ModuloInteger(int value) => new ModuloInteger(value);
-        public static implicit operator ModuloInteger(long value) => new ModuloInteger(value);
-        public static ModuloInteger operator +(ModuloInteger a, ModuloInteger b) => a.Value + b.Value;
-        public static ModuloInteger operator -(ModuloInteger a, ModuloInteger b) => a.Value - b.Value;
-        public static ModuloInteger operator *(ModuloInteger a, ModuloInteger b) => a.Value * b.Value;
-        public static ModuloInteger operator /(ModuloInteger a, ModuloInteger b) => a * b.Inverse();
-        public static bool operator ==(ModuloInteger a, ModuloInteger b) => a.Equals(b);
-        public static bool operator !=(ModuloInteger a, ModuloInteger b) => !a.Equals(b);
+        public static implicit operator ModuloInteger(int value) => new(value);
+        public static implicit operator ModuloInteger(long value) => new(value);
+        public static ModuloInteger operator +(ModuloInteger left, ModuloInteger right) => left.Value + right.Value;
+        public static ModuloInteger operator -(ModuloInteger left, ModuloInteger right) => left.Value - right.Value;
+        public static ModuloInteger operator *(ModuloInteger left, ModuloInteger right) => left.Value * right.Value;
+        public static ModuloInteger operator /(ModuloInteger left, ModuloInteger right) => left * right.Inverse();
+        public static bool operator ==(ModuloInteger left, ModuloInteger right) => left.Equals(right);
+        public static bool operator !=(ModuloInteger left, ModuloInteger right) => !left.Equals(right);
         public bool Equals(ModuloInteger other) => Value == other.Value;
         public override bool Equals(object obj) => obj is ModuloInteger other && Equals(other);
         public override int GetHashCode() => Value.GetHashCode();
