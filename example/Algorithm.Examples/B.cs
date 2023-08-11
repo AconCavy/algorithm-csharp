@@ -11,7 +11,7 @@ namespace Algorithm.Examples
             var (N, Q) = (NQ[0], NQ[1]);
             var A = Console.ReadLine().Split(" ").Select(int.Parse).ToArray();
 
-            var ft = new FenwickTree(N);
+            var ft = new FenwickTree<long>(N);
             for (var i = 0; i < N; i++) ft.Add(i, A[i]);
 
             for (var i = 0; i < Q; i++)
