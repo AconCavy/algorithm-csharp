@@ -225,27 +225,8 @@ namespace Algorithm
             return result.Reverse();
         }
 
-        public readonly struct Edge
-        {
-            public readonly int From;
-            public readonly int To;
-            public readonly long Capacity;
-            public readonly long Flow;
-            public readonly long Cost;
+        public readonly record struct Edge(int From, int To, long Capacity, long Flow, long Cost = 0);
 
-            public Edge(int from, int to, long capacity, long flow, long cost = 0) =>
-                (From, To, Capacity, Flow, Cost) = (from, to, capacity, flow, cost);
-        }
-
-        private readonly struct InternalEdge
-        {
-            public readonly int To;
-            public readonly int Rev;
-            public readonly long Capacity;
-            public readonly long Cost;
-
-            public InternalEdge(int to, int rev, long capacity, long cost) =>
-                (To, Rev, Capacity, Cost) = (to, rev, capacity, cost);
-        }
+        private readonly record struct InternalEdge(int To, int Rev, long Capacity, long Cost);
     }
 }
