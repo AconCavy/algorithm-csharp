@@ -95,11 +95,6 @@ namespace Algorithm
             return groups;
         }
 
-        private readonly struct Edge
-        {
-            public readonly int To;
-
-            public Edge(int to) => To = to;
-        }
+        private readonly record struct Edge(int To);
     }
 }
